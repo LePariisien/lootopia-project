@@ -76,7 +76,7 @@ Ce projet a été réalisé par une équipe de trois étudiants passionnés de d
 ### Instructions
 1. Clonez le dépôt :
    ```bash
-   git clone https://github.com/votre-repo/Lootopia.git
+   git clone https://github.com/LePariisien/lootopia-project
    ```
 2. Suivez les instructions dans les README respectifs pour chaque partie du projet (backend, frontend web, mobile).
 3. Lancez les services et connectez-vous à l'application pour commencer l'expérience.
