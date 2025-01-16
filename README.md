@@ -4,9 +4,9 @@ Contribution
 
 Ce projet a été réalisé par une équipe de trois étudiants passionnés de développement Web. Chaque membre a joué un rôle clé dans les différentes phases du projet :
 
-Alexandre CANO (LePariisien) <alexandre.cano@supdevinci-edu.fr>
-Sidney MARCELIN (LePariisien) <sidney.marcelin@supdevinci-edu.fr>
-Ulysse VIGNOLET (LePariisien) <ulysse.vignolet@supdevinci-edu.fr>
+- Alexandre CANO (LePariisien) <alexandre.cano@supdevinci-edu.fr>
+- Sidney MARCELIN (LePariisien) <sidney.marcelin@supdevinci-edu.fr>
+- Ulysse VIGNOLET (LePariisien) <ulysse.vignolet@supdevinci-edu.fr>
 
 ## Description
 Lootopia est une plateforme innovante qui combine une application web et mobile pour organiser et participer à des chasses au trésor interactives. Grâce à l'intégration de technologies modernes telles que la réalité augmentée (RA) et la géolocalisation, Lootopia offre une expérience immersive et ludique pour les joueurs, tout en permettant aux organisateurs de personnaliser leurs chasses.
