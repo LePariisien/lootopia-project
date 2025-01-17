@@ -5,7 +5,7 @@ Contribution
 Ce projet a été réalisé par une équipe de trois étudiants passionnés de développement Web. Chaque membre a joué un rôle clé dans les différentes phases du projet :
 
 - Alexandre CANO (LePariisien) <alexandre.cano@supdevinci-edu.fr>
-- Sidney MARCELIN (s2y-404) <sidney.marcelin@supdevinci-edu.fr>
+- Sydney MARCELIN (s2y-404) <sydney.marcelin@supdevinci-edu.fr>
 - Ulysse VIGNOLET (Goutsse) <ulysse.vignolet@supdevinci-edu.fr>
 
 ## Description
