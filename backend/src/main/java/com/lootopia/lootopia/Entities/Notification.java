@@ -1,31 +1,27 @@
 package com.lootopia.lootopia.Entities;
 
-import java.time.Instant;
-import java.util.UUID;
-
-import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.Date;
+import java.util.UUID;
 
 @Entity
-@Table(name = "Artefacts")
+@Table(name = "Notifications")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Artefact {
+public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -33,21 +29,18 @@ public class Artefact {
     private UUID id;
 
     @NotNull
-    @Size(min = 1, max = 100)
-    private String name;
+    @Column(nullable = false)
+    private String message;
 
-    @Size(max = 500)
-    private String description;
+    @NotNull
+    @Column(nullable = false)
+    private Date date;
 
-    private int value;
+    @NotNull
+    @ManyToOne
+    private User user;
 
-    private String image;
-
-    
-
-    @Setter(AccessLevel.PRIVATE)
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
-
+    @NotNull
+    @Column(nullable = false)
+    private boolean read;
 }

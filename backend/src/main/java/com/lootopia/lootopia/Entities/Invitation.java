@@ -1,31 +1,28 @@
 package com.lootopia.lootopia.Entities;
 
-import java.time.Instant;
-import java.util.UUID;
-
-import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.UUID;
 
 @Entity
-@Table(name = "Artefacts")
+@Table(name = "Invitations")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Artefact {
+public class Invitation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -33,21 +30,24 @@ public class Artefact {
     private UUID id;
 
     @NotNull
-    @Size(min = 1, max = 100)
-    private String name;
+    @ManyToOne
+    private User sender;
 
-    @Size(max = 500)
-    private String description;
+    @NotNull
+    @ManyToOne
+    private User recipient; 
 
-    private int value;
+    @NotNull
+    @ManyToOne
+    private TreasureHunt treasureHunt;
 
-    private String image;
+    public enum InvitationStatus {
+        PENDING,
+        ACCEPTED
+    }
 
-    
-
-    @Setter(AccessLevel.PRIVATE)
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
-
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private InvitationStatus status; // Status of the invitation (e.g., "PENDING", "ACCEPTED")
 }

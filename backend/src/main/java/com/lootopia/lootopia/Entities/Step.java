@@ -1,10 +1,5 @@
 package com.lootopia.lootopia.Entities;
 
-import java.time.Instant;
-import java.util.UUID;
-
-import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,19 +8,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Artefacts")
+@Table(name = "Steps")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Artefact {
+public class Step {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -33,21 +28,19 @@ public class Artefact {
     private UUID id;
 
     @NotNull
-    @Size(min = 1, max = 100)
-    private String name;
-
     @Size(max = 500)
+    @Column(nullable = false)
     private String description;
+    @NotNull
+    @Column(nullable = false)
+    private double latitude; 
 
-    private int value;
-
-    private String image;
-
-    
-
-    @Setter(AccessLevel.PRIVATE)
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
-
+    @NotNull
+    @Column(nullable = false)
+    private double longitude; 
+    @Size(max = 200)
+    private String clue; 
+    @NotNull
+    @Column(nullable = false)
+    private boolean validated; 
 }

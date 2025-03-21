@@ -1,10 +1,6 @@
 package com.lootopia.lootopia.Entities;
 
-import java.time.Instant;
-import java.util.UUID;
-
 import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,19 +14,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
-@Table(name = "Artefacts")
+@Table(name ="TreasureHunts")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Artefact {
+public class TreasureHunt {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(updatable = false, nullable = false)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotNull
     @Size(min = 1, max = 100)
@@ -39,15 +36,25 @@ public class Artefact {
     @Size(max = 500)
     private String description;
 
-    private int value;
+    @NotNull
+    @Size(min = 1, max = 3)
+    private int level;
 
-    private String image;
+    @NotNull
+    @Size(min = 1, max = 200)
+    private String location;
 
-    
+    @NotNull
+    private LocalDate startDate; 
+
+    @NotNull
+    private LocalDate endDate;
+
+    @NotNull
+    private String organizer;
 
     @Setter(AccessLevel.PRIVATE)
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private Instant createdAt;
-
+    private Date atedAt;
 }
