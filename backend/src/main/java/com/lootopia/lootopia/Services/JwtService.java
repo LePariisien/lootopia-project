@@ -3,9 +3,7 @@ package com.lootopia.lootopia.Services;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 
@@ -16,8 +14,6 @@ import javax.crypto.SecretKey;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class JwtService {
@@ -60,34 +56,6 @@ public class JwtService {
                 .compact();
     }
 
-    // // Get username from JWT token
-    // public String getUsernameFromToken(String token) {
-    // return Jwts.parserBuilder()
-    // .setSigningKey(key).build()
-    // .parseClaimsJws(token)
-    // .getBody()
-    // .getSubject();
-    // }
-
-    // // Validate JWT token
-    // public boolean validateJwtToken(String token) {
-    // try {
-    // Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-    // return true;
-    // } catch (SecurityException e) {
-    // System.out.println("Invalid JWT signature: " + e.getMessage());
-    // } catch (MalformedJwtException e) {
-    // System.out.println("Invalid JWT token: " + e.getMessage());
-    // } catch (ExpiredJwtException e) {
-    // System.out.println("JWT token is expired: " + e.getMessage());
-    // } catch (UnsupportedJwtException e) {
-    // System.out.println("JWT token is unsupported: " + e.getMessage());
-    // } catch (IllegalArgumentException e) {
-    // System.out.println("JWT claims string is empty: " + e.getMessage());
-    // }
-    // return false;
-    // }
-
     public String refreshToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -112,7 +80,7 @@ public class JwtService {
     }
 
     private Date extractExpiration(String token) {
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getExpiration();
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration();
     }
 
     public String extractUsername(String token) {
@@ -120,7 +88,7 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
 }

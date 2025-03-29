@@ -3,8 +3,6 @@ package com.lootopia.lootopia.Services;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,6 +50,7 @@ public class AuthService {
         userRepository.save(user);
         var jwt = jwtService.generateToken(user.getUsername());
         var refreshToken = jwtService.generateRefreshToken(user.getUsername());
+
         return JwtAuthResponse.builder()
                 .accessToken(jwt)
                 .refreshToken(refreshToken)
@@ -71,6 +70,7 @@ public class AuthService {
 
         var jwt = jwtService.generateToken(user.getUsername());
         var refreshToken = jwtService.generateRefreshToken(user.getUsername());
+
         return JwtAuthResponse.builder()
                 .accessToken(jwt)
                 .refreshToken(refreshToken)
@@ -83,6 +83,7 @@ public class AuthService {
         }
 
         String refreshedToken = jwtService.refreshToken(token);
+
         return JwtAuthResponse.builder()
                 .accessToken(token)
                 .refreshToken(refreshedToken)
