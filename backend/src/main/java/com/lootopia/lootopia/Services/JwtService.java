@@ -1,78 +1,92 @@
 package com.lootopia.lootopia.Services;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.lootopia.lootopia.Entities.User;
+import com.lootopia.lootopia.Repositories.RevokedTokenRepository;
 
 import javax.crypto.SecretKey;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Component
+@RequiredArgsConstructor
 public class JwtService {
 
     @Value("${jwt-secret}")
     private String jwtSecret;
 
-    @Value("${jwt-expiration-15m}")
-    private long jwtExpirationDate15m;
-
-    @Value("${jwt-expiration-1d}")
-    private long jwtExpirationDate1d;
-
-    @Value("${jwt-expiration-7d}")
-    private long jwtExpirationDate7d;
-
     private SecretKey key;
+
+    @Autowired
+    private RevokedTokenRepository revokedTokenRepository;
 
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // Generate JWT token
-    public String generateToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationDate15m))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+    public String generateAccessToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("account_creation_timestamp", user.getCreatedAt().toString());
+        claims.put("user_id", user.getId());
+        claims.put("username", user.getUsername());
+        claims.put("email", user.getEmail());
+        return createToken(claims, user.getUsername(), TimeUnit.HOURS.toMillis(1));
     }
 
-    public String generateRefreshToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationDate1d))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+    public String generateRefreshToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        return createToken(claims, user.getUsername(), TimeUnit.DAYS.toMillis(15));
     }
 
-    public String refreshToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            String username = extractUsername(token);
+    private String createToken(Map<String, Object> claims, String subject, Long expiration) {
+        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
 
-            return generateToken(username);
-        } catch (ExpiredJwtException e) {
-            String username = e.getClaims().getSubject();
-            return generateToken(username);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Token invalide ou non rafraîchissable");
-        }
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public boolean validateToken(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+        if (revokedTokenRepository.existsByToken(token)) {
+            return false;
+        }
+
+        String extractedUsername = extractUsername(token);
+        if (extractedUsername.equals(username) && !isTokenExpired(token)) {
+            try {
+                Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+                return true;
+            } catch (JwtException | IllegalArgumentException e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public boolean isTokenExpiredSoon(String token) {
+        Date expirationDate = extractExpiration(token);
+        long timeLeft = expirationDate.getTime() - System.currentTimeMillis();
+        return timeLeft < TimeUnit.MINUTES.toMillis(5);
     }
 
     private boolean isTokenExpired(String token) {

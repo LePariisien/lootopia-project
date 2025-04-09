@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.lootopia.lootopia.Services.JwtService;
-import com.lootopia.lootopia.Services.UserService;
+import com.lootopia.lootopia.Services.CustomUserDetailService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private UserService userService;
+    private CustomUserDetailService customUserDetailService;
 
     @Override
     protected void doFilterInternal(
@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwt != null) {
                 String username = jwtService.extractUsername(jwt);
                 if (username != null && jwtService.validateToken(jwt, username)) {
-                    UserDetails userDetails = userService.loadUserByUsername(username);
+                    UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,

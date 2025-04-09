@@ -55,10 +55,16 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false)
-    private boolean doubleFA;
+    private boolean mfaEnabled;
+
+    @Column(name = "mfa_secret")
+    private String mfaSecret;
+
+    @Column(name = "email_verified", nullable = false)
+    private boolean isEmailVerified;
 
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
@@ -67,7 +73,7 @@ public class User implements UserDetails {
     }
 
     @UpdateTimestamp
-    @Column(nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @Override

@@ -17,6 +17,6 @@ public class RegisterDto {
 
     private String email;
 
-    private boolean doubleFA;
+    private boolean mfaEnabled;
 
 }

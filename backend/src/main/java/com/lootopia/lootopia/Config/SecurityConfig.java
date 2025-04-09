@@ -1,5 +1,7 @@
 package com.lootopia.lootopia.Config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.lootopia.lootopia.Filters.JwtAuthenticationFilter;
-import com.lootopia.lootopia.Services.UserService;
+import com.lootopia.lootopia.Services.CustomUserDetailService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,14 +37,7 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthFilter;
 
     @Autowired
-    private UserService userService;
-
-    private static final String[] WHITE_LIST_URL = {
-            "/api/auth/**",
-            "/api/test/all",
-            "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html",
-            "/error"
-    };
+    private CustomUserDetailService customUserDetailService;
 
     @Bean
     DefaultSecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,8 +45,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(WHITE_LIST_URL).permitAll()
-                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers(Arrays.stream(ApiPathExclusion.values())
+                                .map(ApiPathExclusion::getPath)
+                                .toArray(String[]::new))
+                        .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
@@ -81,7 +78,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService((UserDetailsService) userService);
+        authProvider.setUserDetailsService((UserDetailsService) customUserDetailService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }

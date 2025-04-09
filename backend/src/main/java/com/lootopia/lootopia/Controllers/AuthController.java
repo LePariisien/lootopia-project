@@ -14,21 +14,21 @@ import com.lootopia.lootopia.Services.AuthService;
 public class AuthController {
 
     @Autowired
-    private AuthService authenticationService;
+    private AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<JwtAuthResponse> signup(@RequestBody RegisterDto request) {
-        return ResponseEntity.ok(authenticationService.signup(request));
+    @PostMapping("/sign-up")
+    public ResponseEntity<?> signup(@RequestBody RegisterDto request) {
+        return authService.signup(request);
     }
 
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> signin(@RequestBody LoginDto request) {
-        return ResponseEntity.ok(authenticationService.signin(request));
+        return authService.signin(request);
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<JwtAuthResponse> refreshToken(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(authenticationService.refreshToken(token));
+    @PostMapping("/verify-mfa")
+    public ResponseEntity<JwtAuthResponse> verifyMfa(@RequestParam String username, @RequestParam String mfaCode) {
+        return authService.verifyMfaCode(username, mfaCode);
     }
 
 }
