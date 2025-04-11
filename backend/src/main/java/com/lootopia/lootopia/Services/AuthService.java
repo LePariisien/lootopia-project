@@ -1,8 +1,10 @@
 package com.lootopia.lootopia.Services;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +19,7 @@ import com.lootopia.lootopia.Dtos.RegisterDto;
 import com.lootopia.lootopia.Entities.User;
 import com.lootopia.lootopia.Repositories.UserRepository;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -38,36 +41,44 @@ public class AuthService {
     @Autowired
     private GAService gaService;
 
-    public ResponseEntity<?> signup(@RequestBody RegisterDto request) {
-        if (userRepository.existsByUsername(request.getUsername())
-                || userRepository.existsByEmail(request.getEmail())) {
+    @Autowired
+    private MailService mailService;
+
+    public ResponseEntity<?> signup(@RequestBody RegisterDto registerDto, String siteURL)
+            throws UnsupportedEncodingException, MessagingException {
+        if (userRepository.existsByUsername(registerDto.getUsername())
+                || userRepository.existsByEmail(registerDto.getEmail())) {
             throw new IllegalArgumentException("Ce nom d'utilisateur ou ce mail est déjà pris");
         }
 
         var user = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .username(registerDto.getUsername())
+                .email(registerDto.getEmail())
+                .password(passwordEncoder.encode(registerDto.getPassword()))
                 .build();
 
         if (user.getCreatedAt() == null) {
             user.setCreatedAt(LocalDateTime.now());
         }
         user.setUpdatedAt(LocalDateTime.now());
+        // String randomCode = RandomString.make(64);
+        user.setVerificationCode(RandomStringUtils.randomAlphanumeric(64));
+        user.setEmailVerified(false);
+        user.setMfaEnabled(registerDto.isMfaEnabled());
 
-        user.setMfaEnabled(request.isMfaEnabled());
+        mailService.sendVerificationEmailRegister(user, siteURL);
 
-        if (request.isMfaEnabled()) {
+        if (registerDto.isMfaEnabled()) {
             String secret = gaService.generateKey();
             user.setMfaSecret(secret);
 
-            String qrCodeUrl = gaService.generateQRUrl(secret, request.getUsername());
-
             userRepository.save(user);
 
+            String qrCodeUrl = gaService.generateQRUrl(secret, registerDto.getUsername());
             Map<String, String> response = new HashMap<>();
             response.put("secret", secret);
             response.put("qrCodeUrl", "data:image/png;base64," + qrCodeUrl);
+
             return ResponseEntity.ok(response);
         } else {
             user.setMfaSecret(null);
@@ -86,19 +97,19 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<JwtAuthResponse> signin(LoginDto request) {
-        var user = userRepository.findByEmail(request.getEmail())
+    public ResponseEntity<JwtAuthResponse> signin(LoginDto loginDto) {
+        var user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Email ou mot de passe incorrect"));
 
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), request.getPassword()));
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), loginDto.getPassword()));
         } catch (BadCredentialsException ex) {
             throw new IllegalArgumentException("Email ou mot de passe incorrect");
         }
 
         if (user.isMfaEnabled()) {
-            if (request.getMfaCode() == null || !gaService.isValid(user.getMfaSecret(), request.getMfaCode())) {
+            if (loginDto.getMfaCode() == null || !gaService.isValid(user.getMfaSecret(), loginDto.getMfaCode())) {
                 throw new IllegalArgumentException("Code MFA invalide");
             }
         }

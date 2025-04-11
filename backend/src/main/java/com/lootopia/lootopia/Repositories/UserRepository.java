@@ -3,6 +3,7 @@ package com.lootopia.lootopia.Repositories;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.lootopia.lootopia.Entities.User;
 
@@ -15,5 +16,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
+
+    @Query("SELECT u FROM User u WHERE u.verificationCode = ?1")
+    Optional<User> findByVerificationCode(String code);
 
 }

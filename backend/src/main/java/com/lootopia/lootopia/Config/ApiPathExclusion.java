@@ -22,7 +22,8 @@ public enum ApiPathExclusion {
     HEALTH_CHECK("/health-check"),
     ACTUATOR("/actuator/**"),
     AUTH("/api/auth/**"),
-    REFRESH_TOKEN("/api/token/refresh-token");
+    REFRESH_TOKEN("/api/token/refresh-token"),
+    VERIFY_MAIL("/verify");
 
     private final String path;
 

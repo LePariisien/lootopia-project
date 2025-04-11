@@ -60,6 +60,9 @@ public class User implements UserDetails {
     @Column(name = "mfa_secret")
     private String mfaSecret;
 
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+
     @Column(name = "email_verified", nullable = false)
     private boolean isEmailVerified;
 
