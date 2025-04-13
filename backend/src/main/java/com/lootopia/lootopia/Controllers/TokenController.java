@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.lootopia.lootopia.Dtos.JwtAuthResponse;
 import com.lootopia.lootopia.Services.TokenService;
 
 @RestController
@@ -15,7 +14,7 @@ public class TokenController {
     private TokenService tokenService;
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<JwtAuthResponse> refreshToken(@RequestHeader("Authorization") String refreshToken) {
+    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String refreshToken) {
         System.out.println("Authorization Header: " + refreshToken);
         return tokenService.refreshToken(refreshToken);
     }

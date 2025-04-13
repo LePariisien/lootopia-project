@@ -32,10 +32,10 @@ public class MailService {
 
     public ResponseEntity<String> mailVerify(String verificationCode) {
         User user = userRepository.findByVerificationCode(verificationCode)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable"));
 
         if (user.isEmailVerified()) {
-            return ResponseEntity.badRequest().body("Email already verified");
+            return ResponseEntity.badRequest().body("Email déjà vérifié");
         }
 
         if (user.isEnabled()) {
@@ -43,10 +43,10 @@ public class MailService {
             user.setEmailVerified(true);
             userRepository.save(user);
 
-            return ResponseEntity.ok("Email verified successfully");
+            return ResponseEntity.ok("Email verifié avec succès ! Vous pouvez maintenant vous connecter.");
         }
 
-        return ResponseEntity.badRequest().body("Email verification failed");
+        return ResponseEntity.badRequest().body("Email déjà vérifié ou compte désactivé");
     }
 
     public void sendVerificationEmailRegister(User user, String siteURL)

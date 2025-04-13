@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +18,7 @@ import com.lootopia.lootopia.Dtos.JwtAuthResponse;
 import com.lootopia.lootopia.Dtos.LoginDto;
 import com.lootopia.lootopia.Dtos.RegisterDto;
 import com.lootopia.lootopia.Entities.User;
+import com.lootopia.lootopia.Exceptions.CustomException;
 import com.lootopia.lootopia.Repositories.UserRepository;
 
 import jakarta.mail.MessagingException;
@@ -48,7 +50,7 @@ public class AuthService {
             throws UnsupportedEncodingException, MessagingException {
         if (userRepository.existsByUsername(registerDto.getUsername())
                 || userRepository.existsByEmail(registerDto.getEmail())) {
-            throw new IllegalArgumentException("Ce nom d'utilisateur ou ce mail est déjà pris");
+            throw new CustomException("Ce nom d'utilisateur ou ce mail est déjà pris", HttpStatus.CONFLICT);
         }
 
         var user = User.builder()
@@ -61,7 +63,6 @@ public class AuthService {
             user.setCreatedAt(LocalDateTime.now());
         }
         user.setUpdatedAt(LocalDateTime.now());
-        // String randomCode = RandomString.make(64);
         user.setVerificationCode(RandomStringUtils.randomAlphanumeric(64));
         user.setEmailVerified(false);
         user.setMfaEnabled(registerDto.isMfaEnabled());
@@ -85,50 +86,48 @@ public class AuthService {
 
             userRepository.save(user);
 
-            String accessToken = jwtService.generateAccessToken(user);
-            String refreshToken = jwtService.generateRefreshToken(user);
-
-            JwtAuthResponse jwtAuthResponse = JwtAuthResponse.builder()
-                    .accessToken(accessToken)
-                    .refreshToken(refreshToken)
-                    .build();
-
-            return ResponseEntity.ok(jwtAuthResponse);
+            return ResponseEntity.ok(GetJwtAuthResponse(user));
         }
     }
 
-    public ResponseEntity<JwtAuthResponse> signin(LoginDto loginDto) {
-        var user = userRepository.findByEmail(loginDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Email ou mot de passe incorrect"));
+    public ResponseEntity<?> signin(LoginDto loginDto) {
+        var user = userRepository.findByEmail(loginDto.getEmail()).get();
+        if (user == null) {
+            throw new CustomException("Email ou mot de passe incorrect", HttpStatus.UNAUTHORIZED);
+        }
 
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), loginDto.getPassword()));
         } catch (BadCredentialsException ex) {
-            throw new IllegalArgumentException("Email ou mot de passe incorrect");
+            throw new CustomException("Email ou mot de passe incorrect", HttpStatus.UNAUTHORIZED);
         }
 
         if (user.isMfaEnabled()) {
             if (loginDto.getMfaCode() == null || !gaService.isValid(user.getMfaSecret(), loginDto.getMfaCode())) {
-                throw new IllegalArgumentException("Code MFA invalide");
+                throw new CustomException("Code MFA invalide", HttpStatus.UNAUTHORIZED);
             }
         }
 
         return ResponseEntity.ok(GetJwtAuthResponse(user));
     }
 
-    public ResponseEntity<JwtAuthResponse> verifyMfaCode(String username, String mfaCode) {
-        var user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable"));
+    public ResponseEntity<?> verifyMfaCode(String username, String mfaCode) {
+        var user = userRepository.findByUsername(username).get();
+        if (user == null) {
+            throw new CustomException("Email ou mot de passe incorrect", HttpStatus.UNAUTHORIZED);
+        }
 
         if (!gaService.isValid(user.getMfaSecret(), mfaCode)) {
-            throw new IllegalArgumentException("Code MFA invalide");
+            throw new CustomException("Code MFA invalide", HttpStatus.UNAUTHORIZED);
         }
 
         return ResponseEntity.ok(GetJwtAuthResponse(user));
     }
 
     private JwtAuthResponse GetJwtAuthResponse(User user) {
+        user.setLastSigninAt(LocalDateTime.now());
+
         return JwtAuthResponse.builder()
                 .accessToken(jwtService.generateAccessToken(user))
                 .refreshToken(jwtService.generateRefreshToken(user))
