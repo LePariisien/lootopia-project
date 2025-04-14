@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,35 +67,21 @@ public class AuthService {
         user.setVerificationCode(RandomStringUtils.randomAlphanumeric(64));
         user.setEmailVerified(false);
         user.setMfaEnabled(registerDto.isMfaEnabled());
+        user.setMfaSecret(null);
 
         mailService.sendVerificationEmailRegister(user, siteURL);
 
         if (registerDto.isMfaEnabled()) {
-            String secret = gaService.generateKey();
-            user.setMfaSecret(secret);
-
-            userRepository.save(user);
-
-            String qrCodeUrl = gaService.generateQRUrl(secret, registerDto.getUsername());
-            Map<String, String> response = new HashMap<>();
-            response.put("secret", secret);
-            response.put("qrCodeUrl", "data:image/png;base64," + qrCodeUrl);
-
-            return ResponseEntity.ok(response);
+            return getMfaQr(user.getUsername());
         } else {
-            user.setMfaSecret(null);
-
             userRepository.save(user);
-
             return ResponseEntity.ok(GetJwtAuthResponse(user));
         }
     }
 
     public ResponseEntity<?> signin(LoginDto loginDto) {
-        var user = userRepository.findByEmail(loginDto.getEmail()).get();
-        if (user == null) {
-            throw new CustomException("Email ou mot de passe incorrect", HttpStatus.UNAUTHORIZED);
-        }
+        var user = userRepository.findByEmail(loginDto.getEmail())
+                .orElseThrow(() -> new CustomException("Email ou mot de passe incorrect", HttpStatus.NOT_FOUND));
 
         try {
             authenticationManager.authenticate(
@@ -113,9 +100,11 @@ public class AuthService {
     }
 
     public ResponseEntity<?> verifyMfaCode(String username, String mfaCode) {
-        var user = userRepository.findByUsername(username).get();
-        if (user == null) {
-            throw new CustomException("Email ou mot de passe incorrect", HttpStatus.UNAUTHORIZED);
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException("Email ou mot de passe incorrect", HttpStatus.NOT_FOUND));
+
+        if (user.isMfaEnabled() == false || user.getMfaSecret() == null) {
+            throw new CustomException("MFA non activé", HttpStatus.CONFLICT);
         }
 
         if (!gaService.isValid(user.getMfaSecret(), mfaCode)) {
@@ -123,6 +112,63 @@ public class AuthService {
         }
 
         return ResponseEntity.ok(GetJwtAuthResponse(user));
+    }
+
+    public ResponseEntity<?> getMfaQr(String username) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException("Email ou mot de passe incorrect", HttpStatus.NOT_FOUND));
+
+        if (user.isMfaEnabled() == false) {
+            throw new CustomException("MFA non activé", HttpStatus.CONFLICT);
+        }
+
+        String secret = gaService.generateKey();
+        user.setMfaSecret(secret);
+
+        userRepository.save(user);
+
+        String qrCodeUrl = gaService.generateQRUrl(secret, username);
+        Map<String, String> response = new HashMap<>();
+        response.put("secret", secret);
+        response.put("qrCodeUrl", "data:image/png;base64," + qrCodeUrl);
+
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<?> mfa(String username, boolean enable) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException("Email ou mot de passe incorrect", HttpStatus.NOT_FOUND));
+
+        String authenticatedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!user.getUsername().equals(authenticatedUsername)) {
+            throw new CustomException("Accès non autorisé", HttpStatus.FORBIDDEN);
+        }
+
+        if (user.isMfaEnabled() && enable) {
+            throw new CustomException("MFA déjà activé", HttpStatus.CONFLICT);
+        }
+
+        user.setMfaEnabled(enable);
+        if (!enable) {
+            user.setMfaSecret(null);
+        }
+
+        userRepository.save(user);
+        return enable ? getMfaQr(username) : ResponseEntity.ok("MFA désactivé");
+    }
+
+    public ResponseEntity<?> resendVerification(String username, String siteURL)
+            throws UnsupportedEncodingException, MessagingException {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException("Email ou mot de passe incorrect", HttpStatus.NOT_FOUND));
+
+        if (user.isEmailVerified()) {
+            throw new CustomException("Email déjà vérifié", HttpStatus.CONFLICT);
+        }
+
+        mailService.sendVerificationEmailRegister(user, siteURL);
+
+        return ResponseEntity.ok("Un email de vérification a été envoyé à " + user.getEmail());
     }
 
     private JwtAuthResponse GetJwtAuthResponse(User user) {

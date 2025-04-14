@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.lootopia.lootopia.Services.MailService;
 
 @RestController
-public class MailController {
+public class MailController extends AbstractController {
 
     @Autowired
     private MailService mailService;

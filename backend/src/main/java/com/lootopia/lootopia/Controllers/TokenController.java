@@ -8,7 +8,7 @@ import com.lootopia.lootopia.Services.TokenService;
 
 @RestController
 @RequestMapping("/api/token")
-public class TokenController {
+public class TokenController extends AbstractController {
 
     @Autowired
     private TokenService tokenService;
