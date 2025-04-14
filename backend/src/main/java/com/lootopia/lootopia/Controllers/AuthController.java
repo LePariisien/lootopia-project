@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController extends AbstractController {
 
     @Autowired
     private AuthService authService;
@@ -34,11 +34,6 @@ public class AuthController {
     @PostMapping("/verify-mfa")
     public ResponseEntity<?> verifyMfa(@RequestParam String username, @RequestParam String mfaCode) {
         return authService.verifyMfaCode(username, mfaCode);
-    }
-
-    private String getSiteURL(HttpServletRequest request) {
-        String siteURL = request.getRequestURL().toString();
-        return siteURL.replace(request.getServletPath(), "");
     }
 
 }
