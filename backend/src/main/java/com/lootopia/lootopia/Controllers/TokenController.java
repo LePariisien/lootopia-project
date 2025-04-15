@@ -15,7 +15,6 @@ public class TokenController extends AbstractController {
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String refreshToken) {
-        System.out.println("Authorization Header: " + refreshToken);
         return tokenService.refreshToken(refreshToken);
     }
 

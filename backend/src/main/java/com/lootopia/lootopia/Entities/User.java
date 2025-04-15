@@ -62,7 +62,7 @@ public class User implements UserDetails {
     @Column(name = "mfa_secret")
     private String mfaSecret;
 
-    @Column(name = "verification_code", length = 64)
+    @Column(name = "verification_code", nullable = true, length = 64)
     private String verificationCode;
 
     @Column(name = "email_verified", nullable = false)
@@ -84,7 +84,7 @@ public class User implements UserDetails {
     @Column(name = "last_signin_at")
     private LocalDateTime lastSigninAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Player player;
 
     @Override

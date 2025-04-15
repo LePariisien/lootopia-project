@@ -69,12 +69,13 @@ public class AuthService {
         user.setMfaEnabled(registerDto.isMfaEnabled());
         user.setMfaSecret(null);
 
+        userRepository.save(user);
+
         mailService.sendVerificationEmailRegister(user, siteURL);
 
         if (registerDto.isMfaEnabled()) {
             return getMfaQr(user.getUsername());
         } else {
-            userRepository.save(user);
             return ResponseEntity.ok(GetJwtAuthResponse(user));
         }
     }
@@ -116,7 +117,7 @@ public class AuthService {
 
     public ResponseEntity<?> getMfaQr(String username) {
         var user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomException("Email ou mot de passe incorrect", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Utilisateur introuvable", HttpStatus.NOT_FOUND));
 
         if (user.isMfaEnabled() == false) {
             throw new CustomException("MFA non activé", HttpStatus.CONFLICT);
@@ -135,14 +136,11 @@ public class AuthService {
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<?> mfa(String username, boolean enable) {
-        var user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomException("Email ou mot de passe incorrect", HttpStatus.NOT_FOUND));
+    public ResponseEntity<?> mfa(boolean enable) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        String authenticatedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (!user.getUsername().equals(authenticatedUsername)) {
-            throw new CustomException("Accès non autorisé", HttpStatus.FORBIDDEN);
-        }
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException("Utilisateur introuvable", HttpStatus.NOT_FOUND));
 
         if (user.isMfaEnabled() && enable) {
             throw new CustomException("MFA déjà activé", HttpStatus.CONFLICT);
@@ -157,10 +155,12 @@ public class AuthService {
         return enable ? getMfaQr(username) : ResponseEntity.ok("MFA désactivé");
     }
 
-    public ResponseEntity<?> resendVerification(String username, String siteURL)
+    public ResponseEntity<?> resendVerification(String siteURL)
             throws UnsupportedEncodingException, MessagingException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         var user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomException("Email ou mot de passe incorrect", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Utilisateur introuvable", HttpStatus.NOT_FOUND));
 
         if (user.isEmailVerified()) {
             throw new CustomException("Email déjà vérifié", HttpStatus.CONFLICT);
