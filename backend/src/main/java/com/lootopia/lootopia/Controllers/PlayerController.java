@@ -14,12 +14,12 @@ public class PlayerController extends AbstractController {
     @Autowired
     private PlayerService playerService;
 
-    @GetMapping("/profile")
+    @GetMapping
     public ResponseEntity<?> getPlayer() {
         return playerService.getPlayer();
     }
 
-    @PutMapping("/{playerId}")
+    @PutMapping
     public ResponseEntity<?> updatePlayer(@RequestBody PlayerDto playerDto) {
         return playerService.updatePlayer(playerDto);
     }
