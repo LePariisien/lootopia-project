@@ -14,7 +14,7 @@ public class MailController extends AbstractController {
     private MailService mailService;
 
     @GetMapping("/verify")
-    public ResponseEntity<String> verifyMailUser(@Param("code") String code) {
+    public ResponseEntity<?> verifyMailUser(@Param("code") String code) {
         return mailService.mailVerify(code);
     }
 

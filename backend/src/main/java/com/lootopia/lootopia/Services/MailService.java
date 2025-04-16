@@ -1,16 +1,16 @@
 package com.lootopia.lootopia.Services;
 
 import java.io.UnsupportedEncodingException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.lootopia.lootopia.Entities.User;
+import com.lootopia.lootopia.Exceptions.CustomException;
 import com.lootopia.lootopia.Repositories.UserRepository;
 
 import jakarta.mail.MessagingException;
@@ -30,23 +30,28 @@ public class MailService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<String> mailVerify(String verificationCode) {
+    @Autowired
+    private PlayerService playerService;
+
+    public ResponseEntity<?> mailVerify(String verificationCode) {
         User user = userRepository.findByVerificationCode(verificationCode)
-                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable"));
+                .orElseThrow(() -> new CustomException("Utilisateur introuvable ou email déjà vérifié",
+                        HttpStatus.NOT_FOUND));
 
         if (user.isEmailVerified()) {
-            return ResponseEntity.badRequest().body("Email déjà vérifié");
+            throw new CustomException("Email déjà vérifié", HttpStatus.CONFLICT);
         }
 
         if (user.isEnabled()) {
             user.setVerificationCode(null);
             user.setEmailVerified(true);
+            user.setPlayer(playerService.create(user.getUsername()));
             userRepository.save(user);
 
             return ResponseEntity.ok("Email verifié avec succès ! Vous pouvez maintenant vous connecter.");
         }
 
-        return ResponseEntity.badRequest().body("Email déjà vérifié ou compte désactivé");
+        throw new CustomException("Email déjà vérifié ou compte désactivé", HttpStatus.BAD_REQUEST);
     }
 
     public void sendVerificationEmailRegister(User user, String siteURL)

@@ -18,6 +18,7 @@ public enum ApiPathExclusion {
     SWAGGER_CONFIGURATION("/configuration/**"),
     SWAGGER("/swagger*/**"),
     ERROR("/error"),
+    FAVICON("/favicon.ico"),
     TEST("/api/test/all"),
     HEALTH_CHECK("/health-check"),
     ACTUATOR("/actuator/**"),
