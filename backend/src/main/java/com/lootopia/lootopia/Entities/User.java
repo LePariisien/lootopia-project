@@ -11,11 +11,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -60,7 +62,7 @@ public class User implements UserDetails {
     @Column(name = "mfa_secret")
     private String mfaSecret;
 
-    @Column(name = "verification_code", length = 64)
+    @Column(name = "verification_code", nullable = true, length = 64)
     private String verificationCode;
 
     @Column(name = "email_verified", nullable = false)
@@ -81,6 +83,9 @@ public class User implements UserDetails {
 
     @Column(name = "last_signin_at")
     private LocalDateTime lastSigninAt;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Player player;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -26,8 +26,7 @@ public class UserController extends AbstractController {
     @GetMapping("/resend-email")
     public ResponseEntity<?> resendEmail(HttpServletRequest request)
             throws UnsupportedEncodingException, MessagingException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return authService.resendVerification(username, getSiteURL(request));
+        return authService.resendVerification(getSiteURL(request));
     }
 
     @GetMapping("/mfa-qr")
@@ -38,8 +37,7 @@ public class UserController extends AbstractController {
 
     @PostMapping("/mfa")
     public ResponseEntity<?> mfa(@RequestParam boolean enable) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return authService.mfa(username, enable);
+        return authService.mfa(enable);
     }
 
 }
