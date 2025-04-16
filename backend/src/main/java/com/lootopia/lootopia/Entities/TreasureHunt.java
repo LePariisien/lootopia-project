@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
 import java.util.Date;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 @Table(name ="TreasureHunts")
@@ -51,7 +53,9 @@ public class TreasureHunt {
     private LocalDate endDate;
 
     @NotNull
-    private String organizer;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Setter(AccessLevel.PRIVATE)
     @CreatedDate

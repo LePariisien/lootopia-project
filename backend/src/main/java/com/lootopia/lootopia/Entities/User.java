@@ -25,6 +25,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.OneToMany;
+
 
 @AllArgsConstructor
 @Builder
@@ -81,6 +83,9 @@ public class User implements UserDetails {
 
     @Column(name = "last_signin_at")
     private LocalDateTime lastSigninAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<TreasureHunt> treasureHunts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
