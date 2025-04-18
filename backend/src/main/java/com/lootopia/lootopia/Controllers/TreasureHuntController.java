@@ -1,10 +1,14 @@
 package com.lootopia.lootopia.Controllers;
 
+import com.lootopia.lootopia.Dtos.TreasureHuntDto;
+import com.lootopia.lootopia.Entities.Participation;
 import com.lootopia.lootopia.Entities.TreasureHunt;
-import com.lootopia.lootopia.Entities.User;
 import com.lootopia.lootopia.Services.TreasureHuntService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,38 +19,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TreasureHuntController {
 
-    private final TreasureHuntService treasureHuntService;
+    @Autowired
+    private TreasureHuntService treasureHuntService;
 
     @GetMapping
-    public ResponseEntity<List<TreasureHunt>> getAllTreasureHunts() {
-        List<TreasureHunt> treasureHunts = treasureHuntService.getAllTreasureHunts();
-        return ResponseEntity.ok(treasureHunts);
+    public ResponseEntity<?> getAllTreasureHunts() {
+        return treasureHuntService.getAllTreasureHunts();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TreasureHunt> getTreasureHuntById(@PathVariable Long id) {
-        try {
-            TreasureHunt treasureHunt = treasureHuntService.getTreasureHuntById(id);
-            return ResponseEntity.ok(treasureHunt);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> getTreasureHuntById(@PathVariable Long id) {
+        return treasureHuntService.getTreasureHuntById(id);
     }
 
     @PostMapping
-    public ResponseEntity<String> createTreasureHunt(@RequestBody TreasureHunt treasureHunt) {
-        String message = treasureHuntService.createTreasureHunt(treasureHunt);
-        return ResponseEntity.ok(message);
+    public ResponseEntity<?> createTreasureHunt(@RequestBody @Valid TreasureHuntDto treasureHuntDto) {
+        return treasureHuntService.createTreasureHunt(treasureHuntDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTreasureHunt(@PathVariable Long id, @RequestBody TreasureHunt updatedTreasureHunt) {
-        try {
-            String message = treasureHuntService.updateTreasureHunt(id, updatedTreasureHunt);
-            return ResponseEntity.ok(message);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> updateTreasureHunt(@RequestBody TreasureHuntDto updatedTreasureHunt) {
+        return treasureHuntService.updateTreasureHunt(updatedTreasureHunt);
     }
 
     @DeleteMapping("/{id}")
@@ -59,16 +52,21 @@ public class TreasureHuntController {
         }
     }
 
-    // @GetMapping("/user/{userId}")
-    // public ResponseEntity<List<TreasureHunt>> getTreasureHuntsByUser(@PathVariable Long userId) {
-    //     try {
-    //         // Simulez un utilisateur pour cet exemple (vous pouvez remplacer cela par une vraie recherche utilisateur)
-    //         User user = new User();
-    //         user.setId(userId);
-    //         List<TreasureHunt> treasureHunts = treasureHuntService.getTreasureHuntsByUser(user);
-    //         return ResponseEntity.ok(treasureHunts);
-    //     } catch (EntityNotFoundException e) {
-    //         return ResponseEntity.notFound().build();
-    //     }
+    @GetMapping("/{id}/participations")
+    public ResponseEntity<List<Participation>> getParticipations(@PathVariable Long id) {
+        List<Participation> participations = treasureHuntService.getParticipationsForTreasureHunt(id);
+        return ResponseEntity.ok(participations);
+    }
+
+    // @PostMapping("/participations/{id}/accept")
+    // public ResponseEntity<String> acceptParticipation(@PathVariable Long id) {
+    //     String message = treasureHuntService.acceptParticipation(id);
+    //     return ResponseEntity.ok(message);
+    // }
+
+    // @PostMapping("/participations/{id}/reject")
+    // public ResponseEntity<String> rejectParticipation(@PathVariable Long id) {
+    //     String message = treasureHuntService.rejectParticipation(id);
+    //     return ResponseEntity.ok(message);
     // }
 }

@@ -1,36 +1,89 @@
 package com.lootopia.lootopia.Services;
 
+import com.lootopia.lootopia.Dtos.TreasureHuntDto;
+import com.lootopia.lootopia.Entities.Participation;
+import com.lootopia.lootopia.Entities.Player;
 import com.lootopia.lootopia.Entities.TreasureHunt;
-import com.lootopia.lootopia.Entities.User;
+import com.lootopia.lootopia.Exceptions.CustomException;
+import com.lootopia.lootopia.Repositories.ParticipationRepository;
 import com.lootopia.lootopia.Repositories.TreasureHuntRepository;
+import com.lootopia.lootopia.Repositories.PlayerRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TreasureHuntService {
-
+    
+    @Autowired
     private final TreasureHuntRepository treasureHuntRepository;
 
-    public List<TreasureHunt> getAllTreasureHunts() {
-        return treasureHuntRepository.findAll();
+    @Autowired
+    private final ParticipationRepository participationRepository;
+    
+    @Autowired
+    private PlayerRepository playerRepository;
+
+    public ResponseEntity<?> getAllTreasureHunts() {
+        List<TreasureHunt> AllTreasureHunt = treasureHuntRepository.findAll();
+        if (AllTreasureHunt.isEmpty()) {
+            throw new CustomException("Erreur : Aucune chasse au trésor trouvée.", HttpStatus.NOT_FOUND);
+        }
+        List<TreasureHuntDto> result = new ArrayList<>();
+        for (TreasureHunt treasureHunt : AllTreasureHunt) {
+            result.add(new TreasureHuntDto(treasureHunt));   
+        }
+        return ResponseEntity.ok(result);
+
     }
 
-    public TreasureHunt getTreasureHuntById(Long id) {
-        return treasureHuntRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Erreur : La chasse au trésor n'existe pas."));
+    public ResponseEntity<?> getTreasureHuntById(Long id) {
+        TreasureHunt result = treasureHuntRepository.findById(id)
+            .orElseThrow(() -> new CustomException("Erreur : La chasse au trésor n'existe pas.", HttpStatus.NOT_FOUND));
+
+        return ResponseEntity.ok(new TreasureHuntDto(result));
     }
 
-    public String createTreasureHunt(TreasureHunt treasureHunt) {
-        treasureHuntRepository.save(treasureHunt);
-        return "Succès : La chasse au trésor '" + treasureHunt.getName() + "' a été créée avec succès.";
+    public ResponseEntity<?> createTreasureHunt(TreasureHuntDto treasureHuntDto) {
+        try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            System.out.println("Nom d'utilisateur authentifié : " + username);
+
+            Player player = playerRepository.findByUserUsername(username)
+                    .orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
+            System.out.println("Joueur trouvé : " + player.getNickname());
+
+            TreasureHunt hunt = TreasureHunt.builder()
+                    .name(treasureHuntDto.getName())
+                    .description(treasureHuntDto.getDescription())
+                    .level(treasureHuntDto.getLevel())
+                    .location(treasureHuntDto.getLocation())
+                    .startDate(treasureHuntDto.getStartDate())
+                    .endDate(treasureHuntDto.getEndDate())
+                    .creator(player)
+                    .createdAt(new java.util.Date())
+                    .build();
+            treasureHuntRepository.save(hunt);
+            System.out.println("Chasse au trésor créée avec succès : " + hunt.getName());
+
+            return ResponseEntity.ok("Succès : La chasse au trésor '" + treasureHuntDto.getName() + "' a été créée avec succès.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création de la chasse au trésor.");
+        }
     }
 
-    public String updateTreasureHunt(Long id, TreasureHunt updatedTreasureHunt) {
-        TreasureHunt existingTreasureHunt = getTreasureHuntById(id);
+    public ResponseEntity<?> updateTreasureHunt(TreasureHuntDto updatedTreasureHunt) {
+        var existingTreasureHunt = treasureHuntRepository.findById(updatedTreasureHunt.getId())
+                .orElseThrow(() -> new CustomException("chasse introuvable", HttpStatus.NOT_FOUND));
 
         existingTreasureHunt.setName(updatedTreasureHunt.getName());
         existingTreasureHunt.setDescription(updatedTreasureHunt.getDescription());
@@ -38,11 +91,10 @@ public class TreasureHuntService {
         existingTreasureHunt.setLocation(updatedTreasureHunt.getLocation());
         existingTreasureHunt.setStartDate(updatedTreasureHunt.getStartDate());
         existingTreasureHunt.setEndDate(updatedTreasureHunt.getEndDate());
-        existingTreasureHunt.setUser(updatedTreasureHunt.getUser());
 
         treasureHuntRepository.save(existingTreasureHunt);
-        return "Succès : La chasse au trésor " + updatedTreasureHunt.getName() + " a été mise à jour avec succès.";
-    }
+        return ResponseEntity.ok("Succès : La chasse au trésor " + updatedTreasureHunt.getName() + " a été mise à jour avec succès.");
+    };
 
     public String deleteTreasureHunt(Long id) {
         if (!treasureHuntRepository.existsById(id)) {
@@ -52,15 +104,27 @@ public class TreasureHuntService {
         return "Succès : La chasse au trésor a été supprimée avec succès.";
     }
 
-    public List<TreasureHunt> getTreasureHuntsByUser(User user) {
-        List<TreasureHunt> userTreasureHunts = treasureHuntRepository.findAll().stream()
-                .filter(treasureHunt -> treasureHunt.getUser().equals(user))
+    public List<Participation> getParticipationsForTreasureHunt(Long treasureHuntId) {
+        TreasureHunt treasureHunt = treasureHuntRepository.findById(treasureHuntId)
+                .orElseThrow(() -> new EntityNotFoundException("Chasse au trésor introuvable."));
+        return participationRepository.findAll().stream()
+                .filter(participation -> participation.getTreasureHunt().equals(treasureHunt))
                 .toList();
-
-        if (userTreasureHunts.isEmpty()) {
-            throw new EntityNotFoundException("Erreur : Aucune chasse au trésor trouvée pour l'utilisateur " + user.getUsername() + ".");
-        }
-
-        return userTreasureHunts;
     }
+
+    // public String acceptParticipation(Long participationId) {
+    //     Participation participation = participationRepository.findById(participationId)
+    //             .orElseThrow(() -> new EntityNotFoundException("Participation introuvable."));
+    //     participation.setStatus("accepted");
+    //     participationRepository.save(participation);
+    //     return "Participation acceptée avec succès.";
+    // }
+
+    // public String rejectParticipation(Long participationId) {
+    //     Participation participation = participationRepository.findById(participationId)
+    //             .orElseThrow(() -> new EntityNotFoundException("Participation introuvable."));
+    //     participation.setStatus("rejected");
+    //     participationRepository.save(participation);
+    //     return "Participation rejetée avec succès.";
+    // }
 }
