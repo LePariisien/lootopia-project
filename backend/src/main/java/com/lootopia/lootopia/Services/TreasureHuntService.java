@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -110,6 +111,32 @@ public class TreasureHuntService {
         return participationRepository.findAll().stream()
                 .filter(participation -> participation.getTreasureHunt().equals(treasureHunt))
                 .toList();
+    }
+
+    public ResponseEntity<?> getTreasureHuntsByPlayerId() {
+        // Récupérer le joueur par son ID
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Player player = playerRepository.findByUserUsername(username)
+                .orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
+
+        // Récupérer toutes les chasses au trésor créées par ce joueur
+        List<TreasureHunt> playerTreasureHunts = treasureHuntRepository.findAll().stream()
+                .filter(treasureHunt -> treasureHunt.getCreator().equals(player))
+                .toList();
+
+        // Vérifier si aucune chasse n'a été trouvée
+        if (playerTreasureHunts.isEmpty()) {
+            throw new CustomException("Erreur : Aucune chasse au trésor trouvée pour ce joueur.", HttpStatus.NOT_FOUND);
+        }
+
+        // Convertir les entités en DTO
+        List<TreasureHuntDto> result = new ArrayList<>();
+        for (TreasureHunt treasureHunt : playerTreasureHunts) {
+            result.add(new TreasureHuntDto(treasureHunt));
+        }
+
+        // Retourner la liste des chasses au trésor
+        return ResponseEntity.ok(result);
     }
 
     // public String acceptParticipation(Long participationId) {

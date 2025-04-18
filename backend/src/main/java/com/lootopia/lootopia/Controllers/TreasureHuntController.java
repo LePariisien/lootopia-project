@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/treasure-hunts")
@@ -56,6 +57,11 @@ public class TreasureHuntController {
     public ResponseEntity<List<Participation>> getParticipations(@PathVariable Long id) {
         List<Participation> participations = treasureHuntService.getParticipationsForTreasureHunt(id);
         return ResponseEntity.ok(participations);
+    }
+
+    @GetMapping("/player/{playerId}")
+    public ResponseEntity<?> getTreasureHuntsByPlayerId() {
+        return treasureHuntService.getTreasureHuntsByPlayerId();
     }
 
     // @PostMapping("/participations/{id}/accept")
