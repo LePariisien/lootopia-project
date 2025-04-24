@@ -1,4 +1,5 @@
-version: "3.8"
+# version: "3.8"
+
 services:
   db:
     image: postgres
@@ -11,6 +12,7 @@ services:
       POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     volumes:
       - local_pgdata:/var/lib/postgresql/data
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container_lootopia

@@ -19,9 +19,9 @@ public enum ApiPathExclusion {
     SWAGGER("/swagger*/**"),
     ERROR("/error"),
     FAVICON("/favicon.ico"),
-    TEST("/api/test/all"),
     HEALTH_CHECK("/health-check"),
     ACTUATOR("/actuator/**"),
+    TEST("/api/test/all"),
     AUTH("/api/auth/**"),
     REFRESH_TOKEN("/api/token/refresh-token"),
     VERIFY_MAIL("/verify");
