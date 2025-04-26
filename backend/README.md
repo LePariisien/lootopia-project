@@ -43,7 +43,6 @@ EUREKA_PORT=8088
 
 # Frontend
 SERVER_FRONTEND_URL=http://localhost:3000
-LOOTOPIA_SERVICE_URL=http://localhost:8080/lootopia/api
 
 # Database
 SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/lootopia_db
