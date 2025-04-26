@@ -6,13 +6,13 @@ spring:
       enabled: true
 
 server:
-  port: 8088
+  port: ${EUREKA_PORT}
 
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: http://localhost:8088/eureka/
+      defaultZone: http://eureka:${EUREKA_PORT}/eureka/
   instance:
     prefer-ip-address: true

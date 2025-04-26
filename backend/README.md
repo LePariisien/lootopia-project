@@ -31,7 +31,7 @@ cd lootopia-project/backend
 
 ### 2️⃣ Configuration des variables d'environnement
 
-Dans le dossier `src/main/resources` de chaque service, copiez le fichier `.env.example` et renommez-le en `.env`, puis remplissez les champs nécessaires :
+Dans le dossier `backend`, copiez le fichier `.env.example` et renommez-le en `.env`, puis remplissez les champs nécessaires :
 
 Exemple (`.env.example`) :
 
@@ -46,61 +46,48 @@ SERVER_FRONTEND_URL=http://localhost:3000
 LOOTOPIA_SERVICE_URL=http://localhost:8080/lootopia/api
 
 # Database
-SPRING_DATASOURCE_URL=
-SPRING_DATASOURCE_USERNAME=
-SPRING_DATASOURCE_PASSWORD=
+SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/lootopia_db
+SPRING_DATASOURCE_USERNAME=postgres
+SPRING_DATASOURCE_PASSWORD=postgres
 
+# Hibernate
 SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
 # PgAdmin
-PGADMIN_DEFAULT_EMAIL=
-PGADMIN_DEFAULT_PASSWORD=
+PGADMIN_DEFAULT_EMAIL=admin@example.com
+PGADMIN_DEFAULT_PASSWORD=admin
 
 # JWT
-LOOTOPIA_JWT_SECRET=
+LOOTOPIA_JWT_SECRET=your_secret_key
 
-# MAIL
-MAIL_HOST=
-MAIL_PORT=
-MAIL_USERNAME=
-MAIL_PASSWORD=
+# Mail
+MAIL_HOST=smtp.example.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email@example.com
+MAIL_PASSWORD=your_email_password
 ```
+
+**Note importante pour l'utilisation d'une bdd locale** :  
+👉 Pour `SPRING_DATASOURCE_URL`, utilisez `db` comme nom d'hôte, car tous les services communiquent via le **network Docker lootopia-network**.
 
 ---
 
 ### 3️⃣ Lancer les conteneurs Docker
 
-Démarrez les services de base (PostgreSQL, PgAdmin, etc.) via Docker :
+Compilez et lancez tous les services :
 
 ```bash
-docker-compose up -d
+make
 ```
 
 ---
 
-### 4️⃣ Lancer les microservices
+### 4️⃣ (Optionnel) Accéder aux logs
 
-Dans différents terminaux, lancez les services un par un depuis le dossier `backend` :
-
-#### Eureka Server
+Pour suivre les logs en temps réel :
 
 ```bash
-cd eureka
-mvn spring-boot:run
-```
-
-#### Gateway
-
-```bash
-cd gateway
-mvn spring-boot:run
-```
-
-#### Lootopia Service
-
-```bash
-cd lootopia
-mvn spring-boot:run
+make logs
 ```
 
 ---
@@ -112,13 +99,11 @@ mvn spring-boot:run
 - **Lootopia via Gateway** : [http://localhost:8080/lootopia/api](http://localhost:8080/lootopia/api)
 - **PgAdmin** : [http://localhost:8888](http://localhost:8888)
 
-- **Swagger UI Lootopia** : [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
+- **Swagger UI** : [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
 ---
 
-## 🧪 Endpoints de test
-
-Par exemple :
+## 🧪 Exemples d'Endpoints de test
 
 ```http
 GET http://localhost:8080/lootopia/api/test/all
@@ -137,5 +122,38 @@ GET http://localhost:8080/lootopia/api/test/all
 - Maven
 - JWT (authentification)
 - Mail (SMTP)
+
+---
+
+## ⚙️ Informations supplémentaires sur Docker
+
+- Tous les services utilisent le réseau personnalisé **lootopia-network** pour faciliter la communication.
+- Les conteneurs principaux sont :
+  - `local_pgdb_lootopia` (PostgreSQL)
+  - `pgadmin4_container_lootopia` (PgAdmin)
+  - `eureka` (Service Discovery)
+  - `lootopia` (Service principal)
+  - `gateway` (API Gateway)
+
+---
+
+## 🧹 Commandes Makefile utiles
+
+| Commande       | Description                                       |
+| -------------- | ------------------------------------------------- |
+| `make build`   | Construire les images Docker                      |
+| `make up`      | Lancer tous les conteneurs                        |
+| `make down`    | Arrêter tous les conteneurs                       |
+| `make restart` | Redémarrer tous les services                      |
+| `make logs`    | Afficher les logs des services                    |
+| `make clean`   | Nettoyer les services (sans toucher db / pgadmin) |
+| `make prune`   | Nettoyer toutes les images et volumes inutilisés  |
+
+---
+
+## 📜 Notes
+
+- Assurez-vous que les ports 5432 (si bdd locale), 8080, 8081, 8088 et 8888 sont libres sur votre machine avant de démarrer.
+- `PgAdmin` sera disponible sur [http://localhost:8888](http://localhost:8888) — connectez-vous avec les credentials définis dans `.env`.
 
 ---

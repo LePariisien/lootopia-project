@@ -33,6 +33,6 @@ jwt-secret: ${LOOTOPIA_JWT_SECRET}
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_DEFAULT_ZONE}
+      defaultZone: http://eureka:${EUREKA_PORT}/eureka/
   instance:
     prefer-ip-address: true
