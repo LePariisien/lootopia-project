@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: location_service
+  profiles:
+    active: docker
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL_LOCATION}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+
+server:
+  port: ${LOCATION_PORT}
+  frontend:
+    url: ${SERVER_FRONTEND_URL}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:${EUREKA_PORT}/eureka/
+  instance:
+    prefer-ip-address: true
+
+springdoc:
+  api-docs:
+    enabled: false

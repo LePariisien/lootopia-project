@@ -14,6 +14,12 @@ spring:
             - Path=/lootopia/**
           filters:
             - StripPrefix=1
+        - id: location-service
+          uri: lb://location_service
+          predicates:
+            - Path=/location/**
+          filters:
+            - StripPrefix=1
 
 server:
   port: ${GATEWAY_PORT}
@@ -44,3 +50,5 @@ springdoc:
     urls:
       - name: Lootopia
         url: http://localhost:${GATEWAY_PORT}/lootopia/v3/api-docs
+      - name: Location service
+        url: http://localhost:${GATEWAY_PORT}/location/v3/api-docs
