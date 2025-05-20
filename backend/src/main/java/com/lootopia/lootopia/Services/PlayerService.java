@@ -1,5 +1,7 @@
 package com.lootopia.lootopia.Services;
 
+import java.util.UUID;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +17,7 @@ import com.lootopia.lootopia.Exceptions.CustomException;
 import com.lootopia.lootopia.Repositories.PlayerRepository;
 import com.lootopia.lootopia.Repositories.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -82,5 +85,10 @@ public class PlayerService {
 
 		return ResponseEntity.ok("Profil mis à jour avec succès");
 	}
+
+	public Player getPlayerById(UUID playerId) {
+    	return playerRepository.findById(playerId)
+            .orElseThrow(() -> new EntityNotFoundException("Erreur : Joueur introuvable avec l'ID " + playerId));
+    }
 
 }

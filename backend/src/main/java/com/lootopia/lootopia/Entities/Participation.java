@@ -1,17 +1,12 @@
 package com.lootopia.lootopia.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.UUID;
 
 @Entity
@@ -24,22 +19,17 @@ public class Participation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(updatable = false, nullable = false)
     private UUID id;
 
-    @NotNull
-    @ManyToOne // many participations for one user
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "player_id", nullable = false)
+    private Player player; // Joueur qui participe
 
-    @NotNull
-    @ManyToOne //many patipations for one treasure hunt
-    private TreasureHunt treasureHunt;
-
-    @NotNull
-    @Column(nullable = false)
-    private double progress; // Progress percentage (e.g., 50.0 for 50%)
+    @ManyToOne
+    @JoinColumn(name = "treasure_hunt_id", nullable = false)
+    private TreasureHunt treasureHunt; // Chasse au trésor concernée
 
     @NotNull
     @Column(nullable = false)
-    private String status; // Status of the participation (e.g., "in progress", "completed")
+    private String status = "pending"; // Statut de la participation : pending, accepted, rejected
 }
