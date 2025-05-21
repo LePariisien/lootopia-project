@@ -1,4 +1,5 @@
-version: "3.8"
+# version: "3.8"
+
 services:
   db:
     image: postgres
@@ -9,8 +10,12 @@ services:
     environment:
       POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
       POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      POSTGRES_DB: lootopia_db
     volumes:
       - local_pgdata:/var/lib/postgresql/data
+    networks:
+      - lootopia-network
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container_lootopia
@@ -22,7 +27,51 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - lootopia-network
+
+  eureka:
+    build: ./eureka
+    env_file: 
+      - .env
+    container_name: eureka
+    ports:
+      - "${EUREKA_PORT}:${EUREKA_PORT}"
+    depends_on:
+      - db
+    networks:
+      - lootopia-network
+
+  lootopia:
+    build: ./lootopia
+    env_file: 
+      - .env
+    container_name: lootopia
+    ports:
+      - "${LOOTOPIA_PORT}:${LOOTOPIA_PORT}"
+    depends_on:
+      - db
+      - eureka
+    networks:
+      - lootopia-network
+
+  gateway:
+    build: ./gateway
+    env_file: 
+      - .env
+    container_name: gateway
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+    depends_on:
+      - lootopia
+      - eureka
+    networks:
+      - lootopia-network
 
 volumes:
   local_pgdata:
   pgadmin-data:
+
+networks:
+  lootopia-network:
+    driver: bridge
