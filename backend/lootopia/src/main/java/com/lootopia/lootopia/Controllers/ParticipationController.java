@@ -1,16 +1,12 @@
 package com.lootopia.lootopia.Controllers;
 
-import com.lootopia.lootopia.Entities.Participation;
 import com.lootopia.lootopia.Entities.Player;
-// import com.lootopia.lootopia.Entities.TreasureHunt;
 import com.lootopia.lootopia.Services.ParticipationService;
 import com.lootopia.lootopia.Services.PlayerService;
-// import com.lootopia.lootopia.Services.TreasureHuntService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -44,7 +40,7 @@ public class ParticipationController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> getParticipationById(@PathVariable UUID id) {
-       return participationService.getParticipationById(id);
+        return participationService.getParticipationById(id);
     }
 
     @DeleteMapping("/{participationId}")

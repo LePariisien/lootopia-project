@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: lootopia
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: ${LOOTOPIA_PORT}
+  frontend:
+    url: ${SERVER_FRONTEND_URL}
+
+jwt-secret: ${LOOTOPIA_JWT_SECRET}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:${EUREKA_PORT}/eureka/
+  instance:
+    prefer-ip-address: true
