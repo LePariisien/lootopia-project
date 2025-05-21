@@ -2,7 +2,6 @@ package com.lootopia.lootopia.Controllers;
 
 import com.lootopia.lootopia.Dtos.TreasureHuntDto;
 import com.lootopia.lootopia.Entities.Participation;
-import com.lootopia.lootopia.Entities.TreasureHunt;
 import com.lootopia.lootopia.Services.TreasureHuntService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/treasure-hunts")
@@ -66,13 +64,13 @@ public class TreasureHuntController {
 
     // @PostMapping("/participations/{id}/accept")
     // public ResponseEntity<String> acceptParticipation(@PathVariable Long id) {
-    //     String message = treasureHuntService.acceptParticipation(id);
-    //     return ResponseEntity.ok(message);
+    // String message = treasureHuntService.acceptParticipation(id);
+    // return ResponseEntity.ok(message);
     // }
 
     // @PostMapping("/participations/{id}/reject")
     // public ResponseEntity<String> rejectParticipation(@PathVariable Long id) {
-    //     String message = treasureHuntService.rejectParticipation(id);
-    //     return ResponseEntity.ok(message);
+    // String message = treasureHuntService.rejectParticipation(id);
+    // return ResponseEntity.ok(message);
     // }
 }
