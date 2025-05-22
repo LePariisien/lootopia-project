@@ -6,7 +6,7 @@ import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import com.lootopia.payment.DTO.PaymentIntentDTO;
+import com.lootopia.payment.DTO.PaymentDto;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -19,7 +19,7 @@ public class PaymentController {
     public ResponseEntity<?> createPaymentIntent(@RequestParam Double amount) {
         try {
             PaymentIntent intent = stripeService.createPaymentIntent(amount);
-            PaymentIntentDTO dto = new PaymentIntentDTO(intent.getClientSecret());
+            PaymentDto dto = new PaymentDto(intent.getClientSecret());
             return ResponseEntity.ok(dto);
         } catch (StripeException e) {
             e.printStackTrace();

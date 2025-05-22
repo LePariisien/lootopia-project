@@ -10,7 +10,6 @@ public class StripeService {
 
     public PaymentIntent createPaymentIntent(Double amount) throws StripeException {
         long amountInCents = Math.round(amount * 100);
-        System.out.println("Amount in cents: " + amountInCents);
         String currency = "eur";
         PaymentIntentCreateParams params =
             PaymentIntentCreateParams.builder()
