@@ -1,4 +1,4 @@
-package com.lootopia.lootopia.Services;
+package com.lootopia.payment.Services;
 
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
@@ -8,11 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class StripeService {
 
-    public PaymentIntent createPaymentIntent(Double amount, String currency) throws StripeException {
-        // Conversion en centimes (ex: 10.50€ -> 1050)
+    public PaymentIntent createPaymentIntent(Double amount) throws StripeException {
         long amountInCents = Math.round(amount * 100);
         System.out.println("Amount in cents: " + amountInCents);
-        System.out.println("Currency: " + currency);
+        String currency = "eur";
         PaymentIntentCreateParams params =
             PaymentIntentCreateParams.builder()
                 .setAmount(amountInCents)

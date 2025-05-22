@@ -1,4 +1,4 @@
-package com.lootopia.lootopia.Config;
+package com.lootopia.payment.Config;
 
 import com.stripe.Stripe;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,11 +1,12 @@
-package com.lootopia.lootopia.Controllers;
+package com.lootopia.payment.Controllers;
 
-import com.lootopia.lootopia.Services.StripeService;
+import com.lootopia.payment.Services.StripeService;
 import com.stripe.model.PaymentIntent;
 import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import com.lootopia.payment.DTO.PaymentIntentDTO;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -15,12 +16,13 @@ public class PaymentController {
     private StripeService stripeService;
 
     @PostMapping("/create-payment-intent")
-    public ResponseEntity<?> createPaymentIntent(@RequestParam Double amount, @RequestParam String currency) {
+    public ResponseEntity<?> createPaymentIntent(@RequestParam Double amount) {
         try {
-            PaymentIntent intent = stripeService.createPaymentIntent(amount, currency);
-            return ResponseEntity.ok(intent);
+            PaymentIntent intent = stripeService.createPaymentIntent(amount);
+            PaymentIntentDTO dto = new PaymentIntentDTO(intent.getClientSecret());
+            return ResponseEntity.ok(dto);
         } catch (StripeException e) {
-            e.printStackTrace(); // Ajoute ceci pour voir l'erreur complète dans la console
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Erreur Stripe : " + e.getMessage());
         }
     }
