@@ -1,11 +1,11 @@
 spring:
   application:
-    name: location_service
+    name: locationserv
   profiles:
     active: docker
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL_LOCATION}
+    url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
 
@@ -22,9 +22,7 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka:${EUREKA_PORT}/eureka/
+    register-with-eureka: true
+    fetch-registry: true
   instance:
     prefer-ip-address: true
-
-springdoc:
-  api-docs:
-    enabled: false

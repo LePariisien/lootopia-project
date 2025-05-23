@@ -1,11 +1,15 @@
-package com.location.location_service.Entities;
+package com.location.locationserv.Entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -18,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
-public class Clue {
+public class Treasure {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -31,10 +35,8 @@ public class Clue {
     @Column(nullable = false)
     private double longitude;
 
-    @Column(nullable = false)
-    private String hintText;
-
-    @Column(nullable = false)
-    private UUID treasureId;
+    @Builder.Default
+    @OneToMany(mappedBy = "treasure", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Clue> clues = new ArrayList<>();
 
 }

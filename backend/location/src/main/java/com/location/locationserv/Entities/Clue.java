@@ -1,30 +1,26 @@
-package com.location.location_service.Entities;
+package com.location.locationserv.Entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.PrePersist;
 
 import java.util.UUID;
-
-import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 @AllArgsConstructor
 @Builder
 @Data
 @Entity
 @NoArgsConstructor
-public class Treasure {
+public class Clue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -38,19 +34,10 @@ public class Treasure {
     private double longitude;
 
     @Column(nullable = false)
-    private boolean found;
+    private String message;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    @ManyToOne
+    @JoinColumn(name = "treasure_id")
+    private Treasure treasure;
 
 }

@@ -1,4 +1,4 @@
-package com.location.location_service;
+package com.location.locationserv;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

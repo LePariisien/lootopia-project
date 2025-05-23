@@ -14,10 +14,10 @@ spring:
             - Path=/lootopia/**
           filters:
             - StripPrefix=1
-        - id: location-service
-          uri: lb://location_service
+        - id: locationserv
+          uri: lb://locationserv
           predicates:
-            - Path=/location/**
+            - Path=/locationserv/**
           filters:
             - StripPrefix=1
 

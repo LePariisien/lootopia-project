@@ -8,4 +8,4 @@ RUN ./mvnw clean package -DskipTests
 
 EXPOSE ${LOCATION_PORT}
 
-CMD ["java", "-jar", "target/location_service-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/locationserv-0.0.1-SNAPSHOT.jar"]

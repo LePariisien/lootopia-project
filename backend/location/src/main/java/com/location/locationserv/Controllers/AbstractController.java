@@ -1,4 +1,4 @@
-package com.location.location_service.Controllers;
+package com.location.locationserv.Controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 
