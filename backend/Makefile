@@ -34,8 +34,8 @@ logs:
 ## Nettoyer les images/conteneurs non utilisés, sauf db et pgadmin
 clean:
 	@echo "🧹 Nettoyage des conteneurs, images et volumes (sauf db et pgadmin)..."
-	$(DOCKER_COMPOSE) --env-file $(ENV_FILE) stop lootopia eureka gateway
-	$(DOCKER_COMPOSE) --env-file $(ENV_FILE) rm -f lootopia eureka gateway
+	$(DOCKER_COMPOSE) --env-file $(ENV_FILE) stop lootopia payment eureka gateway
+	$(DOCKER_COMPOSE) --env-file $(ENV_FILE) rm -f lootopia payment eureka gateway
 
 ## Afficher l'aide
 help:
