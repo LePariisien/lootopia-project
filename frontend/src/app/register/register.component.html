@@ -1,0 +1,29 @@
+<div class="register-page">
+  <div class="left-panel">
+    <img src="../assets/images/lootopiaLogoGreen.png" alt="Lootopia" class="logo" />
+    <h1>Lootopia</h1>
+    <h2>INSCRIPTION</h2>
+    <p><a routerLink="/login">J’ai déjà un compte, je me connecte.</a></p>
+  </div>
+
+  <div class="right-panel">
+    <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+      <div class="row">
+        <input formControlName="prenom" placeholder="Prénom" />
+        <input formControlName="nom" placeholder="Nom" />
+      </div>
+      <input formControlName="email" type="email" placeholder="Adresse mail*" />
+      <input formControlName="password" type="password" placeholder="Mot de passe*" />
+      <input formControlName="confirmPassword" type="password" placeholder="Confirmation du mot de passe*" />
+      <label class="checkbox">
+        <input type="checkbox" formControlName="auth2fa" />
+        Authentification à 2 facteurs
+      </label>
+      <button type="submit" class="btn-primary">Je m’inscris</button>
+      <div class="divider">ou</div>
+      <button type="button" class="btn-google" (click)="loginWithGoogle()">
+        <img src="assets/google-icon.svg" alt="Google" /> Je me connecte avec Google
+      </button>
+    </form>
+  </div>
+</div>
