@@ -16,7 +16,6 @@ public class StripeService {
                 .setAmount(amountInCents)
                 .setCurrency(currency)
                 .build();
-        System.out.println("PaymentIntentCreateParams: " + params);
         return PaymentIntent.create(params);
     }
 }
