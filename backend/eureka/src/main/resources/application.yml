@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: eureka
+  cloud:
+    discovery:
+      enabled: true
+
+server:
+  port: ${EUREKA_PORT}
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://eureka:${EUREKA_PORT}/eureka/
+  instance:
+    prefer-ip-address: true
