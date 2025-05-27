@@ -1,2 +1,4 @@
 backend/src/main/resources/.env
 .vscode/**
+.env
+**./env
