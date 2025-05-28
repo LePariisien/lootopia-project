@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: payment_service
+  profiles:
+    active: docker
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+
+server:
+  port: ${PAYMENT_PORT}
+  frontend:
+    url: ${SERVER_FRONTEND_URL}
+
+stripe:
+  api:
+    key: ${STRIPE_API_KEY}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:${EUREKA_PORT}/eureka/
+  instance:
+    prefer-ip-address: true
+

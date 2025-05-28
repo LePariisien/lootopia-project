@@ -18,6 +18,7 @@ import jakarta.validation.constraints.Size;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
+@Builder
 @Data
 @Entity
 @NoArgsConstructor

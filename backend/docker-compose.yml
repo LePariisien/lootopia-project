@@ -66,6 +66,19 @@ services:
     networks:
       - lootopia-network
 
+  payment:
+    build: ./payment
+    env_file: 
+      - .env
+    container_name: payment
+    ports:
+      - "${PAYMENT_PORT}:${PAYMENT_PORT}"
+    depends_on:
+      - db
+      - eureka
+    networks:
+      - lootopia-network
+
   gateway:
     build: ./gateway
     env_file: 
