@@ -32,6 +32,7 @@
         <div *ngIf="pack.badge" class="shop-pack-badge">{{ pack.badge }}</div>
         <div class="shop-pack-title">{{ pack.title }}</div>
         <div class="shop-pack-sub">{{ pack.sub }}</div>
+        <img *ngIf="pack.img" [src]="pack.img" alt="" class="mx-auto mb-2 w-20 h-20 object-contain select-none pointer-events-none" />
         <div class="shop-pack-amount">
           <lucide-icon [img]="Crown"></lucide-icon> {{ pack.amount }}
           <span *ngIf="pack.bonus" class="text-green-500 text-lg font-bold">{{ pack.bonus }}</span>
@@ -48,8 +49,6 @@
         </button>
       </div>
     </div>
-
-    <!-- Ajoute ici la section à propos des couronnes -->
     <div class="bg-white rounded-xl shadow p-6 mt-10 mb-8 border border-green-100">
       <div class="flex items-center mb-4 gap-2">
         <lucide-icon [img]="Info" class="text-green-900"></lucide-icon>
