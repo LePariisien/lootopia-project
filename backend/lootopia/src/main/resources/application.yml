@@ -24,6 +24,7 @@ spring:
             enable: true
 
 server:
+  forward-headers-strategy: framework
   port: ${LOOTOPIA_PORT}
   frontend:
     url: ${SERVER_FRONTEND_URL}

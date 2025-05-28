@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -44,7 +46,8 @@ public class TreasureHunt {
     private String description;
 
     @NotNull
-    @Size(min = 1, max = 3)
+    @Min(1)
+    @Max(3)
     private int level;
 
     @NotNull

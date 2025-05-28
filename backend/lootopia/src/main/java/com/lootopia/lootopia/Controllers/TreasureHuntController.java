@@ -1,6 +1,7 @@
 package com.lootopia.lootopia.Controllers;
 
 import com.lootopia.lootopia.Dtos.TreasureHuntDto;
+import com.lootopia.lootopia.Dtos.TreasureHuntWithTreasureDto;
 import com.lootopia.lootopia.Services.TreasureHuntService;
 
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class TreasureHuntController {
     private final TreasureHuntService treasureHuntService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody TreasureHuntDto dto) {
+    public ResponseEntity<?> create(@RequestBody TreasureHuntWithTreasureDto dto) {
         return treasureHuntService.create(dto);
     }
 
@@ -38,6 +39,15 @@ public class TreasureHuntController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         return treasureHuntService.delete(id);
+    }
+
+    @GetMapping("/digAHole")
+    public ResponseEntity<?> digAHole(
+            @RequestParam String treasureId,
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(required = false, defaultValue = "15") double distance) {
+        return treasureHuntService.digAHole(treasureId, latitude, longitude, distance);
     }
 
 }

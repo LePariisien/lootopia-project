@@ -21,7 +21,11 @@ public class ClueDto {
 
     private double longitude;
 
+    private String address;
+
     private String message;
+
+    private int step;
 
     private UUID treasureId;
 
@@ -29,7 +33,9 @@ public class ClueDto {
         this.id = clue.getId();
         this.latitude = clue.getLatitude();
         this.longitude = clue.getLongitude();
+        this.address = clue.getAddress();
         this.message = clue.getMessage();
+        this.step = clue.getStep();
         this.treasureId = clue.getTreasure().getId();
     }
 

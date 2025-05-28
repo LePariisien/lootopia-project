@@ -35,6 +35,9 @@ public class Treasure {
     @Column(nullable = false)
     private double longitude;
 
+    @Column(nullable = false)
+    private String address;
+
     @Builder.Default
     @OneToMany(mappedBy = "treasure", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Clue> clues = new ArrayList<>();

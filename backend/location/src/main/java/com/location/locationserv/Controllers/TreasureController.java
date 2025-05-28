@@ -62,4 +62,13 @@ public class TreasureController extends AbstractController {
         return treasureService.getLocationsNearby(latitude, longitude, distance);
     }
 
+    @GetMapping("/digAHole")
+    public ResponseEntity<?> digAHole(
+            @RequestParam String treasureId,
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(required = false, defaultValue = "5") double distance) {
+        return treasureService.digAHole(treasureId, latitude, longitude, distance);
+    }
+
 }

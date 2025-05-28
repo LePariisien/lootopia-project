@@ -1,5 +1,7 @@
 package com.location.locationserv.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,11 @@ public class ClueController extends AbstractController {
     @PostMapping
     public ResponseEntity<?> createClue(@RequestBody ClueDto clueDto) {
         return clueService.create(clueDto);
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<?> createClue(@RequestBody List<ClueDto> clueDtos) {
+        return clueService.create(clueDtos);
     }
 
     @GetMapping("/{id}")
@@ -44,9 +51,23 @@ public class ClueController extends AbstractController {
         return clueService.getByTreasureId(treasureId);
     }
 
+    @GetMapping("/getByStep/{treasureId}/{step}")
+    public ResponseEntity<?> getClueByStep(@PathVariable String treasureId, @PathVariable int step) {
+        return clueService.getByStep(treasureId, step);
+    }
+
     @GetMapping("/getByLocation/{latitude}/{longitude}")
-    public ResponseEntity<?> getCluesByLocation(@PathVariable double latitude, @PathVariable double longitude) {
+    public ResponseEntity<?> getClueByLocation(@PathVariable double latitude, @PathVariable double longitude) {
         return clueService.getByLocation(latitude, longitude);
+    }
+
+    @GetMapping("/digAHole")
+    public ResponseEntity<?> digAHole(
+            @RequestParam String treasureId,
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(required = false, defaultValue = "5") double distance) {
+        return clueService.digAHole(treasureId, latitude, longitude, distance);
     }
 
 }

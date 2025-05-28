@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @AllArgsConstructor
 @Builder
@@ -27,17 +28,21 @@ public class Clue {
     @Column(updatable = false, nullable = false)
     private UUID id;
 
-    @Column(nullable = false)
     private double latitude;
 
-    @Column(nullable = false)
     private double longitude;
 
-    @Column(nullable = false)
+    @NonNull
+    private String address;
+
+    @NonNull
     private String message;
+
+    private int step;
 
     @ManyToOne
     @JoinColumn(name = "treasure_id")
+    @NonNull
     private Treasure treasure;
 
 }

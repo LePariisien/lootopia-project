@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.location.locationserv.Dtos.ClueDto;
+import com.location.locationserv.Dtos.TreasureDto;
 import com.location.locationserv.Entities.Clue;
 import com.location.locationserv.Entities.Treasure;
 import com.location.locationserv.Repositories.ClueRepository;
@@ -27,27 +28,51 @@ public class ClueService {
 
     public ResponseEntity<?> create(ClueDto clueDto) {
         if (clueDto.getLatitude() == 0 || clueDto.getLongitude() == 0) {
-            return ResponseEntity.badRequest().body("Invalid coordinates");
+            return ResponseEntity.badRequest().body("Coordonnées invalides");
         }
         if (clueDto.getMessage() == null || clueDto.getMessage().isEmpty()) {
-            return ResponseEntity.badRequest().body("Hint text cannot be empty");
+            return ResponseEntity.badRequest().body("Contenu de l'indice manquant");
+        }
+        if (clueDto.getStep() <= 0) {
+            return ResponseEntity.badRequest().body("Le nombre d'étapes ne peut pas être nul ou négatif");
         }
 
-        Clue clue = Clue.builder()
-                .latitude(clueDto.getLatitude())
-                .longitude(clueDto.getLongitude())
-                .message(clueDto.getMessage())
+        TreasureDto treasureDto = new TreasureDto(treasureRepository.findById(clueDto.getTreasureId()).orElse(null));
+        Treasure treasure = Treasure.builder()
+                .id(treasureDto.getId())
+                .latitude(treasureDto.getLatitude())
+                .longitude(treasureDto.getLongitude())
+                .address(treasureDto.getAddress())
+                .clues(null)
                 .build();
 
-        Treasure treasure = treasureRepository.findById(clueDto.getTreasureId()).orElse(null);
-        if (treasure != null) {
-            clue.setTreasure(treasure);
-        } else {
-            return ResponseEntity.badRequest().body("Trésor non trouvé");
-        }
+        Clue clue = Clue.builder()
+                .id(null)
+                .latitude(clueDto.getLatitude())
+                .longitude(clueDto.getLongitude())
+                .address(clueDto.getAddress())
+                .message(clueDto.getMessage())
+                .step(clueDto.getStep())
+                .treasure(treasure)
+                .build();
 
         clueRepository.save(clue);
         return ResponseEntity.ok("Indice créé avec succès");
+    }
+
+    public ResponseEntity<?> create(List<ClueDto> ClueDtos) {
+        if (ClueDtos == null || ClueDtos.isEmpty()) {
+            return ResponseEntity.badRequest().body("Liste d'indices vide");
+        }
+
+        for (ClueDto clueDto : ClueDtos) {
+            ResponseEntity<?> response = create(clueDto);
+            if (response.getStatusCode().isError()) {
+                return response;
+            }
+        }
+
+        return ResponseEntity.ok("Indices créés avec succès");
     }
 
     public ResponseEntity<?> get(String id) {
@@ -64,10 +89,15 @@ public class ClueService {
         if (existingClue == null) {
             return ResponseEntity.notFound().build();
         }
+        if (clueDto.getStep() <= 0) {
+            return ResponseEntity.badRequest().body("Le nombre d'étapes ne peut pas être nul ou négatif");
+        }
 
-        existingClue.setMessage(clueDto.getMessage());
         existingClue.setLatitude(clueDto.getLatitude());
         existingClue.setLongitude(clueDto.getLongitude());
+        existingClue.setAddress(clueDto.getAddress());
+        existingClue.setMessage(clueDto.getMessage());
+        existingClue.setStep(clueDto.getStep());
 
         Treasure treasure = treasureRepository.findById(clueDto.getTreasureId()).orElse(null);
         if (treasure != null) {
@@ -107,12 +137,37 @@ public class ClueService {
         if (latitude == 0 || longitude == 0) {
             return ResponseEntity.badRequest().body("Coordonées invalides");
         }
-        List<Clue> clues = clueRepository.findByLatitudeAndLongitude(latitude, longitude);
-        if (clues.isEmpty()) {
+        Clue clues = clueRepository.findByLatitudeAndLongitude(latitude, longitude);
+        if (clues == null) {
             return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(clues);
+    }
+
+    public ResponseEntity<?> digAHole(String treasureId, double longitude, double latitude, double distance) {
+        if (treasureId == null || distance == 0 || longitude == 0 || latitude == 0) {
+            return ResponseEntity.badRequest().body("Coordonées ou distance invalides");
+        }
+
+        List<Clue> clues = clueRepository.findClueNerby(UUID.fromString(treasureId), longitude, latitude, distance);
+        if (clues.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(clues.stream().map(ClueDto::new).toList());
+    }
+
+    public ResponseEntity<?> getByStep(String treasureId, int step) {
+        if (step <= 0) {
+            return ResponseEntity.badRequest().body("Le nombre d'étapes ne peut pas être nul ou négatif");
+        }
+
+        Clue clue = clueRepository.findByTreasureIdAndStep(UUID.fromString(treasureId), step);
+        if (clue == null || clue.getStep() != step) {
+            return ResponseEntity.badRequest().body("Aucun indice trouvé pour cette étape");
+        }
+        return ResponseEntity.ok(new ClueDto(clue));
     }
 
 }

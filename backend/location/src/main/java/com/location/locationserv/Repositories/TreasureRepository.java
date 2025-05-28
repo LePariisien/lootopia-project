@@ -22,4 +22,15 @@ public interface TreasureRepository extends JpaRepository<Treasure, UUID> {
                         @Param("longitude") double longitude,
                         @Param("distance") double distance);
 
+        @Query(value = "SELECT * FROM Treasure t WHERE " +
+                        "t.id = :treasureId AND " +
+                        "(6371000 * acos(cos(radians(:latitude)) * cos(radians(t.latitude)) * " +
+                        "cos(radians(t.longitude) - radians(:longitude)) + " +
+                        "sin(radians(:latitude)) * sin(radians(t.latitude)))) < :distance", nativeQuery = true)
+        List<Treasure> findTreasureNerby(
+                        @Param("treasureId") UUID treasureId,
+                        @Param("latitude") double latitude,
+                        @Param("longitude") double longitude,
+                        @Param("distance") double distance);
+
 }

@@ -22,12 +22,15 @@ public class TreasureDto {
 
     private double longitude;
 
+    private String address;
+
     private List<UUID> clueIds;
 
     public TreasureDto(Treasure treasure) {
         this.id = treasure.getId();
         this.latitude = treasure.getLatitude();
         this.longitude = treasure.getLongitude();
+        this.address = treasure.getAddress();
         this.clueIds = treasure.getClues().stream().map(clue -> clue.getId()).toList();
     }
 

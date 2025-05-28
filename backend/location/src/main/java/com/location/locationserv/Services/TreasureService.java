@@ -32,8 +32,10 @@ public class TreasureService {
         }
 
         Treasure treasure = Treasure.builder()
+                .id(null)
                 .latitude(treasureDto.getLatitude())
                 .longitude(treasureDto.getLongitude())
+                .address(treasureDto.getAddress())
                 .build();
 
         if (treasureDto.getClueIds() != null) {
@@ -48,7 +50,7 @@ public class TreasureService {
         }
 
         treasureRepository.save(treasure);
-        return ResponseEntity.ok("Trésor créé avec succès");
+        return ResponseEntity.ok(new TreasureDto(treasure));
     }
 
     public ResponseEntity<?> get(String id) {
@@ -77,6 +79,7 @@ public class TreasureService {
 
         existingTreasure.setLatitude(treasureDto.getLatitude());
         existingTreasure.setLongitude(treasureDto.getLongitude());
+        existingTreasure.setAddress(treasureDto.getAddress());
 
         if (treasureDto.getClueIds() != null) {
             for (UUID clueId : treasureDto.getClueIds()) {
@@ -90,7 +93,7 @@ public class TreasureService {
         }
 
         treasureRepository.save(existingTreasure);
-        return ResponseEntity.ok("Trésor modifié avec succès");
+        return ResponseEntity.ok(new TreasureDto(existingTreasure));
     }
 
     public ResponseEntity<?> delete(String id) {
@@ -125,6 +128,20 @@ public class TreasureService {
         }
 
         List<Treasure> treasures = treasureRepository.findTreasureNerby(longitude, latitude, distance);
+        if (treasures.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(treasures.stream().map(TreasureDto::new).toList());
+    }
+
+    public ResponseEntity<?> digAHole(String treasureId, double longitude, double latitude, double distance) {
+        if (treasureId == null || distance == 0 || longitude == 0 || latitude == 0) {
+            return ResponseEntity.badRequest().body("Coordonées ou distance invalides");
+        }
+
+        List<Treasure> treasures = treasureRepository.findTreasureNerby(UUID.fromString(treasureId), longitude,
+                latitude, distance);
         if (treasures.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
