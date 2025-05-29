@@ -1,3 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+:root {
+  --color-green-50: #f0f9f4;
+  --color-green-100: #d8eee1;
+  --color-green-200: #b3dcc3;
+  --color-green-300: #8ec9a6;
+  --color-green-400: #68b589;
+  --color-green-500: #42a16d;
+  --color-green-600: #2a8d57;
+  --color-green-700: #237148;
+  --color-green-800: #1d5a3a;
+  --color-green-900: #184a30;
+}

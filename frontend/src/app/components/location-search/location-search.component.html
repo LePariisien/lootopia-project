@@ -1,0 +1,29 @@
+<div class="space-y-2 md:col-span-2">
+  <label htmlFor="location" class="text-green-800 block">
+    Lieu principal <span class="text-[#FED35C]">*</span>
+  </label>
+  <div class="flex">
+    <input [id]="inputId" type="text" required [placeholder]="placeholder || 'Ex: Tour Eiffel, Paris'"
+      [ngModel]="model"
+      (ngModelChange)="onModelChange($event)"
+      class="flex-1 p-2 bg-[#E7F3EB] border border-green-200 rounded-md focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400 placeholder-gray-500" />
+    <button (click)="onSearchButtonClick()"
+      class="ml-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center justify-center">
+      <lucide-icon [img]="Search" class="size-4 md:mr-2"></lucide-icon>
+      <span class="hidden md:inline">Rechercher</span>
+    </button>
+    <button (click)="getUserLocation()"
+      class="ml-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center justify-center">
+      <lucide-icon [img]="LocateIcon" class="size-4 md:mr-2"></lucide-icon>
+      <span class="hidden md:inline">Ma position</span>
+    </button>
+  </div>
+</div>
+
+<div class="space-y-2">
+  <p class="text-green-700 my-2 text-sm">
+    Sélectionnez un lieu sur la carte pour définir le point de départ de votre chasse au trésor.
+  </p>
+  <div style="height: 300px; width: 100%;" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)"
+    (leafletClick)="mapClicked($event)"></div>
+</div>
