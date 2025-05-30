@@ -1,4 +1,4 @@
-package com.lootopia.payment;
+package com.lootopia.paymentserv;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: payment_service
+    name: paymentserv
   profiles:
     active: docker
 
@@ -28,4 +28,3 @@ eureka:
       defaultZone: http://eureka:${EUREKA_PORT}/eureka/
   instance:
     prefer-ip-address: true
-

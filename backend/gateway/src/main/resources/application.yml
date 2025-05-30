@@ -20,6 +20,12 @@ spring:
             - Path=/locationserv/**
           filters:
             - StripPrefix=1
+        - id: paymentserv
+          uri: lb://paymentserv
+          predicates:
+            - Path=/paymentserv/**
+          filters:
+            - StripPrefix=1
       globalcors:
         corsConfigurations:
           "[/**]":
@@ -68,5 +74,7 @@ springdoc:
         url: /lootopia/v3/api-docs
       - name: Location service
         url: /locationserv/v3/api-docs
+      - name: Payment service
+        url: /paymentserv/v3/api-docs
   servers:
     url: http://localhost:${GATEWAY_PORT}
