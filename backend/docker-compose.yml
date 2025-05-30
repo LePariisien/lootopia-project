@@ -1,5 +1,3 @@
-# version: "3.8"
-
 services:
   db:
     image: postgres
@@ -49,6 +47,19 @@ services:
     container_name: lootopia
     ports:
       - "${LOOTOPIA_PORT}:${LOOTOPIA_PORT}"
+    depends_on:
+      - db
+      - eureka
+    networks:
+      - lootopia-network
+
+  location:
+    build: ./location
+    env_file: 
+      - .env
+    container_name: location
+    ports:
+      - "${LOCATION_PORT}:${LOCATION_PORT}"
     depends_on:
       - db
       - eureka

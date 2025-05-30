@@ -8,6 +8,17 @@
 
 @layer base {
   :root {
+    --color-green-50: #f0f9f4;
+    --color-green-100: #d8eee1;
+    --color-green-200: #b3dcc3;
+    --color-green-300: #8ec9a6;
+    --color-green-400: #68b589;
+    --color-green-500: #42a16d;
+    --color-green-600: #2a8d57;
+    --color-green-700: #237148;
+    --color-green-800: #1d5a3a;
+    --color-green-900: #184a30;
+
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -43,6 +54,17 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
+    --color-green-50: #123B2A;
+    --color-green-100: #174A34;
+    --color-green-200: #1D5A3A;
+    --color-green-300: #237148;
+    --color-green-400: #2A8D57;
+    --color-green-500: #42A16D;
+    --color-green-600: #68B589;
+    --color-green-700: #8EC9A6;
+    --color-green-800: #B3DCC3;
+    --color-green-900: #D8EEE1;
+
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;

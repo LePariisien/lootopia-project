@@ -1,35 +1,45 @@
 package com.lootopia.lootopia.Entities;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Participations")
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Participation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @NotNull
+    @Column(updatable = false)
     private UUID id;
 
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "player_id", nullable = false)
-    private Player player; // Joueur qui participe
-
-    @ManyToOne
-    @JoinColumn(name = "treasure_hunt_id", nullable = false)
-    private TreasureHunt treasureHunt; // Chasse au trésor concernée
+    private Player player;
 
     @NotNull
-    @Column(nullable = false)
-    private String status = "pending"; // Statut de la participation : pending, accepted, rejected
+    @ManyToOne
+    private TreasureHunt treasureHunt;
+
+    @NotNull
+    private double progress;
+
+    @NotNull
+    private String status;
+
 }

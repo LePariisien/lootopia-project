@@ -45,6 +45,4 @@ public class Player {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TreasureHunt> createdTreasureHunts; // Chasses créées par le joueur
 }
