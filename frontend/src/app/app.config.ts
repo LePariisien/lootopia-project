@@ -1,8 +1,10 @@
+import { bootstrapApplication } from '@angular/platform-browser';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { jwtInterceptor } from './interceptors/jwt.interceptor'; // 👈 c’est une fonction maintenant
+import { jwtInterceptor } from './interceptors/jwt.interceptor';
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
+import { AppComponent } from './app.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,3 +15,9 @@ export const appConfig: ApplicationConfig = {
     )
   ]
 };
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideHttpClient(withInterceptors([])),
+  ]
+});

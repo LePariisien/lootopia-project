@@ -1,0 +1,109 @@
+.register-page {
+  display: flex;
+  height: 100vh;
+  background-color: #002820;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.register-page .left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-page .left-panel img {
+  width: 120px;
+  margin-bottom: 20px;
+}
+
+.register-page .left-panel h1 {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.register-page .left-panel h2 {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.register-page .left-panel p {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.register-page .left-panel p a {
+  color: white;
+  text-decoration: underline;
+}
+
+.register-page .right-panel {
+  flex: 1;
+  background-color: #f2f2f2;
+  padding: 40px;
+  border-radius: 10px;
+  margin: auto;
+  max-width: 500px;
+  color: black;
+}
+
+.register-page .right-panel form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.register-page .right-panel .row {
+  display: flex;
+  gap: 10px;
+}
+
+.register-page .right-panel .row input {
+  flex: 1;
+}
+
+.register-page .right-panel input[type="text"],
+.register-page .right-panel input[type="email"],
+.register-page .right-panel input[type="password"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.register-page .right-panel .checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.register-page .right-panel .btn-primary {
+  background-color: #2e8b57;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.register-page .right-panel .divider {
+  text-align: center;
+  margin: 10px 0;
+  color: gray;
+}
+
+.register-page .right-panel .btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: white;
+  color: black;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
