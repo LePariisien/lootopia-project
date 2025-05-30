@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class StripeService {
 
     public PaymentIntent createPaymentIntent(Double amount) throws StripeException {
-        long amountInCents = Math.round(amount * 100);
+        long amountInCents = Math.round(amount);
         String currency = "eur";
         PaymentIntentCreateParams params =
             PaymentIntentCreateParams.builder()
