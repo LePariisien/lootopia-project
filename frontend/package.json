@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/CLI": "npm:@angular/cli@^19.2.13",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",
@@ -17,7 +18,13 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
+    "@stripe/stripe-js": "^7.3.0",
+    "tailwindcss": "^4.1.7",
+    "@tailwindcss/postcss": "^4.1.7",
+    "angular": "^1.8.3",
+    "lucide-angular": "^0.511.0",
     "rxjs": "~7.8.0",
+    "tailwindcss-animate": "^1.0.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
@@ -34,7 +41,6 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.5.3",
-    "tailwindcss": "^3.4.3",
     "typescript": "~5.7.2"
   }
 }
