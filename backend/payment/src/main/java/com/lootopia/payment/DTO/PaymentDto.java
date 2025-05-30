@@ -1,4 +1,5 @@
-package com.lootopia.payment.DTO;
+package com.lootopia.paymentserv.DTO;
+
 import lombok.Data;
 
 @Data

@@ -1,12 +1,12 @@
-package com.lootopia.payment.Controllers;
+package com.lootopia.paymentserv.Controllers;
 
-import com.lootopia.payment.Services.StripeService;
+import com.lootopia.paymentserv.Services.StripeService;
 import com.stripe.model.PaymentIntent;
 import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import com.lootopia.payment.DTO.PaymentDto;
+import com.lootopia.paymentserv.DTO.PaymentDto;
 
 @RestController
 @RequestMapping("/api/payment")

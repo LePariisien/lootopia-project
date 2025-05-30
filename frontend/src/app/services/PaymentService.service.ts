@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ApiRoutes } from '../api-routes';
 
 interface PaymentDto {
   clientSecret: string;
@@ -8,13 +9,11 @@ interface PaymentDto {
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
-  private apiUrl = 'http://localhost:8082/api/payment';
-
   constructor(private http: HttpClient) {}
 
   createPaymentIntent(amount: number): Observable<PaymentDto> {
     return this.http.post<PaymentDto>(
-      `${this.apiUrl}/create-payment-intent?amount=${amount}`,
+      ApiRoutes.createPaymentIntent(amount),
       {}
     );
   }

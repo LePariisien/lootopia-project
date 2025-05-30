@@ -1,4 +1,4 @@
-package com.lootopia.payment.Services;
+package com.lootopia.paymentserv.Services;
 
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
@@ -11,8 +11,7 @@ public class StripeService {
     public PaymentIntent createPaymentIntent(Double amount) throws StripeException {
         long amountInCents = Math.round(amount);
         String currency = "eur";
-        PaymentIntentCreateParams params =
-            PaymentIntentCreateParams.builder()
+        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(amountInCents)
                 .setCurrency(currency)
                 .build();
