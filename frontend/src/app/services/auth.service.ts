@@ -1,21 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { ApiRoutes } from '../api-routes';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private loginUrl = 'http://localhost:8080/api/auth/login';
-  private verifyMfaUrl = 'http://localhost:8080/api/auth/verify-mfa';
-  private refreshUrl = 'http://localhost:8080/api/token/refresh';
-
   constructor(private http: HttpClient) {}
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post(this.loginUrl, { username, password });
+    return this.http.post(ApiRoutes.login(), { username, password });
   }
 
   verifyMfa(username: string, mfaCode: string): Observable<any> {
-    return this.http.post(this.verifyMfaUrl + `?username=${username}&mfaCode=${mfaCode}`, {});
+    return this.http.post(ApiRoutes.verifyMfa(username, mfaCode), {});
   }
 
   refreshToken(): Observable<any> {
@@ -23,6 +20,6 @@ export class AuthService {
     if (!refreshToken) {
       return throwError(() => new Error('Pas de refreshToken'));
     }
-    return this.http.post<any>(this.refreshUrl, { refreshToken });
+    return this.http.post<any>(ApiRoutes.refresh(), { refreshToken });
   }
 }

@@ -14,8 +14,35 @@ spring:
             - Path=/lootopia/**
           filters:
             - StripPrefix=1
+        - id: locationserv
+          uri: lb://locationserv
+          predicates:
+            - Path=/locationserv/**
+          filters:
+            - StripPrefix=1
+        - id: paymentserv
+          uri: lb://paymentserv
+          predicates:
+            - Path=/paymentserv/**
+          filters:
+            - StripPrefix=1
+      globalcors:
+        corsConfigurations:
+          "[/**]":
+            allowedOrigins:
+              - "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
 
 server:
+  forward-headers-strategy: framework
   port: ${GATEWAY_PORT}
 
 eureka:
@@ -35,6 +62,7 @@ management:
         include: "*"
 
 springdoc:
+  show-default-server: false
   api-docs:
     enabled: true
   swagger-ui:
@@ -43,4 +71,10 @@ springdoc:
     config-url: /v3/api-docs/swagger-config
     urls:
       - name: Lootopia
-        url: http://localhost:${GATEWAY_PORT}/lootopia/v3/api-docs
+        url: /lootopia/v3/api-docs
+      - name: Location service
+        url: /locationserv/v3/api-docs
+      - name: Payment service
+        url: /paymentserv/v3/api-docs
+  servers:
+    url: http://localhost:${GATEWAY_PORT}

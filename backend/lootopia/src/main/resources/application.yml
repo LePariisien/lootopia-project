@@ -24,6 +24,7 @@ spring:
             enable: true
 
 server:
+  forward-headers-strategy: framework
   port: ${LOOTOPIA_PORT}
   frontend:
     url: ${SERVER_FRONTEND_URL}
@@ -34,5 +35,7 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka:${EUREKA_PORT}/eureka/
+    register-with-eureka: true
+    fetch-registry: true
   instance:
     prefer-ip-address: true

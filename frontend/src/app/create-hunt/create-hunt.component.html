@@ -1,0 +1,219 @@
+<div class="min-h-screen bg-gradient-to-b from-green-50 to-green-100 p-4 md:p-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-green-900">Créer une Chasse au Trésor</h1>
+        <p class="text-green-700">Concevez une aventure passionnante pour les chasseurs de trésors</p>
+      </div>
+      <div class="flex gap-2">
+        <button (click)="saveDraft()"
+          class="border-green-300 text-green-800 hover:bg-green-100 px-4 py-2 border border-green-200 rounded-md transition-colors duration-200 disabled">
+          Enregistrer le brouillon
+        </button>
+        <button (click)="publishHunt()"
+          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors duration-200">Publier
+          la chasse</button>
+      </div>
+    </div>
+
+    <div class="w-full">
+      <div class="flex flex-wrap justify-center md:justify-start bg-green-50 text-[#082B21] mb-6 rounded-md p-2 gap-2">
+        <button (click)="setActiveTab('informations')"
+          [ngClass]="{'bg-green-600 text-white': activeTab === 'informations', 'hover:bg-green-200': activeTab !== 'informations'}"
+          class="flex-1 py-2 px-4 text-center border border-green-200 rounded-md transition-colors duration-200">
+          Informations générales
+        </button>
+        <button (click)="setActiveTab('etapes')"
+          [ngClass]="{'bg-green-600 text-white': activeTab === 'etapes', 'hover:bg-green-200': activeTab !== 'etapes'}"
+          class="flex-1 py-2 px-4 text-center border border-green-200 rounded-md transition-colors duration-200">
+          Étapes et indices
+        </button>
+        <button (click)="setActiveTab('options')"
+          [ngClass]="{'bg-green-600 text-white': activeTab === 'options', 'hover:bg-green-200': activeTab !== 'options'}"
+          class="flex-1 py-2 px-4 text-center border border-green-200 rounded-md transition-colors duration-200">
+          Options avancées
+        </button>
+      </div>
+
+      <div [ngSwitch]="activeTab">
+        <div *ngSwitchCase="'informations'" class="bg-[#F9FAF8]">
+          <div class="border border-green-200 shadow-lg rounded-lg p-6">
+            <h2 class="text-xl font-bold text-green-900 mb-2">Informations de base</h2>
+            <p class="text-green-700 mb-6">
+              Définissez les détails principaux de votre chasse au trésor
+            </p>
+            <div class="space-y-4">
+              <div class="space-y-2">
+                <label htmlFor="title" class="text-green-800 block">
+                  Titre de la chasse <span class="text-[#FED35C]">*</span>
+                </label>
+                <input id="title" type="text" required placeholder="Ex: Le Trésor Perdu de Paris" [(ngModel)]="huntTitle"
+                  class="w-full p-2 bg-[#E7F3EB] border border-green-200 rounded-md focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400 placeholder-gray-500" />
+              </div>
+
+              <div class="space-y-2">
+                <label htmlFor="description" class="text-green-800 block">
+                  Description <span class="text-[#FED35C]">*</span>
+                </label>
+                <textarea id="description" required placeholder="Décrivez votre chasse au trésor en quelques phrases..."
+                  [(ngModel)]="huntDescription"
+                  class="w-full p-2 min-h-[120px] bg-[#E7F3EB] border border-green-200 rounded-md focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400 placeholder-gray-500"></textarea>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label htmlFor="difficulty" class="text-green-800 block">
+                    Niveau de difficulté <span class="text-[#FED35C]">*</span>
+                  </label>
+                  <select id="difficulty" required [(ngModel)]="huntDifficulty"
+                    class="w-full p-2 bg-[#E7F3EB] border border-green-200 rounded-md focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400">
+                    <option value="">Sélectionnez un niveau</option>
+                    <option value="easy">Facile</option>
+                    <option value="medium">Moyen</option>
+                    <option value="hard">Difficile</option>
+                  </select>
+                </div>
+
+                <div class="space-y-2">
+                  <label htmlFor="duration" class="text-green-800 block">
+                    Durée estimée
+                  </label>
+                  <div class="flex items-center">
+                    <input id="duration" type="number" placeholder="60" min="5" max="1440" value="60" [(ngModel)]="estimatedDuration"
+                      class="flex-1 p-2 bg-[#E7F3EB] border border-green-200 rounded-md focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400 placeholder-gray-500" />
+                    <span class="ml-2 text-green-700">minutes</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <app-location-search
+                  [(model)]="huntLocation"
+                  [label]="'Lieu principal'"
+                  [placeholder]="'Ex: Tour Eiffel, Paris'"
+                  [inputId]="'hunt-location'"
+                  (coordinatesChange)="onHuntCoordinatesChange($event)">
+                </app-location-search>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-green-800 block">Image de couverture</label>
+                <label for="cover-image-upload"
+                  class="border-2 border-dashed border-green-200 rounded-md p-6 text-center hover:bg-green-50 transition-colors cursor-pointer block">
+                  <lucide-icon [img]="Image" class="h-8 w-8 text-green-600 mx-auto mb-2"></lucide-icon>
+                  <p class="text-green-700 text-sm">Glissez une image ou cliquez pour télécharger</p>
+                  <p class="text-green-600 text-xs mt-1">JPG, PNG ou GIF • 5 MB maximum</p>
+                  <input id="cover-image-upload" type="file" class="hidden" (change)="onFileSelected($event)" />
+                </label>
+                <div *ngIf="coverImage" class="text-sm text-green-600 mt-2">
+                  Image sélectionnée: {{ coverImage.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'etapes'" class="bg-[#F9FAF8]">
+          <div class="border border-green-200 shadow-lg rounded-lg p-6 mb-6">
+            <div class="flex flex-row items-center justify-between mb-6">
+              <div>
+                <h2 class="text-xl font-bold text-green-900 mb-2">Étapes de la chasse</h2>
+                <p class="text-green-700">
+                  Créez les étapes et indices que les participants devront suivre (min. 2)
+                </p>
+              </div>
+              <button (click)="addStep()"
+                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center">
+                <lucide-icon [img]="Plus" class="size-4 mr-2"></lucide-icon>
+                Ajouter une étape
+              </button>
+            </div>
+            <div class="flex flex-col space-y-6 gap">
+              <app-hunt-step *ngFor="let step of huntSteps; let i = index" [step]="step" [stepNumber]="i + 1"
+                (remove)="removeStep(step.id)"></app-hunt-step>
+            </div>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'options'" class="bg-[#F9FAF8]">
+          <div class="border border-green-200 shadow-lg rounded-lg p-6">
+            <h2 class="text-xl font-bold text-green-900 mb-2">Options avancées</h2>
+            <p class="text-green-700 mb-6">
+              Personnalisez davantage votre chasse au trésor
+            </p>
+            <div class="space-y-6">
+              <div class="space-y-4">
+                <h3 class="font-medium text-green-800">Visibilité</h3>
+                <div class="flex items-center space-x-2">
+                  <input type="radio" id="public" name="visibility" value="public" [(ngModel)]="visibility"
+                    class="text-green-600 focus:ring-green-400" />
+                  <label htmlFor="public" class="text-green-700">
+                    Publique - Visible par tous les utilisateurs
+                  </label>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <input type="radio" id="private" name="visibility" value="private" [(ngModel)]="visibility"
+                    class="text-green-600 focus:ring-green-400" />
+                  <label htmlFor="private" class="text-green-700">
+                    Privée - Accessible uniquement avec un code
+                  </label>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <input type="radio" id="friends" name="visibility" value="friends" [(ngModel)]="visibility"
+                    class="text-green-600 focus:ring-green-400" />
+                  <label htmlFor="friends" class="text-green-700">
+                    Amis - Visible uniquement par vos amis
+                  </label>
+                </div>
+              </div>
+
+              <hr class="bg-green-200 h-px border-0" />
+
+              <div class="space-y-4">
+                <h3 class="font-medium text-green-800">Récompenses</h3>
+                <div class="space-y-2">
+                  <label htmlFor="reward-description" class="text-green-800 block">
+                    Description de la récompense
+                  </label>
+                  <textarea id="reward-description"
+                    placeholder="Décrivez la récompense que les participants recevront..."
+                    [(ngModel)]="rewardDescription"
+                    class="w-full p-2 min-h-[80px] bg-[#E7F3EB] border border-green-200 rounded-md focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400 placeholder-gray-500"></textarea>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <input type="checkbox" id="badge" [(ngModel)]="rewardBadge"
+                    class="text-green-600 focus:ring-green-400" />
+                  <label htmlFor="badge" class="text-green-700">
+                    Attribuer un badge aux participants qui terminent
+                  </label>
+                </div>
+              </div>
+
+              <hr class="bg-green-200 h-px border-0" />
+
+              <div class="space-y-4">
+                <h3 class="font-medium text-green-800">Limitations</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="space-y-2">
+                    <label htmlFor="max-participants" class="text-green-800 block">
+                      Nombre maximum de participants <span class="text-[#FED35C]">*</span>
+                    </label>
+                    <input id="max-participants" type="number" required placeholder="Illimité" [(ngModel)]="maxParticipants"
+                      class="w-full p-2 bg-[#E7F3EB] border border-green-200 rounded-md focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400 placeholder-gray-500" />
+                  </div>
+                  <div class="space-y-2">
+                    <label htmlFor="end-date" class="text-green-800 block">
+                      Date de fin <span class="text-[#FED35C]">*</span>
+                    </label>
+                    <input id="end-date" type="date" required [(ngModel)]="endDate"
+                      class="w-full p-2 bg-[#E7F3EB] border border-green-200 rounded-md focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400 placeholder-gray-500" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

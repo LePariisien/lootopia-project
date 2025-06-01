@@ -1,132 +1,127 @@
 package com.lootopia.lootopia.Services;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import com.lootopia.lootopia.Dtos.ClueDto;
+import com.lootopia.lootopia.Dtos.TreasureDto;
 import com.lootopia.lootopia.Dtos.TreasureHuntDto;
-import com.lootopia.lootopia.Entities.Participation;
-import com.lootopia.lootopia.Entities.Player;
+import com.lootopia.lootopia.Dtos.TreasureHuntWithTreasureDto;
 import com.lootopia.lootopia.Entities.TreasureHunt;
-import com.lootopia.lootopia.Exceptions.CustomException;
-import com.lootopia.lootopia.Repositories.ParticipationRepository;
 import com.lootopia.lootopia.Repositories.TreasureHuntRepository;
-import com.lootopia.lootopia.Repositories.PlayerRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import jakarta.persistence.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TreasureHuntService {
-    
-    @Autowired
-    private final TreasureHuntRepository treasureHuntRepository;
 
     @Autowired
-    private final ParticipationRepository participationRepository;
-    
+    private TreasureHuntRepository treasureHuntRepository;
+
     @Autowired
-    private PlayerRepository playerRepository;
+    private LocationServClient locationServClient;
 
-    public ResponseEntity<?> getAllTreasureHunts() {
-        List<TreasureHunt> AllTreasureHunt = treasureHuntRepository.findAll();
-        if (AllTreasureHunt.isEmpty()) {
-            throw new CustomException("Erreur : Aucune chasse au trésor trouvée.", HttpStatus.NOT_FOUND);
-        }
-        List<TreasureHuntDto> result = new ArrayList<>();
-        for (TreasureHunt treasureHunt : AllTreasureHunt) {
-            result.add(new TreasureHuntDto(treasureHunt));   
-        }
-        return ResponseEntity.ok(result);
+    public ResponseEntity<?> create(TreasureHuntWithTreasureDto dto) {
+        TreasureDto treasureDto = new TreasureDto(
+                null,
+                dto.getTreasure().getLatitude(),
+                dto.getTreasure().getLongitude(),
+                dto.getTreasure().getAddress(),
+                null);
 
+        TreasureDto response = locationServClient.createTreasure(treasureDto);
+        if (response == null) {
+            return ResponseEntity.badRequest().body("Erreur lors de la création du trésor");
+        }
+
+        TreasureHunt treasureHunt = new TreasureHunt(
+                null,
+                dto.getName(),
+                dto.getDescription(),
+                dto.getLevel(),
+                (response != null) ? response.getId() : null,
+                dto.getStartDate(),
+                dto.getEndDate(),
+                dto.getOrganizer_id(),
+                dto.isFound(),
+                null,
+                null);
+
+        treasureHuntRepository.save(treasureHunt);
+        return ResponseEntity.ok(new TreasureHuntDto(treasureHunt));
     }
 
-    public ResponseEntity<?> getTreasureHuntById(Long id) {
-        TreasureHunt result = treasureHuntRepository.findById(id)
-            .orElseThrow(() -> new CustomException("Erreur : La chasse au trésor n'existe pas.", HttpStatus.NOT_FOUND));
-
-        return ResponseEntity.ok(new TreasureHuntDto(result));
+    public ResponseEntity<?> get(Long id) {
+        Optional<TreasureHunt> hunt = treasureHuntRepository.findById(id);
+        return hunt.map(value -> ResponseEntity.ok(new TreasureHuntDto(value)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public ResponseEntity<?> createTreasureHunt(TreasureHuntDto treasureHuntDto) {
-        try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-            Player player = playerRepository.findByUserUsername(username)
-                    .orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
-
-            TreasureHunt hunt = TreasureHunt.builder()
-                    .name(treasureHuntDto.getName())
-                    .description(treasureHuntDto.getDescription())
-                    .level(treasureHuntDto.getLevel())
-                    .location(treasureHuntDto.getLocation())
-                    .startDate(treasureHuntDto.getStartDate())
-                    .endDate(treasureHuntDto.getEndDate())
-                    .creator(player)
-                    .createdAt(new java.util.Date())
-                    .build();
-            treasureHuntRepository.save(hunt);
-
-            return ResponseEntity.ok("Succès : La chasse au trésor '" + treasureHuntDto.getName() + "' a été créée avec succès.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création de la chasse au trésor.");
+    public ResponseEntity<?> getAll() {
+        List<TreasureHuntDto> dtos = treasureHuntRepository.findAll().stream().map(TreasureHuntDto::new).toList();
+        if (dtos.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
+
+        return ResponseEntity.ok(dtos);
     }
 
-    public ResponseEntity<?> updateTreasureHunt(TreasureHuntDto updatedTreasureHunt) {
-        var existingTreasureHunt = treasureHuntRepository.findById(updatedTreasureHunt.getId())
-                .orElseThrow(() -> new CustomException("chasse introuvable", HttpStatus.NOT_FOUND));
+    public ResponseEntity<?> update(TreasureHuntDto dto) {
+        Optional<TreasureHunt> opt = treasureHuntRepository.findById(dto.getId());
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
-        existingTreasureHunt.setName(updatedTreasureHunt.getName());
-        existingTreasureHunt.setDescription(updatedTreasureHunt.getDescription());
-        existingTreasureHunt.setLevel(updatedTreasureHunt.getLevel());
-        existingTreasureHunt.setLocation(updatedTreasureHunt.getLocation());
-        existingTreasureHunt.setStartDate(updatedTreasureHunt.getStartDate());
-        existingTreasureHunt.setEndDate(updatedTreasureHunt.getEndDate());
+        TreasureHunt hunt = opt.get();
+        hunt.setName(dto.getName());
+        hunt.setDescription(dto.getDescription());
+        hunt.setLevel(dto.getLevel());
+        hunt.setStartDate(dto.getStartDate());
+        hunt.setEndDate(dto.getEndDate());
+        hunt.setFound(dto.isFound());
+        treasureHuntRepository.save(hunt);
 
-        treasureHuntRepository.save(existingTreasureHunt);
-        return ResponseEntity.ok("Succès : La chasse au trésor " + updatedTreasureHunt.getName() + " a été mise à jour avec succès.");
-    };
+        return ResponseEntity.ok(new TreasureHuntDto(hunt));
+    }
 
-    public String deleteTreasureHunt(Long id) {
+    public ResponseEntity<?> delete(Long id) {
         if (!treasureHuntRepository.existsById(id)) {
-            throw new EntityNotFoundException("Erreur : La chasse au trésor n'existe pas.");
+            return ResponseEntity.notFound().build();
         }
         treasureHuntRepository.deleteById(id);
-        return "Succès : La chasse au trésor a été supprimée avec succès.";
+
+        return ResponseEntity.ok("Chasse au trésor supprimée !");
     }
 
-    public List<Participation> getParticipationsForTreasureHunt(Long treasureHuntId) {
-        TreasureHunt treasureHunt = treasureHuntRepository.findById(treasureHuntId)
-                .orElseThrow(() -> new EntityNotFoundException("Chasse au trésor introuvable."));
-        return participationRepository.findAll().stream()
-                .filter(participation -> participation.getTreasureHunt().equals(treasureHunt))
-                .toList();
-    }
-
-    public ResponseEntity<?> getTreasureHuntsByPlayerId() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Player player = playerRepository.findByUserUsername(username)
-                .orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
-
-        List<TreasureHunt> playerTreasureHunts = treasureHuntRepository.findAll().stream()
-                .filter(treasureHunt -> treasureHunt.getCreator().equals(player))
-                .toList();
-
-        if (playerTreasureHunts.isEmpty()) {
-            throw new CustomException("Erreur : Aucune chasse au trésor trouvée pour ce joueur.", HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> digAHole(String treasureId, double latitude, double longitude, double distance) {
+        try {
+            List<ClueDto> clueResponse = locationServClient.digAClue(UUID.fromString(treasureId), latitude, longitude,
+                    distance);
+            if (clueResponse != null && !clueResponse.isEmpty()) {
+                return ResponseEntity.ok(clueResponse);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("1) Erreur lors de l'appel à digAHole" + e.getMessage());
         }
 
-        List<TreasureHuntDto> result = new ArrayList<>();
-        for (TreasureHunt treasureHunt : playerTreasureHunts) {
-            result.add(new TreasureHuntDto(treasureHunt));
+        try {
+            List<TreasureDto> treasureResponse = locationServClient.digATreasure(UUID.fromString(treasureId), latitude,
+                    longitude,
+                    distance);
+            if (treasureResponse != null && !treasureResponse.isEmpty()) {
+                return ResponseEntity.ok(treasureResponse);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("2) Erreur lors de l'appel à digAHole" + e.getMessage());
         }
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok("Aucun trésor ou indice trouvé dans cette zone.");
     }
+
 }

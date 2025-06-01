@@ -30,10 +30,10 @@ export class ShopComponent {
   showSuccess = false;
 
   crownPacks = [
-    { title: 'Pack Découverte', sub: "Pour débuter l'aventure", amount: 100, price: '4,99 €', priceValue: 4.99, oldPrice: '5,24€', discount: '-5%', img: 'assets/logo-pack-1.png'},
-    { title: 'Pack Aventurier', sub: 'Le plus populaire', amount: 300, price: '12,99 €', priceValue: 12.99, oldPrice: '14,97 €', discount: '-10%', img: 'assets/logo-pack-2.png'},
-    { title: 'Pack Explorateur', sub: 'Pour les passionnés', amount: 600, price: '29,99 €', priceValue: 29.99, oldPrice: '37,50 €', discount: '-20%', badge: 'MEILLEURE OFFRE', bonus: '+100', img: 'assets/logo-pack-3.png'},
-    { title: 'Pack Trésorier', sub: 'Pour les collectionneurs', amount: 2000, price: '69,99 €', priceValue: 69.99, oldPrice: '100,00 €', discount: '-30%', bonus: '+500', img: 'assets/logo-pack-4.png'},
+    { title: 'Pack Découverte', sub: "Pour débuter l'aventure", amount: 100, price: '4,99 €', priceValue: 4.99, oldPrice: '5,24 €', discount: '-5%', img: 'assets/images/shop/logo-pack-1.png'},
+    { title: 'Pack Aventurier', sub: 'Le plus populaire', amount: 300, price: '12,99 €', priceValue: 12.99, oldPrice: '14,97 €', discount: '-10%', img: 'assets/images/shop/logo-pack-2.png'},
+    { title: 'Pack Explorateur', sub: 'Pour les passionnés', amount: 600, price: '29,99 €', priceValue: 29.99, oldPrice: '37,50 €', discount: '-20%', badge: 'MEILLEURE OFFRE', bonus: '+100', img: 'assets/images/shop/logo-pack-3.png'},
+    { title: 'Pack Trésorier', sub: 'Pour les collectionneurs', amount: 2000, price: '69,99 €', priceValue: 69.99, oldPrice: '100,00 €', discount: '-30%', bonus: '+500', img: 'assets/images/shop/logo-pack-4.png'},
   ];
 
   constructor(private paymentService: PaymentService) {}
