@@ -1,4 +1,4 @@
-package com.lootopia.payment.Config;
+package com.lootopia.paymentserv.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
