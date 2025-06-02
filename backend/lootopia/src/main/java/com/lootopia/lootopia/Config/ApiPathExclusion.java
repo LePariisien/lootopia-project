@@ -26,6 +26,7 @@ public enum ApiPathExclusion {
     AUTH("/api/auth/**"),
     REFRESH_TOKEN("/api/token/refresh-token"),
     TEST_TREASURE_HUNT("/api/treasure-hunts"),
+    TEST_TREASURE_HUNT_ALL("/api/treasure-hunt/all"),
     VERIFY_MAIL("/verify");
 
     private final String path;

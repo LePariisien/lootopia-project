@@ -14,6 +14,7 @@ export const ApiRoutes = {
 
   // Treasure Hunt
   treasureHunt: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt`,
+  treasureHuntAll: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt/all`,	
 };
 
 export enum ApiRoutesEnum {

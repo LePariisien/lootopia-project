@@ -27,7 +27,6 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
-      // Appel API à faire ici
     }
   }
 
