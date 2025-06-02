@@ -1,65 +1,68 @@
-<div class="min-h-screen bg-gray-50">
+<div class="flex overflow-y-hidden flex-col justify-center items-center">
   <app-header></app-header>
-  <div class="w-full bg-gradient-to-r from-green-200 to-blue-200 py-8 mb-8 shadow rounded-xl">
+  <div class="w-full py-8 ">
     <div class="max-w-4xl mx-auto text-center">
-      <h1 class="text-4xl font-extrabold text-green-900 mb-2">Bienvenue sur Lootopia !</h1>
+      <h1
+        class="text-9xl font-extrabold mx-2 bg-gradient-to-r from-green-200 to-blue-200 bg-clip-text text-transparent uppercase tracking-widest"
+      >
+        LOOTOPIA
+      </h1>
       <p class="text-lg text-green-800">Pars à la chasse aux trésors, grimpe dans le classement et découvre des récompenses exclusives.</p>
     </div>
   </div>
-  <div class="flex flex-col items-center mt-10">
+  <div class="flex flex-col items-center mt-4">
     <div class="relative w-[900px] h-[500px] flex items-center justify-center">
       <button (click)="prevCard()" class="absolute left-0 z-30 bg-white/80 rounded-full p-2 shadow hover:bg-white transition">
-        <span class="text-2xl">&#8592;</span>
+      <lucide-icon [img]="ArrowLeft" class="text-2xl"></lucide-icon>
       </button>
       <div class="flex w-full h-full items-center justify-center relative">
         <div *ngFor="let hunt of hunts; let i = index"
-          class="absolute top-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group rounded-2xl overflow-hidden bg-white"
-          [ngClass]="getCardClass(i)"
-          style="width:520px; height:440px;">
+          class="absolute top-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group rounded-2xl overflow-hidden bg-white w-[720px] h-[440px] shadow-lg hover:shadow-2xl transform hover:scale-105"
+          [ngClass]="getCardClass(i)">
           <img [src]="hunt.img" alt="" class="w-full h-full object-cover" />
           <div class="absolute inset-0 bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-4">
-            <div class="font-bold text-lg mb-2">{{ hunt.name }}</div>
-            <div class="text-sm mb-2">{{ hunt.info }}</div>
-            <div class="flex gap-4 text-xs">
-              <div>Difficulté<br><span class="font-semibold">{{ hunt.difficulty }}</span></div>
-              <div>Localisation<br><span class="font-semibold">{{ hunt.location }}</span></div>
-              <div>Récompenses<br><span class="font-semibold">{{ hunt.reward }}</span></div>
+            <div class="font-bold text-3xl mb-4">{{ hunt.name }}</div>
+            <div class="text-lg mb-4">{{ hunt.info }}</div>
+            <div class="flex gap-8 text-base">
+              <div>Difficulté<br><span class="font-semibold text-lg">{{ hunt.difficulty }}</span></div>
+              <div>Localisation<br><span class="font-semibold text-lg">{{ hunt.location }}</span></div>
+              <div>Récompenses<br><span class="font-semibold text-lg">{{ hunt.reward }}</span></div>
             </div>
           </div>
         </div>
       </div>
       <button (click)="nextCard()" class="absolute right-0 z-30 bg-white/80 rounded-full p-2 shadow hover:bg-white transition">
-        <span class="text-2xl">&#8594;</span>
+      <lucide-icon [img]="ArrowRight" class="text-2xl"></lucide-icon>
       </button>
     </div>
-    <div class="max-w-4xl mx-auto mb-12">
-    <h2 class="text-2xl font-bold text-green-900 mb-6 mt-6 text-center">Comment ça marche ?</h2>
-    <div class="flex flex-col md:flex-row items-center justify-between gap-8">
-      <div class="flex flex-col items-center">
-        <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mb-2">
-          <span class="text-2xl font-bold text-green-700">1</span>
+    <div class="max-w-4xl mx-auto mb-6">
+      <h2
+        class="text-2xl font-bold mb-6 mt-6 text-center text-green-900 bg-clip-text uppercase tracking-widest"
+      >
+        Comment ça marche ?
+      </h2>
+      <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="flex flex-col items-center">
+          <div class="bg-gradient-to-r from-green-200 to-blue-200 rounded-full w-16 h-16 flex items-center justify-center mb-2">
+            <span class="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">1</span>
+          </div>
+          <span class="text-center text-green-900 font-semibold">Choisis une chasse</span>
         </div>
-        <span class="text-center text-green-900 font-semibold">Choisis une chasse</span>
-      </div>
-      <div class="h-12 w-1 bg-green-300 md:h-1 md:w-12 md:my-0 my-4"></div>
-      <div class="flex flex-col items-center">
-        <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mb-2">
-          <span class="text-2xl font-bold text-green-700">2</span>
+        <div class="h-12 w-1 bg-green-300 md:h-1 md:w-12 md:my-0 my-4"></div>
+        <div class="flex flex-col items-center">
+          <div class="bg-gradient-to-r from-green-200 to-blue-200 rounded-full w-16 h-16 flex items-center justify-center mb-2">
+            <span class="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">2</span>
+          </div>
+          <span class="text-center text-green-900 font-semibold">Résous les énigmes</span>
         </div>
-        <span class="text-center text-green-900 font-semibold">Résous les énigmes</span>
-      </div>
-      <div class="h-12 w-1 bg-green-300 md:h-1 md:w-12 md:my-0 my-4"></div>
-      <div class="flex flex-col items-center">
-        <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mb-2">
-          <span class="text-2xl font-bold text-green-700">3</span>
+        <div class="h-12 w-1 bg-green-300 md:h-1 md:w-12 md:my-0 my-4"></div>
+        <div class="flex flex-col items-center">
+          <div class="bg-gradient-to-r from-green-200 to-blue-200 rounded-full w-16 h-16 flex items-center justify-center mb-2">
+            <span class="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">3</span>
+          </div>
+          <span class="text-center text-green-900 font-semibold">Gagne des récompenses</span>
         </div>
-        <span class="text-center text-green-900 font-semibold">Gagne des récompenses</span>
       </div>
     </div>
-  </div>
-  <app-search-bar
-    (searchChange)="onSearchChange($event)"
-    class="mb-8"
-  />
   </div>
 </div>

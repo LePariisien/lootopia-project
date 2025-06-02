@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Crown, ShoppingCart, Info, CreditCard, Check } from 'lucide-angular';
 import { PaymentService } from '../../services/PaymentService.service';
-import { StripeModalComponent } from '../stripe/stripe-modal.component';
-import { HeaderComponent } from '../../header/header.component';
+import { StripeModalComponent } from '../../components/stripe/stripe-modal.component';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-shop',

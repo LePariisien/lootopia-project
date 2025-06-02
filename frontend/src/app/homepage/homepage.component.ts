@@ -1,77 +1,62 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from "../header/header.component";
-import { SearchBarComponent } from './search-bar/search-bar.component';
+import { HeaderComponent } from "../components/header/header.component";
+import { TreasureHuntService } from '../services/treasure-hunt.service';
+import { TreasureHuntRequest, HuntLevel } from '../models/treasure-hunt.model';
+import { Subscription } from 'rxjs';
+import { ArrowLeft, ArrowRight, LucideAngularModule } from 'lucide-angular';
+
 @Component({
   selector: 'app-homepage',
   standalone: true,
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css',
-  imports: [CommonModule, HeaderComponent, SearchBarComponent],
+  imports: [CommonModule, HeaderComponent, LucideAngularModule],
 })
 export class HomepageComponent implements OnInit, OnDestroy {
-  hunts = [
-    {
-      img: 'assets/logo-lootopia.png',
-      name: 'Nom de la chasse 1',
-      info: 'Infos sur la chasse aux trésors',
-      difficulty: 'Facile',
-      location: 'Paris',
-      reward: '100 couronnes'
-    },
-    {
-      img: 'assets/logo-lootopia.png',
-      name: 'Nom de la chasse 2',
-      info: 'Infos sur la chasse aux trésors',
-      difficulty: 'Moyenne',
-      location: 'Lyon',
-      reward: 'Artefact rare'
-    },
-    {
-      img: 'assets/logo-lootopia.png',
-      name: 'Nom de la chasse 3',
-      info: 'Infos sur la chasse aux trésors',
-      difficulty: 'Difficile',
-      location: 'Marseille',
-      reward: 'Badge exclusif'
-    },
-    {
-      img: 'assets/logo-lootopia.png',
-      name: 'Nom de la chasse 4',
-      info: 'Infos sur la chasse aux trésors',
-      difficulty: 'Difficile',
-      location: 'Marseille',
-      reward: 'Badge exclusif'
-    }
-  ];
-
+  readonly ArrowLeft = ArrowLeft;
+  readonly ArrowRight = ArrowRight;
+  hunts: any[] = [];
   current = 0;
-  direction: 1 | -1 = 1;
   intervalId: any;
   search: string = '';
+  private huntSub?: Subscription;
+
+  // Tableau de correspondance id -> image
+  treasureHuntImages: { [id: number]: string } = {
+    5: 'assets/images/hunt/chatelet-paysage.jpg',
+    6: 'assets/images/hunt/lyon-paysage.jpeg',
+    7: 'assets/images/hunt/toulouse-paysage.jpg',
+    8: 'assets/images/hunt/paris-paysage.jpg',
+  };
+
+  constructor(private treasureHuntService: TreasureHuntService) {}
 
   ngOnInit() {
-    this.startAutoSlide();
-  }
-
-  onSearchChange(search: string) {
-    this.search = search;
+    this.huntSub = this.treasureHuntService.getAllTreasureHunts().subscribe({
+      next: (data) => {
+        // Transforme les données pour le carrousel
+        this.hunts = data.map(hunt => ({
+          img: this.treasureHuntImages[Number(hunt.id)],
+          name: hunt.name,
+          info: hunt.description,
+          difficulty: this.getDifficultyLabel(hunt.level),
+          location: hunt.treasure?.address || 'Inconnue',
+          reward: hunt.found ? 'Trouvée !' : 'À découvrir'
+        }));
+        this.startAutoSlide();
+      }
+    });
   }
 
   ngOnDestroy() {
     clearInterval(this.intervalId);
+    this.huntSub?.unsubscribe();
   }
 
   startAutoSlide() {
     this.intervalId = setInterval(() => {
-      this.current += this.direction;
-      if (this.current >= this.hunts.length - 1) {
-        this.current = this.hunts.length - 1;
-        this.direction = -1;
-      } else if (this.current <= 0) {
-        this.current = 0;
-        this.direction = 1;
-      }
+      this.current = (this.current + 1) % this.hunts.length;
     }, 5000);
   }
 
@@ -101,5 +86,18 @@ export class HomepageComponent implements OnInit, OnDestroy {
       return 'z-10 scale-95 opacity-70 blur-[2px] left-3/4 -translate-x-1/2';
     }
     return 'z-0 scale-90 opacity-0 pointer-events-none';
+  }
+
+  getDifficultyLabel(level: number): string {
+    switch (level) {
+      case 1: return 'Facile';
+      case 2: return 'Moyenne';
+      case 3: return 'Difficile';
+      default: return 'Inconnue';
+    }
+  }
+
+  onSearchChange(search: string) {
+    this.search = search;
   }
 }
