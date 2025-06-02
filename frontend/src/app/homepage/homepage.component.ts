@@ -22,7 +22,6 @@ export class HomepageComponent implements OnInit, OnDestroy {
   search: string = '';
   private huntSub?: Subscription;
 
-  // Tableau de correspondance id -> image
   treasureHuntImages: { [id: number]: string } = {
     5: 'assets/images/hunt/chatelet-paysage.jpg',
     6: 'assets/images/hunt/lyon-paysage.jpeg',
@@ -36,7 +35,6 @@ export class HomepageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.huntSub = this.treasureHuntService.getAllTreasureHunts().subscribe({
       next: (data) => {
-        // Transforme les données pour le carrousel
         this.hunts = data.map(hunt => ({
           img: this.treasureHuntImages[Number(hunt.id)],
           name: hunt.name,
