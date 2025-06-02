@@ -28,6 +28,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
     6: 'assets/images/hunt/lyon-paysage.jpeg',
     7: 'assets/images/hunt/toulouse-paysage.jpg',
     8: 'assets/images/hunt/paris-paysage.jpg',
+    10: 'assets/images/hunt/catacombe-paysage.jpg',
   };
 
   constructor(private treasureHuntService: TreasureHuntService) {}
