@@ -15,6 +15,7 @@ export const ApiRoutes = {
   // Treasure Hunt
   treasureHunt: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt`,
   treasureHuntById: (id: string) => `${ApiRoutesEnum.Lootopia}/treasure-hunt/${id}`,
+  treasureHuntAll: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt/all`,
   digAHole: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt/digAHole`,
 
   // Participation

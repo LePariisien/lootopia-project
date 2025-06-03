@@ -8,6 +8,10 @@ import { ApiRoutes } from '../api-routes';
 export class TreasureHuntService {
   constructor(private http: HttpClient) {}
 
+  getAllTreasureHunts(): Observable<TreasureHunt[]> {
+    return this.http.get<TreasureHunt[]>(ApiRoutes.treasureHuntAll());
+  }
+
   createTreasureHunt(token: string, body: TreasureHunt): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,

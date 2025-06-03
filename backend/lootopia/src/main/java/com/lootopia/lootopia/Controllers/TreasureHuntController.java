@@ -26,7 +26,7 @@ public class TreasureHuntController {
         return treasureHuntService.get(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<?> getAll() {
         return treasureHuntService.getAll();
     }
