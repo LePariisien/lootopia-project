@@ -7,8 +7,9 @@ export interface TreasureHuntRequest {
   startDate: string;
   endDate: string;
   organizer_id: string;
-  treasure: Treasure;
   found: boolean;
+  treasure: Treasure;
+  address?: string; 
 }
 
 export interface Treasure {
