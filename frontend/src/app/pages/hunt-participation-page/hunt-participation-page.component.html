@@ -1,0 +1,32 @@
+<div class="min-h-screen bg-gradient-to-b from-green-50 to-green-100">
+  <app-hunt-header
+    [treasureHunt]="treasureHunt"
+    [treasure]="treasure"
+    [clues]="clues"
+    [participation]="participation"
+  ></app-hunt-header>
+  <main class="max-w-6xl mx-auto p-4 md:p-8 pt-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-6 space-x-6">
+        <app-hunt-step-card
+          [step]="step"
+          [participation]="participation"
+          [treasureHunt]="treasureHunt"
+          [treasure]="treasure"
+          [clues]="clues"
+          [longitude]="longitude"
+          [latitude]="latitude"
+        ></app-hunt-step-card>
+        <app-hunt-completed-steps
+          [clues]="clues"
+          [participation]="participation"
+          [step]="step"
+          (stepChange)="step = $event">
+        </app-hunt-completed-steps>
+      </div>
+      <div>
+        <app-hunt-sidebar></app-hunt-sidebar>
+      </div>
+    </div>
+  </main>
+</div>

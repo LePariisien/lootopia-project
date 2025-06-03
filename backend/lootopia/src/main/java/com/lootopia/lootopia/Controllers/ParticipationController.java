@@ -43,8 +43,14 @@ public class ParticipationController {
         return participationService.getParticipationById(id);
     }
 
+    @GetMapping("/{treasureHuntId}")
+    public ResponseEntity<?> getParticipation(@PathVariable Long treasureHuntId) {
+        return participationService.getParticipation(treasureHuntId);
+    }
+
     @DeleteMapping("/{participationId}")
     public ResponseEntity<?> deleteParticipation(@PathVariable UUID participationId) {
         return participationService.deleteParticipation(participationId);
     }
+
 }

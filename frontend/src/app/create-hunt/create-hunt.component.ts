@@ -15,7 +15,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { LocationSearchComponent } from '../components/location-search/location-search.component';
 
 import { TreasureHuntService } from '../services/treasure-hunt.service';
-import { TreasureHuntRequest } from '../models/treasure-hunt.model';
+import { TreasureHunt } from '../models/treasure-hunt.model';
 import { ClueService } from '../services/clue.service';
 import { Clue } from '../models/clue.model';
 
@@ -191,6 +191,7 @@ export class CreateHuntComponent implements OnInit {
   publishClues(token: string, treasureId: string): void {
     const clues: Clue[] = this.huntSteps.map((step, index) => ({
       id: "",
+      title: step.title,
       latitude: step.latitute,
       longitude: step.longitude,
       address: step.location,
@@ -215,7 +216,7 @@ export class CreateHuntComponent implements OnInit {
       return;
     }
 
-    const body: TreasureHuntRequest = {
+    const body: TreasureHunt = {
       id: "",
       name: this.huntTitle,
       description: this.huntDescription,

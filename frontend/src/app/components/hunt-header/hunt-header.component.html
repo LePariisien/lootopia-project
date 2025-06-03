@@ -1,0 +1,31 @@
+<header class="sticky top-0 z-10 bg-white border-b border-green-200 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center">
+      <h1 class="text-xl font-bold text-green-900 mr-4">{{ title }}</h1>
+      <span class="bg-green-600 text-white rounded px-2 py-1 text-xs">{{ status }}</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <div class="flex justify-center items-center gap-2 text-green-800">
+        <lucide-icon [img]="Clock" size="16"></lucide-icon>
+        <span class="text-sm">{{ time }}</span>
+      </div>
+      <button (click)="pauseTimer()" [disabled]="isPaused || find"
+        class="border border-green-300 text-green-800 px-3 py-1 rounded hover:bg-green-100 disabled:cursor-no-drop disabled:opacity-50">
+        Pause
+      </button>
+      <button (click)="resumeTimer()" [disabled]="!isPaused || time === '00:00:00' || find"
+        class="border border-green-300 text-green-800 px-3 py-1 rounded hover:bg-green-100 disabled:cursor-no-drop disabled:opacity-50">
+        Continuer
+      </button>
+    </div>
+  </div>
+  <div class="max-w-6xl mx-auto px-4 pb-3">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-sm text-green-800">Progression: {{ currentStep }}/{{ totalSteps }} étapes</span>
+    <span class="text-sm text-green-800">{{ progress }}% complété</span>
+    </div>
+    <div class="h-2 bg-green-200 rounded">
+      <div class="h-2 bg-green-600 rounded" [style.width.%]="progress"></div>
+    </div>
+  </div>
+</header>
