@@ -1,17 +1,19 @@
 <app-header></app-header>
 <div class="min-h-screen py-8">
   <div class="max-w-6xl mx-auto">
-    <h1 class="text-4xl font-bold mb-8 text-center">Toutes les chasses au trésor</h1>
+    <h1 class="view-hunt-title">Toutes les chasses au trésor</h1>
+    <p class="view-hunt-desc">
+      Explorez notre collection de chasses au trésor, résolvez des énigmes et découvrez des récompenses uniques.
     <div class="mb-4">
       <input
         type="text"
         [(ngModel)]="search"
         placeholder="Rechercher une chasse..."
-        class="border rounded px-4 py-2 w-full"
+        class="border rounded px-4 py-2 w-full bg-white"
       />
     </div>
     <div class="flex flex-col md:flex-row gap-4 mb-8 items-center justify-between">
-      <select [(ngModel)]="difficulty" class="border rounded px-4 py-2 w-full md:w-1/3">
+      <select [(ngModel)]="difficulty" class="border rounded px-4 py-2 w-auto">
         <option value="">Toutes difficultés</option>
         <option value="1">Facile</option>
         <option value="2">Moyenne</option>
@@ -21,7 +23,7 @@
         type="text"
         [(ngModel)]="city"
         placeholder="Ville"
-        class="border rounded px-4 py-2 w-full md:w-1/3"
+        class="border rounded px-4 py-2 w-full md:w-1/3 bg-white"
       />
     </div>
     <div *ngIf="loading" class="text-center text-lg">Chargement...</div>
