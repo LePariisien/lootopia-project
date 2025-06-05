@@ -57,7 +57,7 @@ public class ClueService {
                 .build();
 
         clueRepository.save(clue);
-        return ResponseEntity.ok("Indice créé avec succès");
+        return ResponseEntity.ok(new ClueDto(clue));
     }
 
     public ResponseEntity<?> create(List<ClueDto> ClueDtos) {
@@ -81,7 +81,7 @@ public class ClueService {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(clue);
+        return ResponseEntity.ok(new ClueDto(clue));
     }
 
     public ResponseEntity<?> update(ClueDto clueDto) {
@@ -107,7 +107,7 @@ public class ClueService {
         }
 
         clueRepository.save(existingClue);
-        return ResponseEntity.ok("Indice modifié avec succès");
+        return ResponseEntity.ok(new ClueDto(existingClue));
     }
 
     public ResponseEntity<?> delete(String id) {
@@ -121,7 +121,7 @@ public class ClueService {
     }
 
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(clueRepository.findAll());
+        return ResponseEntity.ok(clueRepository.findAll().stream().map(ClueDto::new).toList());
     }
 
     public ResponseEntity<?> getByTreasureId(String treasureId) {
@@ -130,7 +130,7 @@ public class ClueService {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(clues);
+        return ResponseEntity.ok(clues.stream().map(ClueDto::new).toList());
     }
 
     public ResponseEntity<?> getByLocation(double latitude, double longitude) {
@@ -142,7 +142,7 @@ public class ClueService {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(clues);
+        return ResponseEntity.ok(new ClueDto(clues));
     }
 
     public ResponseEntity<?> digAHole(String treasureId, double longitude, double latitude, double distance) {
@@ -151,10 +151,6 @@ public class ClueService {
         }
 
         List<Clue> clues = clueRepository.findClueNerby(UUID.fromString(treasureId), longitude, latitude, distance);
-        if (clues.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
         return ResponseEntity.ok(clues.stream().map(ClueDto::new).toList());
     }
 
