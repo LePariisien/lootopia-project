@@ -18,6 +18,7 @@ import { TreasureHuntService } from '../../services/treasure-hunt.service';
 import { TreasureHunt } from '../../models/treasure-hunt.model';
 import { ClueService } from '../../services/clue.service';
 import { Clue } from '../../models/clue.model';
+import { HeaderComponent } from "../../components/header/header.component";
 
 interface HuntStep {
   id: number;
@@ -42,8 +43,9 @@ interface HuntStep {
     LucideAngularModule,
     LeafletModule,
     HttpClientModule,
-    LocationSearchComponent
-  ]
+    LocationSearchComponent,
+    HeaderComponent
+]
 })
 export class CreateHuntComponent implements OnInit {
   readonly LocateIcon = LocateIcon;
@@ -158,7 +160,6 @@ export class CreateHuntComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.coverImage = input.files[0];
-      console.log('Cover image selected:', this.coverImage.name);
     }
   }
 
@@ -238,8 +239,6 @@ export class CreateHuntComponent implements OnInit {
 
     this.treasureHuntService.createTreasureHunt(this.TOKEN, body).subscribe({
       next: (response) => {
-        console.log('Hunt published!');
-
         const treasure_id = response.treasure_id;
         body.treasure_id = treasure_id;
         this.publishClues(this.TOKEN, treasure_id);

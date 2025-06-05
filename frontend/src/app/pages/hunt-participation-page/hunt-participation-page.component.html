@@ -18,6 +18,7 @@
           [clues]="clues"
           [longitude]="longitude"
           [latitude]="latitude"
+          [TOKEN]="TOKEN"
         ></app-hunt-step-card>
         <app-hunt-completed-steps
           [clues]="clues"
@@ -27,7 +28,11 @@
         </app-hunt-completed-steps>
       </div>
       <div>
-        <app-hunt-sidebar></app-hunt-sidebar>
+        <app-hunt-sidebar
+          [participation]="participation"
+          [longitude]="longitude"
+          [latitude]="latitude"
+        ></app-hunt-sidebar>
       </div>
     </div>
   </main>

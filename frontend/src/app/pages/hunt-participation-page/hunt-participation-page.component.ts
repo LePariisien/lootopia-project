@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output } from '@angular/core';
 import { HuntHeaderComponent } from "../../components/hunt-header/hunt-header.component";
 import { HuntStepCardComponent } from "../../components/hunt-step-card/hunt-step-card.component";
 import { HuntCompletedStepsComponent } from "../../components/hunt-completed-steps/hunt-completed-steps.component";
@@ -28,17 +28,17 @@ import { HeaderComponent } from "../../components/header/header.component";
 })
 export class HuntParticipationPageComponent {
 
-  TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2NyZWF0aW9uX3RpbWVzdGFtcCI6IjIwMjUtMDUtMjZUMjI6NTU6NDIuNzc2NDE3IiwidXNlcl9pZCI6IjFhZDExNmY2LTBiMTUtNDYyYS1iYmMzLTBiZWEzMTdiNGFjOCIsImVtYWlsIjoibWFyY2VsaW5zeWRAZ21haWwuY29tIiwidXNlcm5hbWUiOiJzMnlfbWNsIiwic3ViIjoiczJ5X21jbCIsImlhdCI6MTc0ODUxNTcxNSwiZXhwIjoxNzQ4NTE5MzE1fQ.7ys63oSfpwCxrCdKHy5U6s2zXNhLHIiUxHn6txDVNeo";
-  ID_USER = "0fbb229a-eb38-4a64-8e8d-c73e28487759";
+  TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2NyZWF0aW9uX3RpbWVzdGFtcCI6IjIwMjUtMDUtMjZUMjI6NTU6NDIuNzc2NDE3IiwidXNlcl9pZCI6IjFhZDExNmY2LTBiMTUtNDYyYS1iYmMzLTBiZWEzMTdiNGFjOCIsImVtYWlsIjoibWFyY2VsaW5zeWRAZ21haWwuY29tIiwidXNlcm5hbWUiOiJzMnlfbWNsIiwic3ViIjoiczJ5X21jbCIsImlhdCI6MTc0OTE1MDgxMSwiZXhwIjoxNzQ5MTU0NDExfQ.L9vSaFPO4f0pzF-lr6v8uideV-Czi1yTAZ5wrS6oYpc";
 
-  longitude: number = 0;
-  latitude: number = 0;
+  @Output() latitude!: number;
+  @Output() longitude!: number;
 
   participation!: Participation;
   treasureHunt!: TreasureHunt;
   treasure!: Treasure;
   clues!: Clue[];
   step!: number;
+  watchId: number | null = null;
 
   constructor(
     private participationService: ParticipationService,
@@ -50,7 +50,7 @@ export class HuntParticipationPageComponent {
   ) { }
 
   ngOnInit(): void {
-    this.getUserLocation();
+    this.startLocationWatch();
 
     this.route.paramMap.subscribe(params => {
       const participationId = params.get('id');
@@ -96,22 +96,27 @@ export class HuntParticipationPageComponent {
     });
   }
 
-  getUserLocation(): void {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
+  startLocationWatch(): void {
+    if ('geolocation' in navigator) {
+      this.watchId = navigator.geolocation.watchPosition(
         (position) => {
           this.latitude = position.coords.latitude;
           this.longitude = position.coords.longitude;
-          console.log('Latitude:', this.latitude, 'Longitude:', this.longitude);
         },
         (error) => {
           console.error('Erreur de géolocalisation :', error);
-        }
+        },
+        { enableHighAccuracy: true, maximumAge: 10000, timeout: 30000 }
       );
     } else {
       console.error('La géolocalisation n\'est pas supportée par ce navigateur.');
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.watchId !== null) {
+      navigator.geolocation.clearWatch(this.watchId);
+    }
+  }
 
 }

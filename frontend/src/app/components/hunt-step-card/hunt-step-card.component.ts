@@ -43,7 +43,7 @@ export class HuntStepCardComponent implements OnChanges {
 
     if (!this.clues || !this.participation) return;
     this.updateClue();
-    this.step = (this.participation.current_step ?? 1);
+    this.step = (this.participation.current_step ?? 0);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
