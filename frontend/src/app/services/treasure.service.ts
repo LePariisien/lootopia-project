@@ -8,6 +8,9 @@ import { ApiRoutes } from '../api-routes';
 export class TreasureService {
   constructor(private http: HttpClient) {}
 
+  getTreasureDetails(id: string): Observable<Treasure> {
+    return this.http.get<Treasure>(ApiRoutes.treasureDetails(id));
+  }
   getAllTreasures(): Observable<Treasure[]> {
     return this.http.get<Treasure[]>(ApiRoutes.treasureAll());
   }
