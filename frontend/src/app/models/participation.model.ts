@@ -9,7 +9,8 @@ export interface Participation {
   treasureHunt?: TreasureHunt;
   current_step: number;
   status: string;
-  find: boolean;
+  isWinner: boolean;
+  notes: string;
   startDate: string;
   endDate?: string;
   progress?: number;

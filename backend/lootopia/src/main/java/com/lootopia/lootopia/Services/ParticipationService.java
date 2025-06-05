@@ -25,12 +25,13 @@ import java.util.UUID;
 public class ParticipationService {
 
     @Autowired
-    private final TreasureHuntRepository treasureHuntRepository;
+    private TreasureHuntRepository treasureHuntRepository;
 
     @Autowired
-    private final PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
 
-    private final ParticipationRepository participationRepository;
+    @Autowired
+    private ParticipationRepository participationRepository;
 
     public ResponseEntity<?> getParticipationsByPlayer(Player player) {
         if (player == null) {
@@ -91,13 +92,19 @@ public class ParticipationService {
             TreasureHunt treasureHunt = treasureHuntRepository.findById(treasureHuntId)
                     .orElseThrow(() -> new CustomException("Chasse au trésor introuvable", HttpStatus.NOT_FOUND));
 
-            Participation participation = new Participation();
-            participation.setPlayer(player);
-            participation.setTreasureHunt(treasureHunt);
+            Participation participation = Participation.builder()
+                    .player(player)
+                    .treasureHunt(treasureHunt)
+                    .currentStep(1)
+                    .progress(0.0)
+                    .status("En cours")
+                    .notes("")
+                    .isWinner(false)
+                    .build();
+
             participationRepository.save(participation);
 
-            return ResponseEntity.ok("Succès : Participation créée avec succès pour la chasse au trésor '"
-                    + treasureHunt.getName() + "'.");
+            return ResponseEntity.ok(new ParticipationDto(participation));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -119,4 +126,25 @@ public class ParticipationService {
                     .body("Erreur lors de la suppression de la participation.");
         }
     }
+
+    public ResponseEntity<?> updateParticipation(ParticipationDto participationDto) {
+        try {
+            Participation participation = participationRepository.findById(participationDto.getId())
+                    .orElseThrow(() -> new CustomException("Participation introuvable", HttpStatus.NOT_FOUND));
+
+            participation.setCurrentStep(participationDto.getCurrentStep());
+            participation.setNotes(participationDto.getNotes());
+            participation.setProgress(participationDto.getProgress());
+            participation.setStatus(participationDto.getStatus());
+            participation.setIsWinner(participationDto.getIsWinner());
+
+            participationRepository.save(participation);
+            return ResponseEntity.ok(new ParticipationDto(participation));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la mise à jour de la participation.");
+        }
+    }
+
 }

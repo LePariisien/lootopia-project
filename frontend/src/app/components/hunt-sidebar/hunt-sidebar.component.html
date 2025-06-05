@@ -31,8 +31,14 @@
         </div>
       </div>
       <div *ngIf="tab==='notes'">
-        <textarea class="w-full aspect-4/6 p-3 border border-green-200 rounded-lg focus:border-green-400 focus:ring-green-400 text-green-800" placeholder="Prenez des notes ici..."></textarea>
-        <button class="w-full bg-green-600 hover:bg-green-700 text-white rounded px-3 py-2 mt-2">Sauvegarder</button>
+        <textarea
+          class="w-full aspect-4/6 p-3 border border-green-200 rounded-lg focus:border-green-400 focus:ring-green-400 text-green-800"
+          placeholder="Prenez des notes ici..."
+          [(ngModel)]="notesDraft"
+        ></textarea>
+        <button class="w-full bg-green-600 hover:bg-green-700 text-white rounded px-3 py-2 mt-2"
+          (click)="saveNotes()"
+        >Sauvegarder</button>
       </div>
     </div>
 

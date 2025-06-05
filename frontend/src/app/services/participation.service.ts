@@ -24,4 +24,12 @@ export class ParticipationService {
     return this.http.get(ApiRoutes.participationById(id), { headers });
   }
 
+  updateParticipation(token: string, body: Participation): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.put(ApiRoutes.participation(), body, { headers });
+  }
+
 }

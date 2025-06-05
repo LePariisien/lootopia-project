@@ -1,18 +1,9 @@
-import { Component, Input, ChangeDetectorRef } from '@angular/core';
-import { LucideAngularModule, Clock } from 'lucide-angular';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { LucideAngularModule, Clock, ChevronLeft } from 'lucide-angular';
 import { TreasureHunt } from '../../models/treasure-hunt.model';
 import { Treasure } from '../../models/treasure.model';
 import { Clue } from '../../models/clue.model';
 import { Participation } from '../../models/participation.model';
-
-interface HuntHeader {
-  title: string;
-  status: string;
-  startTime: string;
-  currentStep: number;
-  totalSteps: number;
-  progress: number;
-}
 
 @Component({
   selector: 'app-hunt-header',
@@ -24,11 +15,14 @@ interface HuntHeader {
 })
 export class HuntHeaderComponent {
   readonly Clock = Clock;
+  readonly ChevronLeft = ChevronLeft;
 
   @Input() treasureHunt!: TreasureHunt;
   @Input() treasure!: Treasure;
   @Input() clues!: Clue[];
   @Input() participation!: Participation;
+
+  @Output() notesSaved = new EventEmitter<void>();
 
   time: string = '';
   timer: any;
@@ -38,7 +32,7 @@ export class HuntHeaderComponent {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
-    if (this.treasureHunt?.startDate) {
+    if (this.treasureHunt?.startDate && !this.participation?.isWinner) {
       this.startTimer();
     }
   }
@@ -55,8 +49,8 @@ export class HuntHeaderComponent {
     return this.participation?.status ?? '';
   }
 
-  get find(): boolean {
-    return this.participation?.find ?? false;
+  get isWinner(): boolean {
+    return this.participation?.isWinner ?? false;
   }
 
   get currentStep(): number {
@@ -81,7 +75,7 @@ export class HuntHeaderComponent {
   }
 
   startTimer(): void {
-    if (!this.participation?.startDate || this.participation.find) return;
+    if (!this.participation?.startDate || this.participation.isWinner) return;
 
     const now = new Date();
     const start = new Date(this.participation.startDate);
@@ -99,7 +93,7 @@ export class HuntHeaderComponent {
 
 
   private updateTimer(): void {
-    if (this.participation.find === true) {
+    if (this.participation.isWinner === true) {
       clearInterval(this.timer);
       this.timer = null;
       this.isPaused = true;
@@ -149,5 +143,9 @@ export class HuntHeaderComponent {
     }
   }
 
+
+  saveNotes() {
+    this.notesSaved.emit();
+  }
 
 }

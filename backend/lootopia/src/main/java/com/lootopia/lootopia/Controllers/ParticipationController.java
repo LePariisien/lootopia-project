@@ -1,5 +1,6 @@
 package com.lootopia.lootopia.Controllers;
 
+import com.lootopia.lootopia.Dtos.ParticipationDto;
 import com.lootopia.lootopia.Entities.Player;
 import com.lootopia.lootopia.Services.ParticipationService;
 import com.lootopia.lootopia.Services.PlayerService;
@@ -16,7 +17,6 @@ public class ParticipationController {
 
     private final ParticipationService participationService;
     private final PlayerService playerService;
-    // private final TreasureHuntService treasureHuntService;
 
     /**
      * Endpoint pour créer une participation.
@@ -43,14 +43,19 @@ public class ParticipationController {
         return participationService.getParticipationById(id);
     }
 
-    @GetMapping("/{treasureHuntId}")
+    @GetMapping("/treasure/{treasureHuntId}")
     public ResponseEntity<?> getParticipation(@PathVariable Long treasureHuntId) {
         return participationService.getParticipation(treasureHuntId);
     }
 
-    @DeleteMapping("/{participationId}")
-    public ResponseEntity<?> deleteParticipation(@PathVariable UUID participationId) {
-        return participationService.deleteParticipation(participationId);
+    @PutMapping
+    public ResponseEntity<?> updateParticipation(@RequestBody ParticipationDto participationDto) {
+        return participationService.updateParticipation(participationDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteParticipation(@PathVariable UUID id) {
+        return participationService.deleteParticipation(id);
     }
 
 }

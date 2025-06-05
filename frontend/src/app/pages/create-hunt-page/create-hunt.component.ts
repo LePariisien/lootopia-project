@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LucideAngularModule, LocateIcon, Image, Search, Plus } from 'lucide-angular';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-import { HuntStepComponent } from '../hunt-step/hunt-step.component';
+import { HuntStepComponent } from '../../hunt-step/hunt-step.component';
 
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
@@ -12,12 +12,12 @@ import * as L from 'leaflet';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { LocationSearchComponent } from '../components/location-search/location-search.component';
+import { LocationSearchComponent } from '../../components/location-search/location-search.component';
 
-import { TreasureHuntService } from '../services/treasure-hunt.service';
-import { TreasureHunt } from '../models/treasure-hunt.model';
-import { ClueService } from '../services/clue.service';
-import { Clue } from '../models/clue.model';
+import { TreasureHuntService } from '../../services/treasure-hunt.service';
+import { TreasureHunt } from '../../models/treasure-hunt.model';
+import { ClueService } from '../../services/clue.service';
+import { Clue } from '../../models/clue.model';
 
 interface HuntStep {
   id: number;
