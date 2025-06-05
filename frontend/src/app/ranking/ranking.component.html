@@ -1,0 +1,32 @@
+<app-header></app-header>
+<div class="max-w-3xl mx-auto mt-14">
+  <h1 class="text-5xl font-extrabold text-center mb-10 text-green-900 drop-shadow-lg">Classement des joueurs</h1>
+  <table class="w-full bg-white rounded-2xl shadow-2xl text-xl">
+    <thead>
+      <tr class="bg-green-200 text-green-900 text-2xl text-center">
+        <th class="py-4 px-1"></th>
+        <th class="py-4 px-6">Joueur</th>
+        <th class="py-4 px-6">Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let player of players; let i = index"
+        [ngClass]="{
+          'bg-green-200': i === 0,
+          'bg-gray-200': i === 1,
+          'bg-orange-200': i === 2
+        }">
+        <td class="py-4 px-1 font-extrabold text-2xl w-22 text-center">
+          <ng-container [ngSwitch]="i">
+            <img *ngSwitchCase="0" src="assets/images/top1.png" class="w-20 h-auto" />
+            <img *ngSwitchCase="1" src="assets/images/top2.png" class="w-20 h-auto" />
+            <img *ngSwitchCase="2" src="assets/images/top3.png" class="w-20 h-auto" />
+            <span *ngSwitchDefault>{{ player.rank }}</span>
+          </ng-container>
+        </td>
+        <td class="py-4 px-6 font-semibold">{{ player.username }}</td>
+        <td class="py-4 px-6 font-bold text-green-800">{{ player.score }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
