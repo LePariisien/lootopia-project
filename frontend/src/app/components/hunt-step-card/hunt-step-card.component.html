@@ -21,7 +21,7 @@
       </button>
       <button
         class="flex justify-center items-center gap-2 border border-green-300 text-green-800 px-3 py-1 rounded hover:bg-green-100 disabled:cursor-no-drop disabled:opacity-50"
-        [disabled]="step >= clues.length - 1"
+        [disabled]="step >= clues.length - 1 || !clues[step].solved"
         (click)="nextStep()"
       >
         Suivant

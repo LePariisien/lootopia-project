@@ -46,7 +46,7 @@ public class ClueController extends AbstractController {
         return clueService.getAll();
     }
 
-    @GetMapping("/getByTreasureId/{treasureId}")
+    @GetMapping("/treasure/{treasureId}")
     public ResponseEntity<?> getCluesByTreasureId(@PathVariable String treasureId) {
         return clueService.getByTreasureId(treasureId);
     }

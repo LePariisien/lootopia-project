@@ -1,17 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { CheckCircle, Leaf, LucideAngularModule, MapPin, Users } from 'lucide-angular';
 import * as L from 'leaflet';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { HuntTeamInfoComponent } from "../hunt-team-info/hunt-team-info.component";
 import { Player } from '../../models/player.model';
+import { Participation } from '../../models/participation.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-hunt-sidebar',
   templateUrl: './hunt-sidebar.component.html',
   styleUrl: './hunt-sidebar.component.css',
   standalone: true,
-  imports: [LucideAngularModule, CommonModule, LeafletModule, HuntTeamInfoComponent]
+  imports: [
+    LucideAngularModule,
+    CommonModule,
+    LeafletModule,
+    HuntTeamInfoComponent,
+    FormsModule
+  ]
 })
 export class HuntSidebarComponent {
   readonly MapPin = MapPin;
@@ -19,6 +27,11 @@ export class HuntSidebarComponent {
   readonly Users = Users;
 
   @Input() player!: Player;
+  @Input() participation!: Participation;
+  @Input() latitude!: number;
+  @Input() longitude!: number;
+
+  @Output() notesSaved = new EventEmitter<string>();
 
   tab: 'carte' | 'notes' = 'carte';
 
@@ -49,6 +62,8 @@ export class HuntSidebarComponent {
   private sidebarMap: L.Map | null = null;
   private sidebarMarker: L.Marker | null = null;
   private watchId: number | null = null;
+
+  notesDraft: string = '';
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
@@ -92,7 +107,7 @@ export class HuntSidebarComponent {
         (error) => {
           console.warn('Géolocalisation non disponible ou refusée.', error);
         },
-        { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 }
+        { enableHighAccuracy: true, maximumAge: 10000, timeout: 30000 }
       );
     } else {
       console.warn('La géolocalisation n\'est pas supportée par ce navigateur.');
@@ -104,6 +119,34 @@ export class HuntSidebarComponent {
       this.sidebarMap.setView(this.sidebarMarker.getLatLng(), 15);
     } else {
       console.warn('La carte ou le marqueur n\'est pas initialisé.');
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.notesDraft = this.participation?.notes || '';
+
+    if (changes['latitude'] || changes['longitude']) {
+      if (this.sidebarMap && this.latitude && this.longitude) {
+        const latlng = L.latLng(this.latitude, this.longitude);
+        if (this.sidebarMarker) {
+          this.sidebarMarker.setLatLng(latlng);
+        } else {
+          this.sidebarMarker = L.marker(latlng, { icon: this.markerIcon }).addTo(this.sidebarMap);
+        }
+        this.sidebarMap.setView(latlng, 15);
+      }
+    }
+  }
+
+  onNotesChange(value: string) {
+    this.notesDraft = value;
+  }
+
+  saveNotes() {
+    if (this.participation) {
+      this.notesSaved.emit(this.notesDraft);
+    } else {
+      console.warn('Aucune participation disponible pour sauvegarder les notes.');
     }
   }
 

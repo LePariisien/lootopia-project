@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreasureHunt } from '../../models/treasure-hunt.model';
 import { Treasure } from '../../models/treasure.model';
 import { Clue } from '../../models/clue.model';
@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './hunt-step-card.component.html',
   styleUrl: './hunt-step-card.component.css'
 })
-export class HuntStepCardComponent {
+export class HuntStepCardComponent implements OnChanges {
   readonly Bomb = Bomb;
   readonly Check = Check;
   readonly ChevronLeft = ChevronLeft;
@@ -25,8 +25,7 @@ export class HuntStepCardComponent {
   readonly Quote = Quote;
   readonly MapPin = MapPin;
 
-  TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2NyZWF0aW9uX3RpbWVzdGFtcCI6IjIwMjUtMDUtMjZUMjI6NTU6NDIuNzc2NDE3IiwidXNlcl9pZCI6IjFhZDExNmY2LTBiMTUtNDYyYS1iYmMzLTBiZWEzMTdiNGFjOCIsImVtYWlsIjoibWFyY2VsaW5zeWRAZ21haWwuY29tIiwidXNlcm5hbWUiOiJzMnlfbWNsIiwic3ViIjoiczJ5X21jbCIsImlhdCI6MTc0ODUxNTcxNSwiZXhwIjoxNzQ4NTE5MzE1fQ.7ys63oSfpwCxrCdKHy5U6s2zXNhLHIiUxHn6txDVNeo";
-  ID_USER = "0fbb229a-eb38-4a64-8e8d-c73e28487759";
+  @Input() TOKEN!: string;
 
   @Input() step!: number;
   @Input() treasureHunt!: TreasureHunt;
@@ -40,9 +39,18 @@ export class HuntStepCardComponent {
     private treasureHuntService: TreasureHuntService) { }
 
   ngOnInit(): void {
+    this.clues = this.clues || [];
+
     if (!this.clues || !this.participation) return;
     this.updateClue();
     this.step = (this.participation.current_step ?? 1);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['latitude'] || changes['longitude']) {
+      this.treasure.latitude = this.latitude;
+      this.treasure.longitude = this.longitude;
+    }
   }
 
   previousStep(): void {
@@ -51,7 +59,7 @@ export class HuntStepCardComponent {
     }
   }
   nextStep(): void {
-    if (this.step < this.clues.length) {
+    if (this.step < this.clues?.length) {
       this.step++;
     }
   }
@@ -68,15 +76,23 @@ export class HuntStepCardComponent {
   solveStep(): void {
     if (!this.clues || !this.participation) return;
 
-    this.treasureHuntService.digAHole(this.TOKEN, this.treasureHunt.id, this.treasure.latitude, this.treasure.longitude).subscribe({
-      next: (response) => {
-        console.log('Response: ', response);
-        this.clues[this.step].solved = true;
-        this.nextStep();
-        alert('Vous avez trouvé un indice / trésor !');
+    this.treasureHuntService.digAHole(this.TOKEN, this.treasure.id, this.treasure.latitude, this.treasure.longitude).subscribe({
+      next: (response: any) => {
+        const foundClue = response.clues && response.clues.some((clue: any) => clue.step === this.step);
+        const foundTreasure = response.treasures && response.treasures.length > 0;
+
+        if (foundClue) {
+          this.clues[this.step].solved = true;
+          this.nextStep();
+          alert('Vous avez trouvé un indice !');
+        } else if (foundTreasure) {
+          alert('Vous avez trouvé le trésor !');
+        } else {
+          alert('Aucun trésor ou indice trouvé dans cette zone.');
+        }
       },
       error: (err) => {
-        alert('Erreur lors de la publication de la chasse au trésor. Veuillez réessayer.');
+        alert(err.error?.message || 'Erreur lors de la fouille');
         console.error('Erreur lors de la publication', err);
       }
     });
