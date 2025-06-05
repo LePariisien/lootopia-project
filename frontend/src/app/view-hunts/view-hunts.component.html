@@ -1,0 +1,64 @@
+<app-header></app-header>
+<div class="min-h-screen py-8">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="view-hunt-title">Toutes les chasses au trésor</h1>
+    <p class="view-hunt-desc">
+      Explorez notre collection de chasses au trésor, résolvez des énigmes et découvrez des récompenses uniques.
+    <div class="mb-4">
+      <input
+        type="text"
+        [(ngModel)]="search"
+        placeholder="Rechercher une chasse..."
+        class="border rounded px-4 py-2 w-full bg-white"
+      />
+    </div>
+    <div class="flex flex-col md:flex-row gap-4 mb-8 items-center justify-between">
+      <select [(ngModel)]="difficulty" class="border rounded px-4 py-2 w-auto">
+        <option value="">Toutes difficultés</option>
+        <option value="1">Facile</option>
+        <option value="2">Moyenne</option>
+        <option value="3">Difficile</option>
+      </select>
+      <input
+        type="text"
+        [(ngModel)]="city"
+        placeholder="Ville"
+        class="border rounded px-4 py-2 w-full md:w-1/3 bg-white"
+      />
+    </div>
+    <div *ngIf="loading" class="text-center text-lg">Chargement...</div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div
+        *ngFor="let hunt of hunts | huntFilter:search:difficulty:city"
+        class="flex bg-white rounded-lg shadow overflow-hidden min-h-[12rem] h-auto w-auto"
+      >
+        <img
+          [src]="treasureHuntImages[hunt.id] || 'assets/images/picture-undifined.png'"
+          alt="Image chasse"
+          class="w-1/2 object-cover h-full"
+        />
+        <div class="p-8 flex-1 flex flex-col justify-between">
+          <div>
+            <span
+              class="inline-block px-2 py-1 rounded text-xs font-semibold mb-2"
+              [ngClass]="{
+                'bg-green-200 text-green-800': hunt.level === 1,
+                'bg-yellow-200 text-yellow-800': hunt.level === 2,
+                'bg-red-200 text-red-800': hunt.level === 3
+              }"
+            >
+              {{ hunt.level === 1 ? 'Facile' : hunt.level === 2 ? 'Moyenne' : 'Difficile' }}
+            </span>
+            <h2 class="text-2xl font-bold mb-2">{{ hunt.name }}</h2>
+            <div class="text-gray-600 mb-2">{{ hunt.treasure?.clues[0].address || 'Lieu inconnu' }}</div>
+            <div class="text-gray-800 mb-2">{{ hunt.description }}</div>
+          </div>
+          <div class="text-sm text-gray-500 mt-4">
+            Récompense : <span class="font-semibold">{{ hunt.reward || 'À découvrir' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!loading && hunts.length === 0" class="text-center text-gray-500">Aucune chasse trouvée.</div>
+  </div>
+</div>

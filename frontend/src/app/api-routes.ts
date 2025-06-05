@@ -16,8 +16,11 @@ export const ApiRoutes = {
 
   // Treasure Hunt
   treasureHunt: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt`,
+  treasureHuntAll: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt/all`,	
+
+  // Treasure
+  treasureDetails: (id: string) => `${ApiRoutesEnum.Location}/treasure/${id}/details`,
   treasureHuntById: (id: number) => `${ApiRoutesEnum.Lootopia}/treasure-hunt/${id}`,
-  treasureHuntAll: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt/all`,
   digAHole: (treasureId: string, latitude: number, longitude: number) => `${ApiRoutesEnum.Lootopia}/treasure-hunt/digAHole?treasureId=${treasureId}&latitude=${latitude}&longitude=${longitude}`,
 
   // Participation
