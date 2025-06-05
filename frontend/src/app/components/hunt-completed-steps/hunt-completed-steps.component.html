@@ -1,0 +1,24 @@
+<div class="border-green-200 shadow-lg rounded-lg bg-white">
+  <div class="p-6 pb-0 flex items-center justify-between">
+    <h3 class="text-green-900 font-bold text-lg">Étapes complétées</h3>
+  </div>
+  <div class="p-6 space-y-3">
+    <ng-container *ngFor="let clue of clues">
+      <div *ngIf="clue.step <= participation.current_step" class="flex items-center p-3 border border-green-200 rounded-lg bg-green-50 hover:bg-green-100 transition-colors">
+        <lucide-icon [img]="CheckCircle" class="size-5 text-green-900 mr-3"></lucide-icon>
+        <div class="flex-1">
+          <h4 class="font-medium text-green-900">{{ clue.title }}</h4>
+          <p class="text-sm text-green-700">{{ clue.message }}</p>
+        </div>
+        <button class="text-green-700 hover:text-green-900 hover:bg-green-100 px-2 py-1 rounded text-sm"
+          (click)="reviewClue(clue)"
+        >
+          Revoir
+        </button>
+      </div>
+    </ng-container>
+    <div *ngIf="hasNoCompletedClues()" class="text-green-700 text-sm">
+      Aucune étape complétée pour le moment.
+    </div>
+  </div>
+</div>
