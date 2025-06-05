@@ -11,6 +11,7 @@ export interface TreasureHunt {
   organizer_id: string;
   treasure?: Treasure;
   found: boolean;
+  address?: string; 
 }
 
 export enum HuntLevel {
