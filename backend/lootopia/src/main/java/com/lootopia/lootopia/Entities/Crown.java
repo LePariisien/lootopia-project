@@ -1,17 +1,8 @@
 package com.lootopia.lootopia.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import java.util.UUID;
 
 @Entity
@@ -28,10 +19,11 @@ public class Crown {
     private UUID id;
 
     @NotNull
-    @Column(nullable = false)
-    private int quantity; 
+    @ManyToOne
+    @JoinColumn(name = "player_id", nullable = false)
+    private Player player;
 
     @NotNull
-    @ManyToOne
-    private User user;
+    @Column(nullable = false)
+    private int quantity;
 }

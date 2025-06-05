@@ -15,6 +15,15 @@ export const ApiRoutes = {
   // Treasure Hunt
   treasureHunt: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt`,
   treasureHuntAll: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt/all`,	
+
+  // Crowns
+  addCrownsToPlayer: () => `${ApiRoutesEnum.Lootopia}/crowns`,
+  getCrownQuantity: (playerId: string) =>
+    `${ApiRoutesEnum.Lootopia}/crowns/player/${playerId}`,
+
+  // Purchases
+  createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,
+
 };
 
 export enum ApiRoutesEnum {
