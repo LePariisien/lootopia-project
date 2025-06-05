@@ -42,6 +42,16 @@ export const ApiRoutes = {
   playerAll: () => `${ApiRoutesEnum.Lootopia}/player/all`,
   playerCount: () => `${ApiRoutesEnum.Lootopia}/player/count`,
   playerById: (id: string) => `${ApiRoutesEnum.Lootopia}/player/${id}`,
+  player: () => `${ApiRoutesEnum.Lootopia}/player`,
+
+  // Crowns
+  addCrownsToPlayer: () => `${ApiRoutesEnum.Lootopia}/crowns`,
+  getCrownQuantity: (playerId: string) =>
+    `${ApiRoutesEnum.Lootopia}/crownsByToken`,
+
+  // Purchases
+  createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,
+
 };
 
 export enum ApiRoutesEnum {

@@ -3,13 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { ApiRoutes } from '../api-routes';
 import { Router } from '@angular/router';
+import { PlayerService } from './player.service';
+import { Player } from '../models/player.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   accessTokenString = "accessToken";
   refreshTokenString = "refreshToken";
+  playerIdString = "playerId";
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private playerService: PlayerService) { }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post(ApiRoutes.login(), { email, password });
@@ -30,6 +33,18 @@ export class AuthService {
   setTokens(accessToken: string, refreshToken: string, redirect: boolean = false): void {
     localStorage.setItem(this.accessTokenString, accessToken);
     localStorage.setItem(this.refreshTokenString, refreshToken);
+
+    this.playerService.getPlayer(accessToken).subscribe({
+      next: (player: Player) => {
+        console.log('Player récupéré:', player);
+        localStorage.setItem(this.playerIdString, player.id);
+        console.log('Player ID stocké:', localStorage.getItem(this.playerIdString));
+      },
+      error: (err: any) => {
+        console.error('Erreur Player API:', err);
+      }
+    });
+
     if (redirect) {
       this.router.navigate(['/']);
     }
@@ -46,6 +61,7 @@ export class AuthService {
   logout(redirect: boolean = false): void {
     localStorage.removeItem(this.accessTokenString);
     localStorage.removeItem(this.refreshTokenString);
+    localStorage.removeItem(this.playerIdString);
     if (redirect) {
       this.router.navigate(['/login']);
     }
@@ -66,5 +82,10 @@ export class AuthService {
       return null;
     }
     return token;
+  }
+
+  getPlayerId(): string | null {
+    console.log('1| ',localStorage.getItem(this.playerIdString))
+    return localStorage.getItem(this.playerIdString);
   }
 }

@@ -25,4 +25,12 @@ export class PlayerService {
     return this.http.get<Player>(ApiRoutes.playerById(playerId), { headers });
   }
 
+  getPlayer(token: string): Observable<Player> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<Player>(ApiRoutes.player(), { headers });
+  }
+
 }

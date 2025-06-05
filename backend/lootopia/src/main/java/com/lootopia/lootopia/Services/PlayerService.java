@@ -78,6 +78,13 @@ public class PlayerService {
 		return ResponseEntity.ok(new PlayerDto(player));
 	}
 
+	public ResponseEntity<?> getPlayerByNickname(String nickname) {
+		Player player = playerRepository.findByNickname(nickname)
+				.orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
+
+		return ResponseEntity.ok(new PlayerDto(player));
+	}
+
 	public ResponseEntity<?> updatePlayer(PlayerDto playerDto) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
