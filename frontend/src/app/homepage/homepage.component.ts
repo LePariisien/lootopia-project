@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "../components/header/header.component";
 import { TreasureHuntService } from '../services/treasure-hunt.service';
-import { TreasureHuntRequest, HuntLevel } from '../models/treasure-hunt.model';
 import { Subscription } from 'rxjs';
 import { ArrowLeft, ArrowRight, LucideAngularModule } from 'lucide-angular';
 

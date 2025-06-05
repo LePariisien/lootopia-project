@@ -15,4 +15,13 @@ export class ClueService {
     });
     return this.http.post(ApiRoutes.createCluesBatch(), clues, { headers, responseType: 'text' });
   }
+
+  getCluesByTreasureId(token: string, treasureId: string): Observable<Clue[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<Clue[]>(ApiRoutes.getCluesByTreasureId(treasureId), { headers });
+  }
+
 }

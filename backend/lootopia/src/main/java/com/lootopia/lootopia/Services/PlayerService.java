@@ -87,8 +87,8 @@ public class PlayerService {
 	}
 
 	public Player getPlayerById(UUID playerId) {
-    	return playerRepository.findById(playerId)
-            .orElseThrow(() -> new EntityNotFoundException("Erreur : Joueur introuvable avec l'ID " + playerId));
-    }
+		return playerRepository.findById(playerId)
+				.orElseThrow(() -> new EntityNotFoundException("Erreur : Joueur introuvable avec l'ID " + playerId));
+	}
 
 }

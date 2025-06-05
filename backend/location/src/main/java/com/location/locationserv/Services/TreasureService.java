@@ -142,10 +142,6 @@ public class TreasureService {
 
         List<Treasure> treasures = treasureRepository.findTreasureNerby(UUID.fromString(treasureId), longitude,
                 latitude, distance);
-        if (treasures.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
         return ResponseEntity.ok(treasures.stream().map(TreasureDto::new).toList());
     }
 
