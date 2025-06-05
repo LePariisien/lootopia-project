@@ -132,7 +132,6 @@ export class LocationSearchComponent {
     this.addOrUpdateMarker(latlng);
     this.reverseGeocode(latlng.lat, latlng.lng);
     this.coordinatesChange.emit({ lat: latlng.lat, lng: latlng.lng });
-    console.log('Map clicked at:', latlng);
   }
 
   addOrUpdateMarker(latlng: L.LatLng): void {
@@ -230,8 +229,6 @@ export class LocationSearchComponent {
         this.model = firstResult.display_name;
         this.modelChange.emit(this.model);
         this.coordinatesChange.emit({ lat, lng });
-        console.log('Coordinates from geocoding:', { lat, lng });
-        console.log('Address updated via geocoding:', this.model);
       } else {
         console.warn('No coordinates found for this address:', address);
         if (this.marker && this.map) {
