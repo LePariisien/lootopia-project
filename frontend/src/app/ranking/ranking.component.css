@@ -1,0 +1,16 @@
+@keyframes gold-glow {
+  0% { background-color: #fde68a; }
+  50% { background-color: #ffd700; }
+  100% { background-color: #fde68a; }
+}
+
+.gold-animate {
+  animation: gold-glow 2s infinite;
+}
+
+table {
+  border-collapse: collapse;
+}
+th, td {
+  border-bottom: 1px solid #e5e7eb;
+}
