@@ -2,63 +2,37 @@
 
   <div class="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-10 text-black">
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()"
-      class="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-sm sm:max-w-md space-y-4">
+          class="bg-white p-8 rounded-xl shadow w-full max-w-md space-y-4">
 
-      <h2 class="text-3xl sm:text-4xl font-bold text-center text-green-800 mb-6">Inscrivez-vous</h2>
+        <div *ngIf="message" class="text-green-600 text-sm text-center">{{ message }}</div>
+        <div *ngIf="error" class="text-red-600 text-sm text-center">{{ error }}</div>
 
-      <div *ngIf="message" class="text-green-600 text-sm text-center">{{ message }}</div>
-      <div *ngIf="error" class="text-red-600 text-sm text-center">{{ error }}</div>
-
-      <input formControlName="username" placeholder="Nom d'utilisateur"
-        class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-green-700 transition" />
-      <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
-        class="text-red-600 text-xs mt-1">
-        <span *ngIf="registerForm.get('username')?.errors?.['required']">Le nom d'utilisateur est requis.</span>
-      </div>
-
+      <input formControlName="username" placeholder="Username"
+       class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-green-700 transition" />
 
       <input formControlName="email" type="email" placeholder="Adresse e-mail"
-        class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-green-700 transition" />
-      <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
-        class="text-red-600 text-xs mt-1">
-        <span *ngIf="registerForm.get('email')?.errors?.['required']">L'adresse e-mail est requise.</span>
-        <span *ngIf="registerForm.get('email')?.errors?.['email']">Format d'e-mail invalide.</span>
-      </div>
+             class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-green-700 transition" />
 
       <input formControlName="password" type="password" placeholder="Mot de passe"
-        class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-green-700 transition" />
+             class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-green-700 transition" />
+
       <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
-        class="text-red-600 text-xs mt-1">
-        <span *ngIf="registerForm.get('password')?.errors?.['required']">Le mot de passe est requis.</span>
-        <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Le mot de passe doit contenir au moins 6
-          caractères.</span>
+           class="text-red-600 text-sm">
+        Le mot de passe doit contenir au moins 8 caractères, une majuscule et un caractère spécial.
       </div>
 
       <input formControlName="confirmPassword" type="password" placeholder="Confirmer le mot de passe"
-        class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-green-700 transition" />
-      <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
-        class="text-red-600 text-xs mt-1">
-        <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">La confirmation du mot de passe est
-          requise.</span>
-      </div>
+             class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-green-700 transition" />
 
-      <div *ngIf="registerForm.errors?.['passwordsMismatch'] && registerForm.get('confirmPassword')?.touched"
-        class="text-red-600 text-xs">
+      <div *ngIf="registerForm.errors?.['passwordsMismatch'] && registerForm.touched"
+           class="text-red-600 text-sm">
         Les mots de passe ne correspondent pas.
       </div>
 
       <button type="submit"
-        class="w-full bg-green-700 text-white py-3 rounded font-bold hover:bg-green-800 transition hover:scale-105"
-        [disabled]="registerForm.invalid"> Je m’inscris
+              class="w-full bg-green-700 text-white py-3 rounded font-bold hover:bg-green-800 transition hover:scale-105">
+        Je m’inscris
       </button>
-
-      <p class="mt-4 text-center text-sm text-gray-600 lg:hidden">
-        Déjà un compte ?
-        <a routerLink="/login"
-          class="underline text-green-700 hover:text-green-900 transition font-semibold">
-          Connectez-vous ici
-        </a>
-      </p>
     </form>
   </div>
 
