@@ -58,10 +58,9 @@ export class ShopComponent implements OnInit {
 
   ngOnInit() {
     this.token = this.authService.getToken() ?? '';
-    this.playerId = this.authService.getPlayerId() || null;
 
-    if (this.token && this.playerId) {
-      this.shopService.getCrownQuantity(this.token, this.playerId).subscribe({
+    if (this.token) {
+      this.shopService.getCrownQuantity(this.token).subscribe({
         next: (crown) => {
           this.crownCount = crown.quantity;
         },

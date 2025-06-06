@@ -36,7 +36,6 @@ export class HuntDetailJoinComponent {
 
   joinTreasureHunt(): void {
     const token = this.authService.getTokenOrRedirect();
-    console.log('Joining treasure hunt with token:', token);
     if (!token) return;
 
     if (this.isRegistered) {

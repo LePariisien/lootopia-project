@@ -9,6 +9,7 @@ import { ViewHuntsComponent } from './view-hunts/view-hunts.component';
 import { HuntParticipationPageComponent } from './pages/hunt-participation-page/hunt-participation-page.component';
 import { NotFoundComponent } from './pages/not-found-page/not-found.component';
 import { HuntDetailPageComponent } from './pages/hunt-detail-page/hunt-detail-page.component';
+import { ProfilPageComponent } from './pages/profil-page/profil-page.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 
 export const routes: Routes = [
@@ -17,6 +18,7 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: '', component: HomepageComponent },
+      { path: 'profile/:nickname', component: ProfilPageComponent },
       { path: 'create-hunt', component: CreateHuntComponent },
       { path: 'shop', component: ShopComponent },
       { path: 'ranking', component: RankingComponent },

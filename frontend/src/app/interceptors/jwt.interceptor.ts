@@ -9,7 +9,12 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('accessToken');
 
   const cloned = token
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+    ? req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
     : req;
 
   return next(cloned).pipe(

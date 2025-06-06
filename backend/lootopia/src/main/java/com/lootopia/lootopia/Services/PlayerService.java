@@ -65,10 +65,14 @@ public class PlayerService {
 	public ResponseEntity<?> getPlayer() {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		Player player = playerRepository.findByUserUsername(username)
-				.orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
+		Player player = getPlayerByUsername(username);
 
 		return ResponseEntity.ok(new PlayerDto(player));
+	}
+
+	public Player getPlayerByUsername(String username) {
+		return playerRepository.findByUserUsername(username)
+				.orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
 	}
 
 	public ResponseEntity<?> getPlayerById(String id) {

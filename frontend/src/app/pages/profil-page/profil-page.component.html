@@ -1,15 +1,4 @@
-<div *ngIf="profile as p" class="flex flex-col min-h-screen bg-green-50 text-gray-800">
-  <!-- Header -->
-  <header class="bg-white shadow p-4 flex justify-between items-center">
-    <div class="text-2xl font-bold">Lootopia</div>
-    <nav class="space-x-6">
-      <a href="#" class="hover:underline">Accueil</a>
-      <a href="#" class="hover:underline">Boutique</a>
-      <a href="#" class="hover:underline">Classement</a>
-      <button (click)="logout()" class="text-red-500 hover:underline">Se déconnecter</button>
-    </nav>
-  </header>
-
+<div *ngIf="profile as p" class="flex flex-col min-h-screen text-gray-800">
   <main class="flex flex-1">
     <!-- Sidebar -->
     <aside class="w-64 bg-white shadow-lg p-4 space-y-6">

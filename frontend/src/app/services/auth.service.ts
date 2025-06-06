@@ -11,6 +11,7 @@ export class AuthService {
   accessTokenString = "accessToken";
   refreshTokenString = "refreshToken";
   playerIdString = "playerId";
+  nicknameString = "nickname";
 
   constructor(private http: HttpClient, private router: Router, private playerService: PlayerService) { }
 
@@ -48,6 +49,7 @@ export class AuthService {
     this.playerService.getPlayer(accessToken).subscribe({
       next: (player: Player) => {
         localStorage.setItem(this.playerIdString, player.id);
+        localStorage.setItem(this.nicknameString, player.nickname || '');
       },
       error: (err: any) => {
         console.error('Erreur Player API:', err);
@@ -71,6 +73,7 @@ export class AuthService {
     localStorage.removeItem(this.accessTokenString);
     localStorage.removeItem(this.refreshTokenString);
     localStorage.removeItem(this.playerIdString);
+    localStorage.removeItem(this.nicknameString);
     if (redirect) {
       this.router.navigate(['/login']);
     }
@@ -95,5 +98,9 @@ export class AuthService {
 
   getPlayerId(): string | null {
     return localStorage.getItem(this.playerIdString);
+  }
+
+  getNickname(): string | null {
+    return localStorage.getItem(this.nicknameString);
   }
 }
