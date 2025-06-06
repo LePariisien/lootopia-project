@@ -1,5 +1,6 @@
 package com.lootopia.lootopia.Services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -18,6 +19,7 @@ import com.lootopia.lootopia.Repositories.PlayerRepository;
 import com.lootopia.lootopia.Repositories.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -53,7 +55,7 @@ public class PlayerService {
 		Player player = new Player();
 		player.setUser(userFind);
 		player.setNickname(nickname);
-		player.setLevel(1);
+		player.setScore(0);
 		player.setAvatarUrl(defaultAvatarUrl + "/player_default.png");
 		player.setBio("Bienvenue sur Lootopia !\n" +
 				"N'hésitez pas à m'en dire plus 😉");
@@ -87,8 +89,20 @@ public class PlayerService {
 	}
 
 	public Player getPlayerById(UUID playerId) {
-    	return playerRepository.findById(playerId)
-            .orElseThrow(() -> new EntityNotFoundException("Erreur : Joueur introuvable avec l'ID " + playerId));
-    }
+		return playerRepository.findById(playerId)
+				.orElseThrow(() -> new EntityNotFoundException("Erreur : Joueur introuvable avec l'ID " + playerId));
+	}
 
+	public ResponseEntity<?> getAllPlayers() {
+		return ResponseEntity.ok(
+				playerRepository.findAll().stream()
+						.map(PlayerDto::new)
+						.toList()
+		);
+	}
+
+	public ResponseEntity<?> getPlayerCount() {
+		long count = playerRepository.count();
+		return ResponseEntity.ok(count);
+	}
 }

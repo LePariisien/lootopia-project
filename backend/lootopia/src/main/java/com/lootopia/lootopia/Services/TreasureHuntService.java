@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.lootopia.lootopia.Dtos.ClueDto;
+import com.lootopia.lootopia.Dtos.DigResultDto;
 import com.lootopia.lootopia.Dtos.TreasureDto;
 import com.lootopia.lootopia.Dtos.TreasureHuntDto;
 import com.lootopia.lootopia.Dtos.TreasureHuntWithTreasureDto;
@@ -103,25 +104,25 @@ public class TreasureHuntService {
         try {
             List<ClueDto> clueResponse = locationServClient.digAClue(UUID.fromString(treasureId), latitude, longitude,
                     distance);
-            if (clueResponse != null && !clueResponse.isEmpty()) {
-                return ResponseEntity.ok(clueResponse);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("1) Erreur lors de l'appel à digAHole" + e.getMessage());
-        }
-
-        try {
             List<TreasureDto> treasureResponse = locationServClient.digATreasure(UUID.fromString(treasureId), latitude,
-                    longitude,
-                    distance);
-            if (treasureResponse != null && !treasureResponse.isEmpty()) {
-                return ResponseEntity.ok(treasureResponse);
+                    longitude, distance);
+
+            boolean hasClues = clueResponse != null && !clueResponse.isEmpty();
+            boolean hasTreasures = treasureResponse != null && !treasureResponse.isEmpty();
+
+            if (hasClues || hasTreasures) {
+                return ResponseEntity.ok(new DigResultDto(clueResponse, treasureResponse));
+            } else {
+                return ResponseEntity.ok(new DigResultDto(List.of(), List.of()));
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("2) Erreur lors de l'appel à digAHole" + e.getMessage());
+            return ResponseEntity.badRequest().body("Erreur lors de la fouille : " + e.getMessage());
         }
-
-        return ResponseEntity.ok("Aucun trésor ou indice trouvé dans cette zone.");
     }
+
+    	public ResponseEntity<?> getTreasureHuntCount() {
+		long count = treasureHuntRepository.count();
+		return ResponseEntity.ok(count);
+	}
 
 }

@@ -11,9 +11,31 @@ export const ApiRoutes = {
 
   // Clues
   createCluesBatch: () => `${ApiRoutesEnum.Location}/clue/batch`,
+  getCluesByTreasureId: (treasureId: string) =>
+    `${ApiRoutesEnum.Location}/clue/treasure/${treasureId}`,
 
   // Treasure Hunt
   treasureHunt: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt`,
+  treasureHuntAll: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt/all`,
+  treasureHuntCount: () => `${ApiRoutesEnum.Lootopia}/treasure-hunt/count`,
+
+  // Treasure
+  treasureDetails: (id: string) => `${ApiRoutesEnum.Location}/treasure/${id}/details`,
+  treasureHuntById: (id: number) => `${ApiRoutesEnum.Lootopia}/treasure-hunt/${id}`,
+  digAHole: (treasureId: string, latitude: number, longitude: number) => `${ApiRoutesEnum.Lootopia}/treasure-hunt/digAHole?treasureId=${treasureId}&latitude=${latitude}&longitude=${longitude}`,
+
+  // Participation
+  participation: () => `${ApiRoutesEnum.Lootopia}/participations`,
+  participationById: (id: string) => `${ApiRoutesEnum.Lootopia}/participations/${id}`,
+
+  // Treasure
+  treasure: () => `${ApiRoutesEnum.Location}/treasure`,
+  treasureById: (id: string) => `${ApiRoutesEnum.Location}/treasure/${id}`,
+  treasureAll: () => `${ApiRoutesEnum.Location}/treasure/all`,
+
+  // Player
+  playerAll: () => `${ApiRoutesEnum.Lootopia}/player/all`,
+  playerCount: () => `${ApiRoutesEnum.Lootopia}/player/count`,
 };
 
 export enum ApiRoutesEnum {

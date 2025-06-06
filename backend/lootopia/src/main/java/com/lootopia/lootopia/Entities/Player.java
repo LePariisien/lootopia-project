@@ -1,6 +1,5 @@
 package com.lootopia.lootopia.Entities;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.OnDelete;
@@ -29,7 +28,7 @@ public class Player {
     private String nickname;
 
     @Column(nullable = false)
-    private int level;
+    private int score;
 
     @Column(nullable = false)
     private String avatarUrl;

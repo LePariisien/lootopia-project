@@ -1,0 +1,72 @@
+<div class="border-green-200 shadow-lg rounded-lg bg-white">
+  <div class="p-6 pb-0 flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <span class="bg-green-600 text-white rounded px-2 py-1 text-xs">
+        Étape {{ step + 1 }}/{{ clues.length }}
+      </span>
+      <span class="flex items-center gap-2 text-green-800 font-bold"
+        *ngIf="clues[step].solved"
+      >
+        résolu <lucide-icon [img]="Check" class="size-4 text-green-600"></lucide-icon>
+      </span>
+    </div>
+    <div class="flex gap-2">
+      <button
+        class="flex justify-center items-center gap-2 border border-green-300 text-green-800 px-3 py-1 rounded hover:bg-green-100 disabled:cursor-no-drop disabled:opacity-50"
+        [disabled]="step <= 0"
+        (click)="previousStep()"
+      >
+        <lucide-icon [img]="ChevronLeft" class="size-4"></lucide-icon>
+         Précédent
+      </button>
+      <button
+        class="flex justify-center items-center gap-2 border border-green-300 text-green-800 px-3 py-1 rounded hover:bg-green-100 disabled:cursor-no-drop disabled:opacity-50"
+        [disabled]="step >= clues.length - 1 || !clues[step].solved"
+        (click)="nextStep()"
+      >
+        Suivant
+        <lucide-icon [img]="ChevronRight" class="size-4"></lucide-icon>
+      </button>
+    </div>
+  </div>
+  <div class="p-6">
+    <h2 class="text-2xl text-green-900 font-bold mb-2">
+      {{ clues[step].title }}
+    </h2>
+    <p class="text-green-700 mb-4">
+      {{ clues[step].message }}
+    </p>
+
+    <div class="bg-green-100 p-4 rounded-lg border border-green-200 mb-4">
+      <h3 class="font-bold text-green-900 mb-2 flex items-center">
+        <lucide-icon [img]="MapPin" class="size-5 mr-2"></lucide-icon>
+         Localisation
+      </h3>
+      <p class="text-green-800 ml-7">
+        {{ clues[step].address }}
+      </p>
+    </div>
+
+    <div>
+      <h3 class="font-bold text-green-900 mb-2">Énigme</h3>
+      <div class="flex items-center gap-4 bg-white p-4 rounded-lg border border-green-200 text-green-800">
+        <lucide-icon [img]="Quote" class="size-5"></lucide-icon>
+        <p class="italic">
+          {{ clues[step].message }}
+        </p>
+      </div>
+    </div>
+
+    <div class="my-4 border-t border-green-200"></div>
+
+    <div class="space-y-4">
+      <button class="flex justify-center items-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white rounded px-3 py-2 disabled:cursor-no-drop disabled:opacity-50"
+        [disabled]="clues[step].solved"
+        (click)="solveStep()"
+      >
+        Creuser
+        <lucide-icon [img]="Bomb" class="size-4"></lucide-icon>
+      </button>
+    </div>
+  </div>
+</div>

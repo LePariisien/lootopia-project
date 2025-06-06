@@ -1,4 +1,6 @@
-export interface TreasureHuntRequest {
+import { Treasure } from "./treasure.model";
+
+export interface TreasureHunt {
   id: string;
   name: string;
   description: string;
@@ -7,16 +9,9 @@ export interface TreasureHuntRequest {
   startDate: string;
   endDate: string;
   organizer_id: string;
-  treasure: Treasure;
+  treasure?: Treasure;
   found: boolean;
-}
-
-export interface Treasure {
-  id: string;
-  latitude: number;
-  longitude: number;
-  address: string;
-  clueIds: string[];
+  address?: string; 
 }
 
 export enum HuntLevel {

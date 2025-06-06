@@ -26,7 +26,7 @@ public class TreasureHuntController {
         return treasureHuntService.get(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<?> getAll() {
         return treasureHuntService.getAll();
     }
@@ -48,6 +48,11 @@ public class TreasureHuntController {
             @RequestParam double longitude,
             @RequestParam(required = false, defaultValue = "15") double distance) {
         return treasureHuntService.digAHole(treasureId, latitude, longitude, distance);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<?> getTreasureHuntCount() {
+        return treasureHuntService.getTreasureHuntCount();
     }
 
 }

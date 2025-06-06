@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LucideAngularModule, LocateIcon, Image, Search, Plus } from 'lucide-angular';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-import { HuntStepComponent } from '../hunt-step/hunt-step.component';
+import { HuntStepComponent } from '../../hunt-step/hunt-step.component';
 
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
@@ -12,12 +12,13 @@ import * as L from 'leaflet';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { LocationSearchComponent } from '../components/location-search/location-search.component';
+import { LocationSearchComponent } from '../../components/location-search/location-search.component';
 
-import { TreasureHuntService } from '../services/treasure-hunt.service';
-import { TreasureHuntRequest } from '../models/treasure-hunt.model';
-import { ClueService } from '../services/clue.service';
-import { Clue } from '../models/clue.model';
+import { TreasureHuntService } from '../../services/treasure-hunt.service';
+import { TreasureHunt } from '../../models/treasure-hunt.model';
+import { ClueService } from '../../services/clue.service';
+import { Clue } from '../../models/clue.model';
+import { HeaderComponent } from "../../components/header/header.component";
 
 interface HuntStep {
   id: number;
@@ -42,8 +43,9 @@ interface HuntStep {
     LucideAngularModule,
     LeafletModule,
     HttpClientModule,
-    LocationSearchComponent
-  ]
+    LocationSearchComponent,
+    HeaderComponent
+]
 })
 export class CreateHuntComponent implements OnInit {
   readonly LocateIcon = LocateIcon;
@@ -158,7 +160,6 @@ export class CreateHuntComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.coverImage = input.files[0];
-      console.log('Cover image selected:', this.coverImage.name);
     }
   }
 
@@ -191,6 +192,7 @@ export class CreateHuntComponent implements OnInit {
   publishClues(token: string, treasureId: string): void {
     const clues: Clue[] = this.huntSteps.map((step, index) => ({
       id: "",
+      title: step.title,
       latitude: step.latitute,
       longitude: step.longitude,
       address: step.location,
@@ -215,7 +217,7 @@ export class CreateHuntComponent implements OnInit {
       return;
     }
 
-    const body: TreasureHuntRequest = {
+    const body: TreasureHunt = {
       id: "",
       name: this.huntTitle,
       description: this.huntDescription,
@@ -237,8 +239,6 @@ export class CreateHuntComponent implements OnInit {
 
     this.treasureHuntService.createTreasureHunt(this.TOKEN, body).subscribe({
       next: (response) => {
-        console.log('Hunt published!');
-
         const treasure_id = response.treasure_id;
         body.treasure_id = treasure_id;
         this.publishClues(this.TOKEN, treasure_id);
