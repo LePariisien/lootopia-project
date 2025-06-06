@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
 
   const cloned = token
     ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
@@ -17,7 +17,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         return auth.refreshToken().pipe(
           switchMap((res) => {
-            localStorage.setItem('token', res.accessToken);
+            localStorage.setItem('accessToken', res.accessToken);
             localStorage.setItem('refreshToken', res.refreshToken);
             const retryReq = req.clone({
               setHeaders: { Authorization: `Bearer ${res.accessToken}` }
@@ -25,7 +25,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
             return next(retryReq);
           }),
           catchError(() => {
-            localStorage.removeItem('token');
+            localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             return throwError(() => error);
           })

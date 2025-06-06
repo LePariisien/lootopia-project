@@ -15,4 +15,6 @@ public class JwtAuthResponse {
 
     private String refreshToken;
 
+    private boolean emailVerified;
+
 }
