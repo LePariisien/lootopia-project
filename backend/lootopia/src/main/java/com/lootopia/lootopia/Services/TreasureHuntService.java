@@ -120,4 +120,9 @@ public class TreasureHuntService {
         }
     }
 
+    	public ResponseEntity<?> getTreasureHuntCount() {
+		long count = treasureHuntRepository.count();
+		return ResponseEntity.ok(count);
+	}
+
 }

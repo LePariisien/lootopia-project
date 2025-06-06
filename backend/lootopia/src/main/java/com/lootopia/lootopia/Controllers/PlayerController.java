@@ -24,4 +24,14 @@ public class PlayerController extends AbstractController {
         return playerService.updatePlayer(playerDto);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllPlayers() {
+        return playerService.getAllPlayers();
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<?> getPlayerCount() {
+        return playerService.getPlayerCount();
+    }
+
 }
