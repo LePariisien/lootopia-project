@@ -25,7 +25,7 @@ export class LoginComponent {
     this.auth.login(this.email, this.password).subscribe({
       next: (response) => {
         if (response.accessToken && response.refreshToken) {
-          this.auth.setTokens(response.accessToken, response.refreshToken, true);
+          this.auth.setTokens(response.accessToken, response.refreshToken, response.emailVerified, true);
         } else if (response.mfaRequired) {
           this.showMfa = true;
         }
@@ -36,7 +36,7 @@ export class LoginComponent {
   verifyMfa() {
     this.auth.verifyMfa(this.email, this.mfaCode).subscribe({
       next: (response) => {
-        this.auth.setTokens(response.accessToken, response.refreshToken, true);
+        this.auth.setTokens(response.accessToken, response.refreshToken, response.emailVerified, true);
       },
       error: () => {
         this.errorMessage = 'Code MFA invalide';

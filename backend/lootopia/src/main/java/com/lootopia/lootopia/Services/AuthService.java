@@ -184,6 +184,7 @@ public class AuthService {
                 .refreshToken(jwtService.generateRefreshToken(user))
                 .nickname(player.getNickname())
                 .playerId(player.getId())
+                .emailVerified(user.isEmailVerified())
                 .build();
     }
 

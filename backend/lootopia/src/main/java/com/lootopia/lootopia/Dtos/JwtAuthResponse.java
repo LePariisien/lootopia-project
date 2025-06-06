@@ -21,4 +21,6 @@ public class JwtAuthResponse {
 
     private UUID playerId;
 
+    private boolean emailVerified;
+
 }

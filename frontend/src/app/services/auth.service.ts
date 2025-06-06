@@ -12,6 +12,7 @@ export class AuthService {
   refreshTokenString = "refreshToken";
   playerIdString = "playerId";
   nicknameString = "nickname";
+  emailVerifiedString = "emailVerified";
 
   constructor(private http: HttpClient, private router: Router, private playerService: PlayerService) { }
 
@@ -42,9 +43,10 @@ export class AuthService {
     return this.http.post<any>(ApiRoutes.refresh(), { refreshToken });
   }
 
-  setTokens(accessToken: string, refreshToken: string, redirect: boolean = false): void {
+  setTokens(accessToken: string, refreshToken: string, emailVerified: boolean = false, redirect: boolean = false): void {
     localStorage.setItem(this.accessTokenString, accessToken);
     localStorage.setItem(this.refreshTokenString, refreshToken);
+    localStorage.setItem(this.emailVerifiedString, String(emailVerified));
 
     this.playerService.getPlayer(accessToken).subscribe({
       next: (player: Player) => {
@@ -74,6 +76,7 @@ export class AuthService {
     localStorage.removeItem(this.refreshTokenString);
     localStorage.removeItem(this.playerIdString);
     localStorage.removeItem(this.nicknameString);
+    localStorage.removeItem(this.emailVerifiedString);
     if (redirect) {
       this.router.navigate(['/login']);
     }
