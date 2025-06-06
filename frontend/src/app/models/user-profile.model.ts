@@ -7,3 +7,11 @@ export interface UserProfile {
   riddlesSolved: number;
   badgesWon: number;
 }
+
+export interface Player {
+  nickname: string;
+  bio: string;
+  country: string;
+  avatarUrl: string;
+  level: number;
+}

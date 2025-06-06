@@ -34,6 +34,7 @@ export class LoginComponent {
         localStorage.setItem('accessToken', response.accessToken);
         localStorage.setItem('refreshToken', response.refreshToken);
         localStorage.setItem('userId', response.userId);
+        localStorage.setItem('emailVerified', String(response.emailVerified));
         this.router.navigate(['/profile']);
       },
       error: (err) => {
