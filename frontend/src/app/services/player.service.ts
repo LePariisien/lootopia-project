@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiRoutes } from '../api-routes';
 import { Player } from '../models/player.model';
@@ -14,6 +14,15 @@ export class PlayerService {
   }
 
   getPlayerCount(): Observable<number> {
-        return this.http.get<number>(ApiRoutes.playerCount());
-    }
+    return this.http.get<number>(ApiRoutes.playerCount());
+  }
+
+  getPlayerById(token: string, playerId: string): Observable<Player> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<Player>(ApiRoutes.playerById(playerId), { headers });
+  }
+
 }

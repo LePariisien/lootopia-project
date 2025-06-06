@@ -1,0 +1,50 @@
+<app-header></app-header>
+
+<div *ngIf="!treasureHunt" class="text-center py-10 text-green-700">
+  Chargement de la chasse au trésor...
+</div>
+<div *ngIf="treasureHunt" class="min-h-screen p-4 md:p-8 pb-8">
+  <div class="max-w-6xl mx-auto space-y-6">
+    <!-- Image de couverture -->
+    <div class="relative w-full h-64 md:h-96 rounded-xl overflow-hidden">
+      <div
+        class="absolute inset-0 bg-cover bg-center bg-[url('/assets/images/default/cover_treasure_hunt_default.png')]"
+      >
+        <div class="absolute inset-0 bg-gradient-to-t from-green-900/70 to-transparent"></div>
+      </div>
+      <div class="absolute bottom-0 left-0 p-6 text-white">
+        <span class="bg-green-600 mb-2 px-2 py-1 rounded text-xs font-semibold">Aventure</span>
+        <h1 class="text-3xl md:text-4xl font-bold">{{ treasureHunt.name }}</h1>
+        <p class="text-green-100 mt-2 max-w-2xl">{{ treasureHunt.description }}</p>
+      </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Colonne principale -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="mb-6">
+          <app-hunt-detail-content
+            [treasureHunt]="treasureHunt"
+          ></app-hunt-detail-content>
+        </div>
+        <app-hunt-detail-opinion
+          [treasureHunt]="treasureHunt"
+        ></app-hunt-detail-opinion>
+      </div>
+
+      <!-- Colonne latérale -->
+      <div class="space-y-6">
+        <div class="mb-6">
+          <app-hunt-detail-join
+            [treasureHunt]="treasureHunt"
+            [(isRegistered)]="isRegistered"
+          ></app-hunt-detail-join>
+        </div>
+        <app-hunt-detail-organizer
+          [organizer]="organizer"
+        ></app-hunt-detail-organizer>
+      </div>
+    </div>
+  </div>
+</div>

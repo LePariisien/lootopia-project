@@ -19,6 +19,11 @@ public class PlayerController extends AbstractController {
         return playerService.getPlayer();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPlayerById(@PathVariable String id) {
+        return playerService.getPlayerById(id);
+    }
+
     @PutMapping
     public ResponseEntity<?> updatePlayer(@RequestBody PlayerDto playerDto) {
         return playerService.updatePlayer(playerDto);

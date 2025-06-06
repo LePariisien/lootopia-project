@@ -22,8 +22,11 @@ export class LoginComponent {
 
   login() {
     this.auth.login(this.username, this.password).subscribe({
-      next: () => {
-        this.showMfa = true;
+      next: (response) => {
+        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('refreshToken', response.refreshToken);
+        this.router.navigate(['/']);
+        // this.showMfa = true;
       },
       error: () => {
         this.errorMessage = 'Identifiants incorrects';
@@ -34,7 +37,7 @@ export class LoginComponent {
   verifyMfa() {
     this.auth.verifyMfa(this.username, this.mfaCode).subscribe({
       next: (res) => {
-        localStorage.setItem('token', res.token); 
+        localStorage.setItem('token', res.token);
         this.router.navigate(['/']);
       },
       error: () => {

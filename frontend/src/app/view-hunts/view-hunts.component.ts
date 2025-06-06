@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { HuntFilterPipe } from './hunt-filter.pipe';
 import { HeaderComponent } from '../components/header/header.component';
 import { TreasureService } from '../services/treasure.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-hunts',
@@ -36,7 +37,9 @@ export class ViewHuntsComponent implements OnInit {
     10: 'assets/images/hunt/catacombe-paysage.jpg',
   };
 
-  constructor(private huntService: TreasureHuntService, private treasureService: TreasureService) {}
+  constructor(private huntService: TreasureHuntService,
+    private treasureService: TreasureService,
+    private router: Router) {}
 
   ngOnInit() {
     this.huntService.getAllTreasureHunts().subscribe({
@@ -52,7 +55,7 @@ export class ViewHuntsComponent implements OnInit {
                 hunt.treasure_id === element.treasure_id ? { ...hunt, treasure } : hunt)
             },
             error: (err) => console.error('Error fetching treasure details:', err)
-          });  
+          });
         });
         this.loading = false;
 
@@ -60,4 +63,9 @@ export class ViewHuntsComponent implements OnInit {
       error: () => this.loading = false
     });
   }
+
+  goTreasureHunt(id: number) {
+    this.router.navigate(['/hunt', id]);
+  }
+
 }

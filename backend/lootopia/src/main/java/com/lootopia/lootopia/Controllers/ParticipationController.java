@@ -43,7 +43,7 @@ public class ParticipationController {
         return participationService.getParticipationById(id);
     }
 
-    @GetMapping("/treasure/{treasureHuntId}")
+    @GetMapping("/treasure-hunt/{treasureHuntId}")
     public ResponseEntity<?> getParticipation(@PathVariable Long treasureHuntId) {
         return participationService.getParticipation(treasureHuntId);
     }
@@ -56,6 +56,11 @@ public class ParticipationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteParticipation(@PathVariable UUID id) {
         return participationService.deleteParticipation(id);
+    }
+
+    @GetMapping("/treasure-hunt/{treasureHuntId}/player")
+    public ResponseEntity<?> getParticipationByTreasureHuntAndPlayer(@PathVariable Long treasureHuntId) {
+        return participationService.getParticipationByTreasureHuntAndPlayer(treasureHuntId);
     }
 
 }

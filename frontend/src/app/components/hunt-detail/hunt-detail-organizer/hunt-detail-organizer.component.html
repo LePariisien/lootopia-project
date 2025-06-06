@@ -1,0 +1,28 @@
+<div class="border border-green-200 shadow-lg rounded-xl bg-white">
+  <div class="p-6 border-b border-green-100">
+    <h2 class="text-green-900 text-xl font-bold">Créateur</h2>
+  </div>
+  <div *ngIf="organizer" class="p-6">
+    <div class="flex items-center">
+      <img src="/assets/images/default/player_default.png" alt="Avatar" class="h-12 w-12 rounded-full mr-4" />
+      <div>
+        <h4 class="font-bold text-green-900">{{ organizer.nickname }}</h4>
+        <p class="text-green-700 text-sm">
+          <lucide-icon [img]="Medal" class="inline mr-1" size="16"></lucide-icon>
+          {{ organizer.rank || 'Non classé' }}
+        </p>
+        <div class="flex items-center mt-1">
+          <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+          <span class="text-green-800 text-sm">4.8 (42 chasses)</span>
+        </div>
+      </div>
+    </div>
+    <p class="text-green-800 text-sm mt-4 line-clamp-3">
+      {{ organizer.bio }}
+    </p>
+    <button (click)="viewProfile(organizer.id)"
+      class="w-full mt-4 border border-green-300 text-green-800 hover:bg-green-100 hover:border-green-400 rounded py-2">
+      Voir le profil
+    </button>
+  </div>
+</div>
