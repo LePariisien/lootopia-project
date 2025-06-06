@@ -1,36 +1,61 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "../components/header/header.component";
-
-interface PlayerRanking {
-  rank: number;
-  username: string;
-  score: number;
-}
+import { LucideAngularModule, Medal } from 'lucide-angular';
+import { PlayerService } from '../services/player.service';
+import { TreasureHuntService } from '../services/treasure-hunt.service';
+import { Player } from '../models/player.model';
 
 @Component({
   selector: 'app-ranking',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, LucideAngularModule],
   templateUrl: './ranking.component.html',
   styleUrls: ['./ranking.component.css']
 })
 export class RankingComponent implements OnInit {
-  players: PlayerRanking[] = [];
+  readonly Medal = Medal;
+  topPlayers: Player[] = [];
+  otherPlayers: Player[] = [];
+  playerCount!: number;
+  totalScore!: number;
+  treasureHuntCount!: number;
+
+  constructor(private playerService: PlayerService, private treasureHuntService: TreasureHuntService) {}
+
 
   ngOnInit() {
-    // Exemple statique, à remplacer par un appel API
-    this.players = [
-      { rank: 1, username: 'Alice', score: 1200 },
-      { rank: 2, username: 'Bob', score: 1100 },
-      { rank: 3, username: 'Charlie', score: 950 },
-      { rank: 4, username: 'David', score: 900 },
-      { rank: 5, username: 'Eve', score: 850 },
-      { rank: 6, username: 'Frank', score: 800 },
-      { rank: 7, username: 'Grace', score: 750 },
-      { rank: 8, username: 'Heidi', score: 700 },
-      { rank: 9, username: 'Ivan', score: 650 },
-      { rank: 10, username: 'Judy', score: 600 }
-    ];
+    this.playerService.getAllPlayers().subscribe(players => {
+      players.sort((a, b) => b.score - a.score);
+      this.topPlayers = players.slice(0, 3).map((p, i) => ({
+        ...p,
+        rank: i + 1,
+        color: i === 0 ? "#FDD47D" : i === 1 ? "#D9D9D9" : "#E5A76E",
+        avatar: p.nickname?.substring(0, 2).toUpperCase()
+      }));
+      this.otherPlayers = players.slice(3, 10).map((p, i) => ({
+        ...p,
+        rank: i + 4,
+        avatar: p.nickname?.substring(0, 2).toUpperCase()
+      }));
+      this.totalScore = players.reduce((sum, p) => sum + (p.score || 0), 0);
+    });
+    this.playerService.getPlayerCount().subscribe(count => {
+      console.log(`Total players: ${count}`);
+      this.playerCount = count;
+      });
+    this.treasureHuntService.getTreasureHuntCount().subscribe(count => {
+      console.log(`Total treasure hunts: ${count}`);
+      this.treasureHuntCount = count;
+    });
+  }
+
+  getRankIcon(rank: number): string {
+    switch (rank) {
+      case 1: return "assets/images/rank/top1.png";
+      case 2: return "assets/images/rank/top2.png";
+      case 3: return "assets/images/rank/top3.png";
+      default: return "";
+    }
   }
 }

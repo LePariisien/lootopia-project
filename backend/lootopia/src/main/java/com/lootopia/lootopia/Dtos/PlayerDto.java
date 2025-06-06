@@ -14,14 +14,14 @@ import lombok.ToString;
 public class PlayerDto {
 
     private String nickname;
-    private int level;
+    private int score;
     private String avatarUrl;
     private String bio;
     private String country;
 
     public PlayerDto(Player player) {
         this.nickname = player.getNickname();
-        this.level = player.getLevel();
+        this.score = player.getScore();
         this.avatarUrl = player.getAvatarUrl();
         this.bio = player.getBio();
         this.country = player.getCountry();

@@ -50,4 +50,9 @@ public class TreasureHuntController {
         return treasureHuntService.digAHole(treasureId, latitude, longitude, distance);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<?> getTreasureHuntCount() {
+        return treasureHuntService.getTreasureHuntCount();
+    }
+
 }

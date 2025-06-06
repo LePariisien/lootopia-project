@@ -28,7 +28,7 @@ public class Player {
     private String nickname;
 
     @Column(nullable = false)
-    private int level;
+    private int score;
 
     @Column(nullable = false)
     private String avatarUrl;

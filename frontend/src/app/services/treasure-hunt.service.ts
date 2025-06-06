@@ -35,4 +35,8 @@ export class TreasureHuntService {
     });
     return this.http.get(ApiRoutes.digAHole(treasureId, latitude, longitude), { headers });
   }
+
+  getTreasureHuntCount(): Observable<number> {
+        return this.http.get<number>(ApiRoutes.treasureHuntCount());
+    }
 }
