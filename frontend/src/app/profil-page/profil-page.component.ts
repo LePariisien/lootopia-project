@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { UserService } from '../services/userProfile.service';
 import { AuthService } from '../services/auth.service';
-import { UserProfile } from '../models/user-profile.model';
+import { UserProfile, Player } from '../models/user-profile.model';
 
 @Component({
   selector: 'app-profil-page',
@@ -13,7 +13,8 @@ import { UserProfile } from '../models/user-profile.model';
   styleUrls: ['./profil-page.component.css']
 })
 export class ProfilPageComponent implements OnInit {
-  profile: UserProfile | null = null;
+  userProfile: UserProfile | null = null;
+  player: Player | null = null;
 
   constructor(
     private userService: UserService,
@@ -31,11 +32,12 @@ export class ProfilPageComponent implements OnInit {
 
     this.userService.getProfile(userId).subscribe({
       next: (data) => {
-        this.profile = data;
+        this.userProfile = data.userProfile;
+        this.player = data.player;
       },
       error: (err) => {
         console.error('Erreur de récupération du profil:', err);
-        this.router.navigate(['/login']); 
+        this.router.navigate(['/login']);
       }
     });
   }
