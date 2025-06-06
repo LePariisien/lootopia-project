@@ -1,36 +1,72 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
   registerForm: FormGroup;
+  message: string = '';
+  error: string = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.registerForm = this.fb.group({
-      prenom: [''],
-      nom: [''],
+      username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-      confirmPassword: ['', [Validators.required]],
-      auth2fa: [false]
-    });
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/)
+      ]],
+      confirmPassword: ['', Validators.required],
+      mfaEnabled: [false]
+    }, { validators: this.passwordMatchValidator });
   }
 
-  onSubmit() {
-    if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordsMismatch: true };
+  }
+
+  onSubmit(): void {
+    if (this.registerForm.invalid) {
+      return;
     }
-  }
 
-  loginWithGoogle() {
-    console.log('Connexion Google');
+    console.log("🔁 Envoi du formulaire...");
+    const { confirmPassword, ...formValue } = this.registerForm.value;
+
+    this.authService.register({
+      email: formValue.email,
+      password: formValue.password,
+      username: formValue.username,
+      mfaEnabled: formValue.mfaEnabled
+    }, window.location.origin).subscribe({
+      next: (res) => {
+        console.log("Réponse reçue :", res); 
+        this.message = "Compte créé avec succès. Veuillez vérifier votre adresse email.";
+        setTimeout(() => {
+          console.log("⏩ Redirection vers /login");
+          this.router.navigate(['/login']);
+        }, 3000);
+      },
+      error: (err) => {
+        console.error("Erreur reçue :", err); 
+        this.error = err?.error?.message || "Erreur lors de l'inscription.";
+      }
+    });
   }
 }

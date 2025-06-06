@@ -8,6 +8,9 @@ import { RankingComponent } from './ranking/ranking.component';
 import { ViewHuntsComponent } from './view-hunts/view-hunts.component';
 import { HuntParticipationPageComponent } from './pages/hunt-participation-page/hunt-participation-page.component';
 import { NotFoundComponent } from './pages/not-found-page/not-found.component';
+import { ProfilPageComponent } from './profil-page/profil-page.component';
+import { AuthGuard } from './guards/auth.guards';
+import { VerifyComponent } from './verify/verify.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,5 +22,12 @@ export const routes: Routes = [
   { path: 'view-hunts', component: ViewHuntsComponent },
   { path: 'participation/:id', component: HuntParticipationPageComponent },
   { path: '404', component: NotFoundComponent },
-  { path: '**', redirectTo: '404' }
+  { path: '**', redirectTo: '404' },
+  { path: 'verify', component: VerifyComponent },
+  {
+    path: 'profile',
+    component: ProfilPageComponent,
+    canActivate: [AuthGuard] 
+  },
+
 ];

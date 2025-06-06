@@ -1,45 +1,49 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  imports: [FormsModule, CommonModule, RouterModule],
 })
 export class LoginComponent {
-  username = '';
-  password = '';
-  mfaCode = '';
-  showMfa = false;
-  errorMessage = '';
+  email: string = '';
+  password: string = '';
+  mfaCode: string = ''; // requis si MFA activé côté backend
+  errorMessage: string = '';
+  showPassword: boolean = false;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
-  login() {
-    this.auth.login(this.username, this.password).subscribe({
-      next: () => {
-        this.showMfa = true;
+  login(): void {
+    if (!this.email || !this.password) {
+      this.errorMessage = 'Veuillez remplir tous les champs.';
+      return;
+    }
+
+    this.authService.login(this.email, this.password, this.mfaCode).subscribe({
+      next: (response) => {
+        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('refreshToken', response.refreshToken);
+        localStorage.setItem('userId', response.userId);
+        this.router.navigate(['/profile']);
       },
-      error: () => {
-        this.errorMessage = 'Identifiants incorrects';
+      error: (err) => {
+        this.errorMessage =
+          err.error?.message || 'Identifiants invalides. Veuillez réessayer.';
       },
     });
   }
 
-  verifyMfa() {
-    this.auth.verifyMfa(this.username, this.mfaCode).subscribe({
-      next: (res) => {
-        localStorage.setItem('token', res.token); 
-        this.router.navigate(['/']);
-      },
-      error: () => {
-        this.errorMessage = 'Code MFA invalide';
-      },
-    });
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }
