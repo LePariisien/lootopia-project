@@ -7,9 +7,28 @@ import { ApiRoutes } from '../api-routes';
 export class AuthService {
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(ApiRoutes.login(), { username, password });
+  register(userData: any, siteURL: string): Observable<any> {
+  return this.http.post(
+  ApiRoutes.signUp() + '?siteURL=' + encodeURIComponent(siteURL), userData);
   }
+
+
+  login(email: string, password: string, mfaCode: string = ''): Observable<any> {
+    if (!email || !password) {
+      return throwError(() => new Error('Identifiants manquants'));
+    }
+    return this.http.post(ApiRoutes.login(), { email, password, mfaCode });
+  }
+  
+  logout(): void {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('userId');
+}
+
+verifyAccount(code: string) {
+  return this.http.get(ApiRoutes.verify() + '?code=' + code);
+}
 
   verifyMfa(username: string, mfaCode: string): Observable<any> {
     return this.http.post(ApiRoutes.verifyMfa(username, mfaCode), {});
