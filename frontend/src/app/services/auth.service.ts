@@ -14,8 +14,19 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router, private playerService: PlayerService) { }
 
-  login(email: string, password: string): Observable<any> {
-    return this.http.post(ApiRoutes.login(), { email, password });
+  register(userData: any, siteURL: string): Observable<any> {
+    return this.http.post(ApiRoutes.signUp() + '?siteURL=' + encodeURIComponent(siteURL), userData);
+  }
+
+  login(email: string, password: string, mfaCode: string = ''): Observable<any> {
+    if (!email || !password) {
+      return throwError(() => new Error('Identifiants manquants'));
+    }
+    return this.http.post(ApiRoutes.login(), { email, password, mfaCode });
+  }
+
+  verifyAccount(code: string) {
+    return this.http.get(ApiRoutes.verify() + '?code=' + code);
   }
 
   verifyMfa(username: string, mfaCode: string): Observable<any> {
@@ -36,9 +47,7 @@ export class AuthService {
 
     this.playerService.getPlayer(accessToken).subscribe({
       next: (player: Player) => {
-        console.log('Player récupéré:', player);
         localStorage.setItem(this.playerIdString, player.id);
-        console.log('Player ID stocké:', localStorage.getItem(this.playerIdString));
       },
       error: (err: any) => {
         console.error('Erreur Player API:', err);
@@ -85,7 +94,6 @@ export class AuthService {
   }
 
   getPlayerId(): string | null {
-    console.log('1| ',localStorage.getItem(this.playerIdString))
     return localStorage.getItem(this.playerIdString);
   }
 }

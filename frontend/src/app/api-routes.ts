@@ -4,6 +4,12 @@ export const ApiRoutes = {
   verifyMfa: (username: string, mfaCode: string) =>
     `${ApiRoutesEnum.Lootopia}/auth/verify-mfa?username=${username}&mfaCode=${mfaCode}`,
   refresh: () => `${ApiRoutesEnum.Lootopia}/token/refresh`,
+  signUp: () => `${ApiRoutesEnum.Lootopia}/auth/sign-up`,
+
+  verify: () => `${ApiRoutesEnum.Lootopia}/auth/verify`,
+
+  profile: (userId: string) =>
+    `${ApiRoutesEnum.Lootopia}/users/${userId}/profile`,
 
   // Paiements
   createPaymentIntent: (amount: number) =>
