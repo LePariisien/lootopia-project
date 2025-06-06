@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { RouterModule } from '@angular/router';
 
@@ -9,31 +9,32 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  username = '';
-  password = '';
-  mfaCode = '';
-  showMfa = false;
-  errorMessage = '';
+  email: string = '';
+  password: string = '';
+  mfaCode: string = ''; // requis si MFA activé côté backend
+  errorMessage: string = '';
+  showPassword: boolean = false;
+  showMfa: boolean = false;
 
   constructor(private auth: AuthService) {}
 
   login() {
-    this.auth.login(this.username, this.password).subscribe({
+    this.auth.login(this.email, this.password).subscribe({
       next: (response) => {
-        this.auth.setTokens(response.accessToken, response.refreshToken, true);
-        // this.showMfa = true;
-      },
-      error: () => {
-        this.errorMessage = 'Identifiants incorrects';
-      },
+        if (response.accessToken && response.refreshToken) {
+          this.auth.setTokens(response.accessToken, response.refreshToken, true);
+        } else if (response.mfaRequired) {
+          this.showMfa = true;
+        }
+      }
     });
   }
 
   verifyMfa() {
-    this.auth.verifyMfa(this.username, this.mfaCode).subscribe({
+    this.auth.verifyMfa(this.email, this.mfaCode).subscribe({
       next: (response) => {
         this.auth.setTokens(response.accessToken, response.refreshToken, true);
       },
@@ -41,5 +42,9 @@ export class LoginComponent {
         this.errorMessage = 'Code MFA invalide';
       },
     });
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }
