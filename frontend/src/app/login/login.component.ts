@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
@@ -18,14 +17,12 @@ export class LoginComponent {
   showMfa = false;
   errorMessage = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService) {}
 
   login() {
     this.auth.login(this.username, this.password).subscribe({
       next: (response) => {
-        localStorage.setItem('accessToken', response.accessToken);
-        localStorage.setItem('refreshToken', response.refreshToken);
-        this.router.navigate(['/']);
+        this.auth.setTokens(response.accessToken, response.refreshToken, true);
         // this.showMfa = true;
       },
       error: () => {
@@ -36,9 +33,8 @@ export class LoginComponent {
 
   verifyMfa() {
     this.auth.verifyMfa(this.username, this.mfaCode).subscribe({
-      next: (res) => {
-        localStorage.setItem('token', res.token);
-        this.router.navigate(['/']);
+      next: (response) => {
+        this.auth.setTokens(response.accessToken, response.refreshToken, true);
       },
       error: () => {
         this.errorMessage = 'Code MFA invalide';

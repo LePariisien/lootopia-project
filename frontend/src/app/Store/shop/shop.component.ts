@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Crown, ShoppingCart, Info, CreditCard, Check } from 'lucide-angular';
 import { PaymentService } from '../../services/PaymentService.service';
 import { StripeModalComponent } from '../../components/stripe/stripe-modal.component';
-import { HeaderComponent } from '../../components/header/header.component';
+import { Alert } from '../../models/alert.model';
+import { AlertComponent } from "../../components/alert/alert.component";
 
 @Component({
   selector: 'app-shop',
@@ -14,8 +15,8 @@ import { HeaderComponent } from '../../components/header/header.component';
     CommonModule,
     LucideAngularModule,
     StripeModalComponent,
-    HeaderComponent
-  ],
+    AlertComponent
+],
 })
 export class ShopComponent {
   readonly Crown = Crown;
@@ -35,6 +36,8 @@ export class ShopComponent {
     { title: 'Pack Explorateur', sub: 'Pour les passionnés', amount: 600, price: '29,99 €', priceValue: 29.99, oldPrice: '37,50 €', discount: '-20%', badge: 'MEILLEURE OFFRE', bonus: '+100', img: 'assets/images/shop/logo-pack-3.png'},
     { title: 'Pack Trésorier', sub: 'Pour les collectionneurs', amount: 2000, price: '69,99 €', priceValue: 69.99, oldPrice: '100,00 €', discount: '-30%', bonus: '+500', img: 'assets/images/shop/logo-pack-4.png'},
   ];
+  
+  alert: Alert = { type: 'success', message: '' };
 
   constructor(private paymentService: PaymentService) {}
 
@@ -58,7 +61,7 @@ export class ShopComponent {
         this.selectedPrice = pack.price;
       },
       error: (err) => {
-        alert('Erreur lors de la création du paiement : ' + err.message);
+        this.setAlert({ type: 'error', message: 'Erreur lors de la création du paiement : ' + err.message });
       }
     });
   }
@@ -67,6 +70,13 @@ export class ShopComponent {
     this.showStripe = false;
     this.showSuccess = true;
     setTimeout(() => this.showSuccess = false, 4000);
-
   }
+
+  setAlert(alert: Alert) {
+    this.alert = alert;
+    setTimeout(() => {
+      this.alert = { type: 'success', message: '' };
+    }, 4000);
+  }
+
 }

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { LucideAngularModule, Users } from 'lucide-angular';
-import { Player } from '../../models/player.model';
+import { Player } from '../../../models/player.model';
 
 @Component({
   selector: 'app-hunt-team-info',

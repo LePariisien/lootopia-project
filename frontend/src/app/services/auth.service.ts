@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  accessTokenString = "accessToken";
+  refreshTokenString = "refreshToken";
+
   constructor(private http: HttpClient, private router: Router) { }
 
   login(email: string, password: string): Observable<any> {
@@ -17,24 +20,35 @@ export class AuthService {
   }
 
   refreshToken(): Observable<any> {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = localStorage.getItem(this.refreshTokenString);
     if (!refreshToken) {
       return throwError(() => new Error('Pas de refreshToken'));
     }
     return this.http.post<any>(ApiRoutes.refresh(), { refreshToken });
   }
 
+  setTokens(accessToken: string, refreshToken: string, redirect: boolean = false): void {
+    localStorage.setItem(this.accessTokenString, accessToken);
+    localStorage.setItem(this.refreshTokenString, refreshToken);
+    if (redirect) {
+      this.router.navigate(['/']);
+    }
+  }
+
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('accessToken');
+    return !!localStorage.getItem(this.accessTokenString);
   }
 
   getToken(): string | null  {
-    return localStorage.getItem('accessToken');
+    return localStorage.getItem(this.accessTokenString);
   }
 
-  logout(): void {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+  logout(redirect: boolean = false): void {
+    localStorage.removeItem(this.accessTokenString);
+    localStorage.removeItem(this.refreshTokenString);
+    if (redirect) {
+      this.router.navigate(['/login']);
+    }
   }
 
   getUserId(): string | null {

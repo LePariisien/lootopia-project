@@ -4,8 +4,8 @@ import { CheckCircle, Leaf, LucideAngularModule, MapPin, Users } from 'lucide-an
 import * as L from 'leaflet';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { HuntTeamInfoComponent } from "../hunt-team-info/hunt-team-info.component";
-import { Player } from '../../models/player.model';
-import { Participation } from '../../models/participation.model';
+import { Player } from '../../../models/player.model';
+import { Participation } from '../../../models/participation.model';
 import { FormsModule } from '@angular/forms';
 
 @Component({

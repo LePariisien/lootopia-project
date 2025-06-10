@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Clue } from '../../models/clue.model';
-import { Participation } from '../../models/participation.model';
+import { Clue } from '../../../models/clue.model';
+import { Participation } from '../../../models/participation.model';
 import { LucideAngularModule, CheckCircle } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
 

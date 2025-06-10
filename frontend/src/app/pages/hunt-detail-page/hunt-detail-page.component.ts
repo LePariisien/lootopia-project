@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ArrowRight, Calendar, Clock, LucideAngularModule, MapPin, Share2, Star, Trophy, Users } from 'lucide-angular';
-import { HeaderComponent } from "../../components/header/header.component";
 import { ActivatedRoute, Router } from '@angular/router';
 import { TreasureHunt } from '../../models/treasure-hunt.model';
 import { Treasure } from '../../models/treasure.model';
@@ -15,17 +14,19 @@ import { Player } from '../../models/player.model';
 import { PlayerService } from '../../services/player.service';
 import { HuntDetailContentComponent } from "../../components/hunt-detail/hunt-detail-content/hunt-detail-content.component";
 import { HuntDetailJoinComponent } from "../../components/hunt-detail/hunt-detail-join/hunt-detail-join.component";
+import { Alert } from '../../models/alert.model';
+import { AlertComponent } from "../../components/alert/alert.component";
 
 @Component({
   selector: 'app-hunt-detail-page',
   imports: [
     LucideAngularModule,
-    HeaderComponent,
     CommonModule,
     HuntDetailOpinionComponent,
     HuntDetailOrganizerComponent,
     HuntDetailContentComponent,
-    HuntDetailJoinComponent
+    HuntDetailJoinComponent,
+    AlertComponent
 ],
   templateUrl: './hunt-detail-page.component.html',
   styleUrl: './hunt-detail-page.component.css'
@@ -46,7 +47,7 @@ export class HuntDetailPageComponent {
   organizer!: Player;
   isRegistered: boolean = true;
   token: string | null = null;
-
+  alert: Alert = { type: 'success', message: '' };
 
   constructor(private route: ActivatedRoute,
               private treasureHuntService: TreasureHuntService,
@@ -55,7 +56,6 @@ export class HuntDetailPageComponent {
               private playerService: PlayerService,
               private authService: AuthService,
               private router: Router
-
   ) {
     this.treasureHuntId = this.route.snapshot.paramMap.get('id');
   }
@@ -118,5 +118,11 @@ export class HuntDetailPageComponent {
     });
   }
 
+  setAlert(alert: Alert) {
+    this.alert = alert;
+    setTimeout(() => {
+      this.alert = { type: 'success', message: '' };
+    }, 4000);
+  }
 
 }

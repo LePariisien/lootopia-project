@@ -1,8 +1,9 @@
-<app-header></app-header>
+<app-alert *ngIf="!!alert.message" [message]="alert.message" [type]="alert.type"></app-alert>
 
 <div *ngIf="!treasureHunt" class="text-center py-10 text-green-700">
   Chargement de la chasse au trésor...
 </div>
+
 <div *ngIf="treasureHunt" class="min-h-screen p-4 md:p-8 pb-8">
   <div class="max-w-6xl mx-auto space-y-6">
     <!-- Image de couverture -->
@@ -38,8 +39,9 @@
         <div class="mb-6">
           <app-hunt-detail-join
             [treasureHunt]="treasureHunt"
-            [(isRegistered)]="isRegistered"
-          ></app-hunt-detail-join>
+            [isRegistered]="isRegistered"
+            (alert)="setAlert($event)">
+          </app-hunt-detail-join>
         </div>
         <app-hunt-detail-organizer
           [organizer]="organizer"

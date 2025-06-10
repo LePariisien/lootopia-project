@@ -5,7 +5,6 @@ import { TreasureHunt } from '../models/treasure-hunt.model';
 import { Clue } from '../models/clue.model';
 import { FormsModule } from '@angular/forms';
 import { HuntFilterPipe } from './hunt-filter.pipe';
-import { HeaderComponent } from '../components/header/header.component';
 import { TreasureService } from '../services/treasure.service';
 import { Router } from '@angular/router';
 
@@ -16,7 +15,6 @@ import { Router } from '@angular/router';
     CommonModule,
     FormsModule,
     HuntFilterPipe,
-    HeaderComponent
 ],
   templateUrl: './view-hunts.component.html',
   styleUrls: ['./view-hunts.component.css']

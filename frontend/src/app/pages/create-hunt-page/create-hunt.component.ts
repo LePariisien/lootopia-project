@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, LocateIcon, Image, Search, Plus } from 'lucide-angular';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { HuntStepComponent } from '../../hunt-step/hunt-step.component';
 
@@ -18,7 +17,9 @@ import { TreasureHuntService } from '../../services/treasure-hunt.service';
 import { TreasureHunt } from '../../models/treasure-hunt.model';
 import { ClueService } from '../../services/clue.service';
 import { Clue } from '../../models/clue.model';
-import { HeaderComponent } from "../../components/header/header.component";
+import { AuthService } from '../../services/auth.service';
+import { Alert } from '../../models/alert.model';
+import { AlertComponent } from "../../components/alert/alert.component";
 
 interface HuntStep {
   id: number;
@@ -42,9 +43,8 @@ interface HuntStep {
     HuntStepComponent,
     LucideAngularModule,
     LeafletModule,
-    HttpClientModule,
     LocationSearchComponent,
-    HeaderComponent
+    AlertComponent
 ]
 })
 export class CreateHuntComponent implements OnInit {
@@ -53,8 +53,6 @@ export class CreateHuntComponent implements OnInit {
   readonly Search = Search;
   readonly Plus = Plus;
 
-
-  TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2NyZWF0aW9uX3RpbWVzdGFtcCI6IjIwMjUtMDUtMjZUMjI6NTU6NDIuNzc2NDE3IiwidXNlcl9pZCI6IjFhZDExNmY2LTBiMTUtNDYyYS1iYmMzLTBiZWEzMTdiNGFjOCIsImVtYWlsIjoibWFyY2VsaW5zeWRAZ21haWwuY29tIiwidXNlcm5hbWUiOiJzMnlfbWNsIiwic3ViIjoiczJ5X21jbCIsImlhdCI6MTc0ODUxNTcxNSwiZXhwIjoxNzQ4NTE5MzE1fQ.7ys63oSfpwCxrCdKHy5U6s2zXNhLHIiUxHn6txDVNeo";
   ID_USER = "0fbb229a-eb38-4a64-8e8d-c73e28487759";
 
   // General
@@ -110,11 +108,17 @@ export class CreateHuntComponent implements OnInit {
   maxParticipants: number | null = null;
   endDate: string = '';
 
-  constructor(private http: HttpClient,
+  token: string = '';
+
+  alert: Alert = { type: 'success', message: '' };
+
+  constructor(private authService: AuthService,
     private treasureHuntService: TreasureHuntService,
     private clueService: ClueService) { }
 
   ngOnInit(): void {
+    this.token = this.authService.getTokenOrRedirect() ?? '';
+
     this.addStep();
     this.addStep();
 
@@ -186,6 +190,8 @@ export class CreateHuntComponent implements OnInit {
       maxParticipants: this.maxParticipants,
       endDate: this.endDate
     });
+    
+    this.setAlert({ type: 'success', message: 'Brouillon enregistré avec succès !' });
 
   }
 
@@ -213,7 +219,7 @@ export class CreateHuntComponent implements OnInit {
 
   publishHunt(): void {
     if (!this.areRequiredFieldsFilled()) {
-      alert('Merci de remplir tous les champs obligatoires.');
+      this.setAlert({ type: 'error', message: 'Merci de remplir tous les champs obligatoires.' });
       return;
     }
 
@@ -237,18 +243,18 @@ export class CreateHuntComponent implements OnInit {
       found: false
     };
 
-    this.treasureHuntService.createTreasureHunt(this.TOKEN, body).subscribe({
+    this.treasureHuntService.createTreasureHunt(this.token, body).subscribe({
       next: (response) => {
         const treasure_id = response.treasure_id;
         body.treasure_id = treasure_id;
-        this.publishClues(this.TOKEN, treasure_id);
+        this.publishClues(this.token, treasure_id);
 
         this.resetForm();
         this.activeTab = 'informations';
-        alert('Chasse au trésor et étapes publiées avec succès !');
+        this.setAlert({ type: 'success', message: 'Chasse au trésor et étapes publiées avec succès !' });
       },
       error: (err) => {
-        alert('Erreur lors de la publication de la chasse au trésor. Veuillez réessayer.');
+        this.setAlert({ type: 'error', message: 'Erreur lors de la publication de la chasse au trésor. Veuillez réessayer.' });
         console.error('Erreur lors de la publication', err);
       }
     });
@@ -287,4 +293,10 @@ export class CreateHuntComponent implements OnInit {
     );
   }
 
+  setAlert(alert: Alert) {
+    this.alert = alert;
+    setTimeout(() => {
+      this.alert = { type: 'success', message: '' };
+    }, 4000);
+  }
 }
