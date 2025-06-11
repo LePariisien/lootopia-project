@@ -5,6 +5,8 @@ import { ApiRoutes } from '../api-routes';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  currentUser: any = null; // à remplir lors du login ou du chargement du profil
+
   constructor(private http: HttpClient) {}
 
   register(userData: any, siteURL: string): Observable<any> {
@@ -40,5 +42,13 @@ verifyAccount(code: string) {
       return throwError(() => new Error('Pas de refreshToken'));
     }
     return this.http.post<any>(ApiRoutes.refresh(), { refreshToken });
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('accessToken') && !!this.currentUser;
+  }
+
+  getPlayerId(): string | null {
+    return this.currentUser ? this.currentUser.player_id : null;
   }
 }
