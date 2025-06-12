@@ -1,0 +1,70 @@
+<div class="flex flex-col lg:flex-row h-screen font-sans bg-[#f9f5ed]">
+  <div
+    class="w-full lg:w-[40%] xl:w-[35%] xl:ml-32 bg-[#002820] text-white text-center flex flex-col items-center justify-center py-8 px-6 shadow-inne animate-slide-upr">
+    <img src="assets/logo-lootopia.png" alt="Lootopia"
+      class="w-32 sm:w-48 md:w-56 mb-4 mt-0 sm:mt-12 lg:mt-0 transition duration-500 hover:scale-105" />
+    <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold mt-4 transition-opacity duration-700 delay-100">Lootopia</h1>
+    <h2 class="text-2xl sm:text-3xl font-bold mt-2 transition-opacity duration-700 delay-200">Bienvenue Aventurier !
+    </h2>
+    <p class="mt-2 text-sm sm:text-base transition-opacity duration-700 delay-300 px-4">
+      Connectez-vous pour continuer votre quête et découvrir de nouveaux trésors.
+    </p>
+    <p class="mt-16 text-sm transition-opacity duration-700 delay-300 hidden lg:block">
+        Je n’ai pas de compte,
+      <a routerLink="/register" class="underline hover:text-green-300 transition">
+        je m’inscris
+      </a>
+    </p>
+    <p class="mt-4 text-sm transition-opacity duration-700 delay-300">
+      <a routerLink="/" class="underline hover:text-green-300 transition font-semibold">
+        Mode invité
+      </a>
+    </p>
+  </div>
+
+  <div class="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-10 animate-slide-up delay-200">
+    <form
+      class="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md space-y-4 animate-fade-in delay-300"
+      (ngSubmit)="login()">
+      <h2 class="text-3xl sm:text-4xl font-bold text-center text-[#3a3a3a] mb-6">Connexion</h2>
+
+      <label class="block mb-2 font-semibold text-sm text-[#3a3a3a]">Adresse e-mail</label>
+      <input type="email" [(ngModel)]="email" name="email"
+        class="w-full border border-[#81b394] rounded px-3 py-2 text-sm focus:outline-green-700 transition" required />
+
+      <label class="block mb-2 font-semibold text-sm text-[#3a3a3a]">Mot de passe</label>
+      <div class="relative w-full h-fit p-0 m-0">
+        <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password"
+          class="w-full border border-[#81b394] rounded px-3 py-2 text-sm focus:outline-green-700 transition"
+          required />
+        <span class="absolute right-3 top-1/3 -translate-y-1/2 text-gray-500 cursor-pointer text-xl"
+          (click)="togglePassword()">
+          <span *ngIf="showPassword">🙈</span>
+          <span *ngIf="!showPassword">👁️</span>
+        </span>
+      </div>
+
+      <div class="flex justify-between items-center align-center text-sm mt-2 gap-2 sm:gap-0">
+      <div class="flex items-center gap-2">
+        <input type="checkbox" />
+        <label>Se souvenir de moi</label>
+      </div>
+        <a href="#" class="text-green-600 hover:underline">Mot de passe oublié ?</a>
+      </div>
+
+      <button type="submit"
+        class="w-full bg-[#4CAF50] text-white font-bold py-3 rounded mt-4 hover:bg-[#388E3C] transition duration-300 hover:scale-105">
+        Je me connecte
+      </button>
+
+      <p *ngIf="errorMessage" class="text-red-600 text-sm text-center mt-4 animate-fade-in delay-500">
+        {{ errorMessage }}
+      </p>
+
+      <p class="mt-4 text-center text-sm text-gray-600 lg:hidden">
+        Vous n'avez pas de compte ? <a routerLink="/register"
+          class="underline text-green-700 hover:text-green-900 transition font-semibold">Inscrivez-vous ici</a>
+      </p>
+    </form>
+  </div>
+</div>
