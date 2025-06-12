@@ -13,7 +13,7 @@ export class ParticipationService {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    return this.http.post(ApiRoutes.participationByIdParam(treasureHuntId), { headers });
+    return this.http.post(ApiRoutes.participationByTreasureHuntQuery(treasureHuntId), { headers });
   }
 
   getParticipation(token: string, id: string): Observable<any> {

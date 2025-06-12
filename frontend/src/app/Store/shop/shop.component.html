@@ -43,7 +43,7 @@
         <img
           *ngIf="pack.img"
           [src]="pack.img"
-          alt
+          [alt]="pack.title"
           class="mx-auto mb-2 w-20 h-20 object-contain select-none pointer-events-none" />
         <div class="shop-pack-amount">
           <lucide-icon [img]="Crown"></lucide-icon> {{ pack.amount }}

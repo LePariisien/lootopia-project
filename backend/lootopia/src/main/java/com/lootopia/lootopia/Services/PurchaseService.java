@@ -19,14 +19,14 @@ public class PurchaseService {
 
     public Purchase createPurchase(PurchaseDto purchaseDto) {
         Player player = playerRepository.findById(purchaseDto.getPlayer_id())
-            .orElseThrow(() -> new RuntimeException("Player not found"));
+                .orElseThrow(() -> new RuntimeException("Player not found"));
         Purchase purchase = new Purchase();
         purchase.setPlayer(player);
         purchase.setCrowns(purchaseDto.getCrowns());
         purchase.setPrice(purchaseDto.getPrice());
         purchase.setDate(purchaseDto.getDate());
         purchase.setTitle(purchaseDto.getTitle());
-        purchase.setSub(purchaseDto.getSub());
+        purchase.setSubtitle(purchaseDto.getSubtitle());
         purchase.setOldPrice(purchaseDto.getOldPrice());
         purchase.setDiscount(purchaseDto.getDiscount());
         purchase.setBadge(purchaseDto.getBadge());

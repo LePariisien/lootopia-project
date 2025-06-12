@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Crown, ShoppingCart, Info, CreditCard, Check, XCircle } from 'lucide-angular';
+import { LucideAngularModule, Crown, ShoppingCart, Info, CreditCard } from 'lucide-angular';
 import { PaymentService } from '../../services/PaymentService.service';
 import { StripeModalComponent } from '../../components/stripe/stripe-modal.component';
 import { Alert } from '../../models/alert.model';
@@ -28,8 +28,7 @@ export class ShopComponent implements OnInit {
   readonly ShoppingCart = ShoppingCart;
   readonly Info = Info;
   readonly CreditCard = CreditCard;
-  readonly Check = Check;
-  readonly XCircle = XCircle;
+
   activeTab: 'couronnes' | 'abonnements' | 'artefacts' = 'couronnes';
   showStripe = false;
   clientSecret: string | null = null;

@@ -40,7 +40,7 @@ public class Purchase {
     private Date date;
 
     private String title;
-    private String sub;
+    private String subtitle;
     private String oldPrice;
     private String discount;
     private String badge;
