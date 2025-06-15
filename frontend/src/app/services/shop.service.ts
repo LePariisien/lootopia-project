@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { ApiRoutes } from '../api-routes';
 
 @Injectable({ providedIn: 'root' })
 export class ShopService {
+  private crownCountSubject = new BehaviorSubject<number | null>(null);
+  crownCount$ = this.crownCountSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   addCrownsToPlayer(token: string, playerId: string, quantity: number): Observable<any> {
@@ -29,5 +32,9 @@ export class ShopService {
       'Content-Type': 'application/json'
     });
     return this.http.get(ApiRoutes.getCrownQuantity(playerId), { headers });
+  }
+
+  updateCrownCount(count: number) {
+    this.crownCountSubject.next(count);
   }
 }

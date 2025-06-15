@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { LucideAngularModule, CircleX, Home, ChevronLeft } from 'lucide-angular';
-import { HeaderComponent } from "../../components/header/header.component";
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -8,7 +7,6 @@ import { Location } from '@angular/common';
   selector: 'app-not-found',
   imports: [
     LucideAngularModule,
-    HeaderComponent
   ],
   templateUrl: './not-found.component.html',
   styleUrl: './not-found.component.css'

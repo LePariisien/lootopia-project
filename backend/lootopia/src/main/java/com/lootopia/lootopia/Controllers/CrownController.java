@@ -33,4 +33,9 @@ public class CrownController {
         CrownDto dto = crownService.getCrownDtoByPlayerId(playerId);
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping("/crownsByToken")
+    public ResponseEntity<CrownDto> getCrown() {
+        return ResponseEntity.ok(crownService.getCrown());
+    }
 }

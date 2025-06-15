@@ -16,7 +16,7 @@ public class PurchaseDto {
     private double price;
     private Date date;
     private String title;
-    private String sub;
+    private String subtitle;
     private String oldPrice;
     private String discount;
     private String badge;
@@ -29,7 +29,7 @@ public class PurchaseDto {
         this.price = purchase.getPrice();
         this.date = purchase.getDate();
         this.title = purchase.getTitle();
-        this.sub = purchase.getSub();
+        this.subtitle = purchase.getSubtitle();
         this.oldPrice = purchase.getOldPrice();
         this.discount = purchase.getDiscount();
         this.badge = purchase.getBadge();

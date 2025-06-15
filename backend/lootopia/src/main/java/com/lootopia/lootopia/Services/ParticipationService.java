@@ -147,4 +147,22 @@ public class ParticipationService {
         }
     }
 
+    public ResponseEntity<?> getParticipationByTreasureHuntAndPlayer(Long treasureHuntId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Player player = playerRepository.findByUserUsername(username)
+                .orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
+
+        TreasureHunt treasureHunt = treasureHuntRepository.findById(treasureHuntId)
+                .orElseThrow(() -> new CustomException("Chasse au trésor introuvable", HttpStatus.NOT_FOUND));
+
+        Participation participation = participationRepository.findByTreasureHuntAndPlayer(treasureHunt, player);
+        if (participation == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Aucune participation trouvée pour cette chasse au trésor.");
+        }
+
+        return ResponseEntity.ok(new ParticipationDto(participation));
+    }
+
 }

@@ -1,9 +1,9 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { LucideAngularModule, Clock, ChevronLeft } from 'lucide-angular';
-import { TreasureHunt } from '../../models/treasure-hunt.model';
-import { Treasure } from '../../models/treasure.model';
-import { Clue } from '../../models/clue.model';
-import { Participation } from '../../models/participation.model';
+import { TreasureHunt } from '../../../models/treasure-hunt.model';
+import { Treasure } from '../../../models/treasure.model';
+import { Clue } from '../../../models/clue.model';
+import { Participation } from '../../../models/participation.model';
 
 @Component({
   selector: 'app-hunt-header',

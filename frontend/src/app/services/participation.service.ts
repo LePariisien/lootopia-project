@@ -8,12 +8,12 @@ import { ApiRoutes } from '../api-routes';
 export class ParticipationService {
   constructor(private http: HttpClient) {}
 
-  createParticipation(token: string, body: Participation): Observable<any> {
+  createParticipation(token: string, treasureHuntId: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    return this.http.post(ApiRoutes.participation(), body, { headers });
+    return this.http.post(ApiRoutes.participationByTreasureHuntQuery(treasureHuntId), { headers });
   }
 
   getParticipation(token: string, id: string): Observable<any> {
@@ -30,6 +30,22 @@ export class ParticipationService {
       'Content-Type': 'application/json'
     });
     return this.http.put(ApiRoutes.participation(), body, { headers });
+  }
+
+  getParticipationByTreasureHuntId(token: string, treasureHuntId: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get(ApiRoutes.participationByTreasureHuntId(treasureHuntId), { headers });
+  }
+
+  getParticipationByTreasureHuntIdAndPlayer(token: string, treasureHuntId: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get(ApiRoutes.participationByTreasureHuntIdAndPlayer(treasureHuntId), { headers });
   }
 
 }

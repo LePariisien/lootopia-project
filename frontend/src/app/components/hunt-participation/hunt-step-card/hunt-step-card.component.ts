@@ -1,12 +1,13 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { TreasureHunt } from '../../models/treasure-hunt.model';
-import { Treasure } from '../../models/treasure.model';
-import { Clue } from '../../models/clue.model';
-import { Participation } from '../../models/participation.model';
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { TreasureHunt } from '../../../models/treasure-hunt.model';
+import { Treasure } from '../../../models/treasure.model';
+import { Clue } from '../../../models/clue.model';
+import { Participation } from '../../../models/participation.model';
 import { LucideAngularModule, Bomb, ChevronLeft, ChevronRight, Quote, MapPin, Check } from 'lucide-angular';
 import { HttpClient } from '@angular/common/http';
-import { TreasureHuntService } from '../../services/treasure-hunt.service';
+import { TreasureHuntService } from '../../../services/treasure-hunt.service';
 import { CommonModule } from '@angular/common';
+import { Alert } from '../../../models/alert.model';
 
 @Component({
   selector: 'app-hunt-step-card',
@@ -34,6 +35,8 @@ export class HuntStepCardComponent implements OnChanges {
   @Input() participation!: Participation;
   @Input() longitude!: number;
   @Input() latitude!: number;
+
+  @Output() alert = new EventEmitter<Alert>();
 
   constructor(private http: HttpClient,
     private treasureHuntService: TreasureHuntService) { }
@@ -84,15 +87,15 @@ export class HuntStepCardComponent implements OnChanges {
         if (foundClue) {
           this.clues[this.step].solved = true;
           this.nextStep();
-          alert('Vous avez trouvé un indice !');
+          this.alert.emit({ type: 'success', message: 'Vous avez trouvé un indice !' });
         } else if (foundTreasure) {
-          alert('Vous avez trouvé le trésor !');
+          this.alert.emit({ type: 'success', message: 'Vous avez trouvé le trésor !' });
         } else {
-          alert('Aucun trésor ou indice trouvé dans cette zone.');
+          this.alert.emit({ type: 'success', message: 'Aucun trésor ou indice trouvé dans cette zone.' });
         }
       },
       error: (err) => {
-        alert(err.error?.message || 'Erreur lors de la fouille');
+        this.alert.emit({ type: 'error', message: err.error?.message || 'Erreur lors de la fouille' });
         console.error('Erreur lors de la publication', err);
       }
     });

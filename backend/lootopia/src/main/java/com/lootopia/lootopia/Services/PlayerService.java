@@ -1,6 +1,5 @@
 package com.lootopia.lootopia.Services;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -19,7 +18,6 @@ import com.lootopia.lootopia.Repositories.PlayerRepository;
 import com.lootopia.lootopia.Repositories.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -73,6 +71,20 @@ public class PlayerService {
 		return ResponseEntity.ok(new PlayerDto(player));
 	}
 
+	public ResponseEntity<?> getPlayerById(String id) {
+		Player player = playerRepository.findById(UUID.fromString(id))
+				.orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
+
+		return ResponseEntity.ok(new PlayerDto(player));
+	}
+
+	public ResponseEntity<?> getPlayerByNickname(String nickname) {
+		Player player = playerRepository.findByNickname(nickname)
+				.orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
+
+		return ResponseEntity.ok(new PlayerDto(player));
+	}
+
 	public ResponseEntity<?> updatePlayer(PlayerDto playerDto) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -97,8 +109,7 @@ public class PlayerService {
 		return ResponseEntity.ok(
 				playerRepository.findAll().stream()
 						.map(PlayerDto::new)
-						.toList()
-		);
+						.toList());
 	}
 
 	public ResponseEntity<?> getPlayerCount() {

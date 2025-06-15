@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -14,28 +14,17 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  mfaCode: string = ''; // requis si MFA activé côté backend
+  mfaCode: string = '';
   errorMessage: string = '';
   showPassword: boolean = false;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private auth: AuthService) {}
 
-  login(): void {
-    if (!this.email || !this.password) {
-      this.errorMessage = 'Veuillez remplir tous les champs.';
-      return;
-    }
-
-    this.authService.login(this.email, this.password, this.mfaCode).subscribe({
+  login() {
+    this.auth.login(this.email, this.password).subscribe({
       next: (response) => {
-        localStorage.setItem('accessToken', response.accessToken);
-        localStorage.setItem('refreshToken', response.refreshToken);
-        localStorage.setItem('userId', response.userId);
-        localStorage.setItem('emailVerified', String(response.emailVerified));
-        this.router.navigate(['/profile']);
+        this.auth.setTokens(response.accessToken, response.refreshToken, true);
+        // this.showMfa = true;
       },
       error: (err) => {
         this.errorMessage =
@@ -44,7 +33,14 @@ export class LoginComponent {
     });
   }
 
-  togglePassword(): void {
-    this.showPassword = !this.showPassword;
+  verifyMfa() {
+    this.auth.verifyMfa(this.email, this.mfaCode).subscribe({
+      next: (response) => {
+        this.auth.setTokens(response.accessToken, response.refreshToken, true);
+      },
+      error: () => {
+        this.errorMessage = 'Code MFA invalide';
+      },
+    });
   }
 }

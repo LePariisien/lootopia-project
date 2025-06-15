@@ -1,0 +1,47 @@
+<div class="border border-green-200 shadow-lg rounded-xl bg-white">
+  <div class="p-6 border-b border-green-100">
+    <h2 class="text-green-900 text-xl font-bold">Avis des participants</h2>
+  </div>
+  <div class="p-6 space-y-4">
+    <div class="flex items-center mb-4">
+      <div class="flex items-center mr-4">
+        <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+        <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+        <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+        <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+        <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+      </div>
+      <span class="text-green-800 font-bold">4.0</span>
+      <span class="text-green-700 ml-2">(24 avis)</span>
+    </div>
+
+    <!-- Avis individuels (exemple statique) -->
+    <div class="border-b border-green-200 pb-4 mb-4">
+      <div class="flex items-start">
+        <img src="/assets/images/default/player_default.png" alt="Avatar" class="h-10 w-10 rounded-full mr-3" />
+        <div>
+          <div class="flex items-center">
+            <h4 class="font-bold text-green-900 mr-2">Marie L.</h4>
+            <div class="flex">
+              <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+              <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+              <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+              <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+              <lucide-icon [img]="Star" class="text-green-500 mr-1" size="16"></lucide-icon>
+            </div>
+          </div>
+          <p class="text-green-700 text-sm mt-1">
+            Une expérience incroyable ! Les énigmes sont bien pensées et nous avons appris beaucoup de choses sur
+            l'histoire des Templiers.
+          </p>
+          <p class="text-green-500 text-xs mt-2">Il y a 2 semaines</p>
+        </div>
+      </div>
+    </div>
+    <!-- Ajoute d'autres avis ici -->
+
+    <button class="w-full border border-green-300 text-green-800 hover:bg-green-100 rounded py-2">
+      Voir tous les avis
+    </button>
+  </div>
+</div>
