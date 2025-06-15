@@ -58,7 +58,7 @@ public class ParticipationController {
         return participationService.deleteParticipation(id);
     }
 
-    @GetMapping("/treasure-hunt/{treasureHuntId}/player")
+    @GetMapping("/treasure-hunt/{treasureHuntId}/by-player")
     public ResponseEntity<?> getParticipationByTreasureHuntAndPlayer(@PathVariable Long treasureHuntId) {
         return participationService.getParticipationByTreasureHuntAndPlayer(treasureHuntId);
     }

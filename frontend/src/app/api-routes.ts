@@ -27,11 +27,11 @@ export const ApiRoutes = {
   // Participation
   participation: () => `${ApiRoutesEnum.Lootopia}/participations`,
   participationById: (id: string) => `${ApiRoutesEnum.Lootopia}/participations/${id}`,
-  participationByIdParam: (id: string) => `${ApiRoutesEnum.Lootopia}/participations?treasureHuntId=${id}`,
+  participationByTreasureHuntQuery: (id: string) => `${ApiRoutesEnum.Lootopia}/participations?treasureHuntId=${id}`,
   participationByTreasureHuntId: (treasureHuntId: string) =>
     `${ApiRoutesEnum.Lootopia}/participations/treasure-hunt/${treasureHuntId}`,
   participationByTreasureHuntIdAndPlayer: (treasureHuntId: string) =>
-    `${ApiRoutesEnum.Lootopia}/participations/treasure-hunt/${treasureHuntId}/player`,
+    `${ApiRoutesEnum.Lootopia}/participations/treasure-hunt/${treasureHuntId}/by-player`,
 
   // Treasure
   treasure: () => `${ApiRoutesEnum.Location}/treasure`,
@@ -41,7 +41,17 @@ export const ApiRoutes = {
   // Player
   playerAll: () => `${ApiRoutesEnum.Lootopia}/player/all`,
   playerCount: () => `${ApiRoutesEnum.Lootopia}/player/count`,
-  playerById: (id: string) => `${ApiRoutesEnum.Lootopia}/player/${id}`,
+  playerById: (id: string) => `${ApiRoutesEnum.Lootopia}/player/id/${id}`,
+  player: () => `${ApiRoutesEnum.Lootopia}/player`,
+
+  // Crowns
+  addCrownsToPlayer: () => `${ApiRoutesEnum.Lootopia}/crowns`,
+  getCrownQuantity: (playerId: string) =>
+    `${ApiRoutesEnum.Lootopia}/crownsByToken`,
+
+  // Purchases
+  createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,
+
 };
 
 export enum ApiRoutesEnum {

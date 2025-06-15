@@ -1,18 +1,9 @@
 package com.lootopia.lootopia.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import java.util.Date;
 import java.util.UUID;
 
@@ -31,18 +22,28 @@ public class Purchase {
 
     @NotNull
     @ManyToOne
-    private User user;
+    @JoinColumn(name = "player_id", nullable = false)
+    private Player player;
+
     @NotNull
     @Min(1)
     @Column(nullable = false)
-    private int crowns; 
+    private int crowns;
 
     @NotNull
     @Min(0)
     @Column(nullable = false)
-    private double price; 
+    private double price;
 
     @NotNull
     @Column(nullable = false)
-    private Date date; 
+    private Date date;
+
+    private String title;
+    private String subtitle;
+    private String oldPrice;
+    private String discount;
+    private String badge;
+    private String bonus;
+    private String img;
 }

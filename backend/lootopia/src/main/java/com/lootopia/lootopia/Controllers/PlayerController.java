@@ -19,7 +19,12 @@ public class PlayerController extends AbstractController {
         return playerService.getPlayer();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/nickname/{nickname}")
+    public ResponseEntity<?> getPlayerByNickname(@PathVariable String nickname) {
+        return playerService.getPlayerByNickname(nickname);
+    }
+
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> getPlayerById(@PathVariable String id) {
         return playerService.getPlayerById(id);
     }
