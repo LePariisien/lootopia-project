@@ -1,38 +1,40 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  imports: [FormsModule, CommonModule, RouterModule],
 })
 export class LoginComponent {
-  username = '';
-  password = '';
-  mfaCode = '';
-  showMfa = false;
-  errorMessage = '';
+  email: string = '';
+  password: string = '';
+  mfaCode: string = '';
+  errorMessage: string = '';
+  showPassword: boolean = false;
 
   constructor(private auth: AuthService) {}
 
   login() {
-    this.auth.login(this.username, this.password).subscribe({
+    this.auth.login(this.email, this.password).subscribe({
       next: (response) => {
         this.auth.setTokens(response.accessToken, response.refreshToken, true);
         // this.showMfa = true;
       },
-      error: () => {
-        this.errorMessage = 'Identifiants incorrects';
+      error: (err) => {
+        this.errorMessage =
+          err.error?.message || 'Identifiants invalides. Veuillez réessayer.';
       },
     });
   }
 
   verifyMfa() {
-    this.auth.verifyMfa(this.username, this.mfaCode).subscribe({
+    this.auth.verifyMfa(this.email, this.mfaCode).subscribe({
       next: (response) => {
         this.auth.setTokens(response.accessToken, response.refreshToken, true);
       },

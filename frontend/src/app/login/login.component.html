@@ -1,4 +1,5 @@
-<div class="flex h-screen font-sans bg-[#f9f5ed] animate-fade-in">
+<div class="flex h-screen font-sans animate-fade-in">
+  <!-- Sidebar gauche -->
   <div class="w-[28%] bg-[#002820] text-white flex flex-col items-center px-6 text-center shadow-md ml-[200px] animate-slide-up">
     <img src="assets/logo-lootopia.png" alt="Lootopia" class="w-64 mb-8 mt-40 transition duration-500 hover:scale-105" />
     <h1 class="text-7xl font-bold mt-6 transition-opacity duration-700 delay-100">Lootopia</h1>
@@ -9,16 +10,28 @@
   </div>
 
   <div class="flex-1 flex items-center justify-center animate-slide-up delay-200">
-    <form class="bg-white p-8 rounded-lg shadow w-full max-w-md space-y-4 animate-fade-in delay-300" (ngSubmit)="login()">
+    <form
+      class="bg-white p-8 rounded-lg shadow w-full max-w-md space-y-4 animate-fade-in delay-300"
+      (ngSubmit)="login()"
+    >
       <label class="block font-semibold text-sm text-[#3a3a3a]">Adresse e-mail</label>
-      <input type="text" [(ngModel)]="username" name="username"
-             class="w-full border border-[#81b394] rounded px-3 py-2 text-sm focus:outline-green-700 transition" required />
+        <input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          class="w-full border border-[#81b394] rounded px-3 py-2 text-sm focus:outline-green-700 transition"
+          required
+        />
 
       <label class="block mt-2 font-semibold text-sm text-[#3a3a3a]">Mot de passe</label>
       <div class="relative">
-        <input type="password" [(ngModel)]="password" name="password"
-               class="w-full border border-[#81b394] rounded px-3 py-2 text-sm focus:outline-green-700 transition" required />
-        <span class="absolute right-3 top-2.5 text-gray-500 cursor-pointer">👁️</span>
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          [(ngModel)]="password"
+          name="password"
+          class="w-full border border-[#81b394] rounded px-3 py-2 text-sm focus:outline-green-700 transition"
+          required />
+        <span class="absolute right-3 top-2.5 text-gray-500 cursor-pointer" (click)="togglePassword()">👁️</span>
       </div>
 
       <div class="flex justify-between items-center text-sm mt-2">
@@ -29,20 +42,10 @@
         <a href="#" class="text-green-600 hover:underline">Mot de passe oublié ?</a>
       </div>
 
-      <button type="submit"
-              class="w-full bg-[#4CAF50] text-white font-bold py-3 rounded mt-4 hover:bg-[#388E3C] transition duration-300 hover:scale-105">
+      <button
+        type="submit"
+        class="w-full bg-[#4CAF50] text-white font-bold py-3 rounded mt-4 hover:bg-[#388E3C] transition duration-300 hover:scale-105">
         Je me connecte
-      </button>
-
-      <div class="relative text-center text-sm text-gray-400 mt-6 mb-4">
-        <div class="absolute top-1/2 left-0 w-[40%] h-px bg-gray-300 -translate-y-1/2"></div>
-        <span class="bg-white px-3 z-10 relative">Ou</span>
-        <div class="absolute top-1/2 right-0 w-[40%] h-px bg-gray-300 -translate-y-1/2"></div>
-      </div>
-
-      <button type="button"
-              class="w-full border border-gray-300 rounded py-2 flex justify-center items-center gap-2 text-sm font-bold hover:bg-gray-100 transition">
-        Je me connecte avec Google
       </button>
 
       <p *ngIf="errorMessage" class="text-red-600 text-sm text-center mt-4 animate-fade-in delay-500">

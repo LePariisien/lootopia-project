@@ -4,6 +4,13 @@ export const ApiRoutes = {
   verifyMfa: (username: string, mfaCode: string) =>
     `${ApiRoutesEnum.Lootopia}/auth/verify-mfa?username=${username}&mfaCode=${mfaCode}`,
   refresh: () => `${ApiRoutesEnum.Lootopia}/token/refresh`,
+  signUp: () => `${ApiRoutesEnum.Lootopia}/auth/sign-up`,
+
+  verify: () => `${ApiRoutesEnum.Lootopia}/auth/verify`,
+
+  profile: (userId: string) =>
+    `${ApiRoutesEnum.Lootopia}/users/${userId}/profile`,
+
 
   // Paiements
   createPaymentIntent: (amount: number) =>
@@ -38,6 +45,14 @@ export const ApiRoutes = {
   treasureById: (id: string) => `${ApiRoutesEnum.Location}/treasure/${id}`,
   treasureAll: () => `${ApiRoutesEnum.Location}/treasure/all`,
 
+  // Crowns
+  addCrownsToPlayer: () => `${ApiRoutesEnum.Lootopia}/crowns`,
+  getCrownQuantity: (playerId: string) =>
+    `${ApiRoutesEnum.Lootopia}/crowns/player/${playerId}`,
+
+  // Purchases
+  createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,
+
   // Player
   playerAll: () => `${ApiRoutesEnum.Lootopia}/player/all`,
   playerCount: () => `${ApiRoutesEnum.Lootopia}/player/count`,
@@ -59,3 +74,4 @@ export enum ApiRoutesEnum {
   Payment = 'http://localhost:8080/paymentserv/api/payment',
   Location = 'http://localhost:8080/locationserv/api',
 }
+

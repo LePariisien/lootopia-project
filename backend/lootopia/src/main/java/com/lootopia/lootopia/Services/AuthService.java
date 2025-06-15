@@ -177,6 +177,7 @@ public class AuthService {
         return JwtAuthResponse.builder()
                 .accessToken(jwtService.generateAccessToken(user))
                 .refreshToken(jwtService.generateRefreshToken(user))
+                .emailVerified(user.isEmailVerified())
                 .build();
     }
 
