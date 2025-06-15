@@ -42,6 +42,9 @@ export class HomepageComponent implements OnInit, OnDestroy {
           reward: hunt.found ? 'Trouvée !' : 'À découvrir'
         }));
         this.startAutoSlide();
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des chasses au trésor', err);
       }
     });
   }

@@ -79,7 +79,7 @@ export class HuntStepCardComponent implements OnChanges {
   solveStep(): void {
     if (!this.clues || !this.participation) return;
 
-    this.treasureHuntService.digAHole(this.TOKEN, this.treasure.id, this.treasure.latitude, this.treasure.longitude).subscribe({
+    this.treasureHuntService.digAHole(this.treasure.id, this.treasure.latitude, this.treasure.longitude).subscribe({
       next: (response: any) => {
         const foundClue = response.clues && response.clues.some((clue: any) => clue.step === this.step);
         const foundTreasure = response.treasures && response.treasures.length > 0;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { TreasureHunt } from '../models/treasure-hunt.model';
 import { Observable } from 'rxjs';
 import { ApiRoutes } from '../api-routes';
@@ -12,28 +12,16 @@ export class TreasureHuntService {
     return this.http.get<TreasureHunt[]>(ApiRoutes.treasureHuntAll());
   }
 
-  createTreasureHunt(token: string, body: TreasureHunt): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    return this.http.post(ApiRoutes.treasureHunt(), body, { headers });
+  createTreasureHunt(body: TreasureHunt): Observable<any> {
+    return this.http.post(ApiRoutes.treasureHunt(), body);
   }
 
-  getTreasureHunt(token: string, id: number): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    return this.http.get(ApiRoutes.treasureHuntById(id), { headers });
+  getTreasureHunt(id: number): Observable<any> {
+    return this.http.get(ApiRoutes.treasureHuntById(id));
   }
 
-  digAHole(token: string, treasureId: string, latitude: number, longitude: number): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    return this.http.get(ApiRoutes.digAHole(treasureId, latitude, longitude), { headers });
+  digAHole(treasureId: string, latitude: number, longitude: number): Observable<any> {
+    return this.http.get(ApiRoutes.digAHole(treasureId, latitude, longitude));
   }
 
   getTreasureHuntCount(): Observable<number> {

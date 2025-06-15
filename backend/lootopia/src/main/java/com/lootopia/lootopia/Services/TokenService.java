@@ -27,9 +27,19 @@ public class TokenService {
     @Autowired
     private RevokedTokenRepository revokedTokenRepository;
 
-    public ResponseEntity<?> refreshToken(String refreshToken) {
+    public ResponseEntity<?> refreshToken(String refreshToken, String accessToken) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new CustomException("Token de rafraîchissement manquant", HttpStatus.BAD_REQUEST);
+        }
+
         var refreshTokenClean = getTokenClean(refreshToken);
+        var accessTokenClean = getTokenClean(accessToken);
         String username = jwtService.extractUsername(refreshTokenClean);
+        if (username.equals(jwtService.extractUsername(accessTokenClean))
+                && !jwtService.validateToken(accessTokenClean, username)) {
+            throw new CustomException("Token d'accès invalide ou expiré", HttpStatus.BAD_REQUEST);
+        }
+
         var user = userRepository.findByUsername(username).get();
         if (user == null) {
             throw new CustomException("Utilisateur introuvable", HttpStatus.NOT_FOUND);
@@ -40,11 +50,11 @@ public class TokenService {
         }
 
         String newAccessToken = null;
-        if (jwtService.isTokenExpiredSoon(refreshTokenClean)) {
-            revokeToken(refreshTokenClean);
+        if (jwtService.isTokenExpiredSoon(accessTokenClean)) {
+            revokeToken(accessTokenClean);
             newAccessToken = jwtService.generateAccessToken(user);
         } else {
-            newAccessToken = refreshTokenClean;
+            newAccessToken = accessTokenClean;
         }
 
         JwtAuthResponse jwtAuthResponse = JwtAuthResponse.builder()

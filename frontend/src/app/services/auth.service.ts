@@ -48,19 +48,21 @@ export class AuthService {
     localStorage.setItem(this.refreshTokenString, refreshToken);
     localStorage.setItem(this.emailVerifiedString, String(emailVerified));
 
-    this.playerService.getPlayer(accessToken).subscribe({
+    this.playerService.getPlayer().subscribe({
       next: (player: Player) => {
         localStorage.setItem(this.playerIdString, player.id);
         localStorage.setItem(this.nicknameString, player.nickname || '');
+        if (redirect) {
+          this.router.navigate(['/']);        }
       },
       error: (err: any) => {
         console.error('Erreur Player API:', err);
+        if (redirect) {
+          window.location.reload();
+        }
       }
     });
 
-    if (redirect) {
-      this.router.navigate(['/']);
-    }
   }
 
   isAuthenticated(): boolean {

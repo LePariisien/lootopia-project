@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiRoutes } from '../api-routes';
 import { Player } from '../models/player.model';
@@ -17,28 +17,16 @@ export class PlayerService {
     return this.http.get<number>(ApiRoutes.playerCount());
   }
 
-  getPlayerById(token: string, playerId: string): Observable<Player> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    return this.http.get<Player>(ApiRoutes.playerById(playerId), { headers });
+  getPlayerById(playerId: string): Observable<Player> {
+    return this.http.get<Player>(ApiRoutes.playerById(playerId));
   }
 
-  getPlayer(token: string): Observable<Player> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    return this.http.get<Player>(ApiRoutes.player(), { headers });
+  getPlayer(): Observable<Player> {
+    return this.http.get<Player>(ApiRoutes.player());
   }
 
-  getPlayerByNickname(token: string, nickname: string): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    return this.http.get(ApiRoutes.playerByNickname(nickname), { headers });
+  getPlayerByNickname(nickname: string): Observable<any> {
+    return this.http.get(ApiRoutes.playerByNickname(nickname));
   }
 
 }

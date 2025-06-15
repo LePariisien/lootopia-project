@@ -39,9 +39,8 @@ export class HuntDetailJoinComponent {
     if (!token) return;
 
     if (this.isRegistered) {
-      this.participationService.createParticipation(token, this.treasureHunt.id).subscribe({
+      this.participationService.createParticipation(this.treasureHunt.id).subscribe({
         next: (response) => {
-          console.log('Participation created successfully:', response);
           this.isRegistered = true;
           this.isRegisteredChange.emit(true);
           this.alert.emit({ type: 'success', message: 'Participation enregistrée avec succès !' });

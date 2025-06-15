@@ -13,6 +13,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.lootopia.lootopia.Services.JwtService;
 import com.lootopia.lootopia.Services.CustomUserDetailService;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,6 +49,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
+        } catch (ExpiredJwtException | SignatureException | MalformedJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token expiré ou invalide");
+            return;
         } catch (Exception e) {
             System.out.println("Cannot set user authentication: " + e);
         }

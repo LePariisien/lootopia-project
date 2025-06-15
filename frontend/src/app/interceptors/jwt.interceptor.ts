@@ -12,7 +12,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
     ? req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        ContentType: 'application/json'
       }
     })
     : req;
@@ -25,7 +25,8 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
             localStorage.setItem('accessToken', res.accessToken);
             localStorage.setItem('refreshToken', res.refreshToken);
             const retryReq = req.clone({
-              setHeaders: { Authorization: `Bearer ${res.accessToken}` }
+              body: { 'accessToken': res.accessToken },
+              setHeaders: { Authorization: `Bearer ${res.refreshToken}` }
             });
             return next(retryReq);
           }),

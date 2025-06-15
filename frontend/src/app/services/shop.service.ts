@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ApiRoutes } from '../api-routes';
 
@@ -10,28 +10,16 @@ export class ShopService {
 
   constructor(private http: HttpClient) {}
 
-  addCrownsToPlayer(token: string, playerId: string, quantity: number): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    return this.http.post(ApiRoutes.addCrownsToPlayer(), { player_id: playerId, quantity }, { headers });
+  addCrownsToPlayer(playerId: string, quantity: number): Observable<any> {
+    return this.http.post(ApiRoutes.addCrownsToPlayer(), { player_id: playerId, quantity });
   }
 
-  createPurchase(token: string, purchase: any): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    return this.http.post(ApiRoutes.createPurchase(), purchase, { headers });
+  createPurchase(purchase: any): Observable<any> {
+    return this.http.post(ApiRoutes.createPurchase(), purchase);
   }
 
-  getCrownQuantity(token: string): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    return this.http.get(ApiRoutes.getCrownQuantity(), { headers });
+  getCrownQuantity(): Observable<any> {
+    return this.http.get(ApiRoutes.getCrownQuantity());
   }
 
   updateCrownCount(count: number) {

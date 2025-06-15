@@ -1,0 +1,61 @@
+<div class="min-h-screen flex items-center justify-center relative overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="absolute top-20 left-20 animate-bounce">
+      <lucide-icon [img]="Sparkles" class="h-6 w-6 text-[#FED35C]/30"></lucide-icon>
+    </div>
+    <div class="absolute top-40 right-32 animate-bounce">
+      <lucide-icon [img]="Sparkles" class="h-4 w-4 text-[#2A8D57]/20"></lucide-icon>
+    </div>
+    <div class="absolute bottom-32 left-40 animate-bounce">
+      <lucide-icon [img]="Sparkles" class="h-5 w-5 text-[#FED35C]/40"></lucide-icon>
+    </div>
+    <div class="absolute bottom-20 right-20 animate-bounce">
+      <lucide-icon [img]="Sparkles" class="h-7 w-7 text-[#2A8D57]/15"></lucide-icon>
+    </div>
+    <div class="absolute top-60 left-1/4 animate-bounce">
+      <lucide-icon [img]="Sparkles" class="h-3 w-3 text-[#FED35C]/25"></lucide-icon>
+    </div>
+    <div class="absolute top-32 right-1/4 animate-bounce">
+      <lucide-icon [img]="Sparkles" class="h-4 w-4 text-[#2A8D57]/30"></lucide-icon>
+    </div>
+
+    <div class="absolute top-10 left-10 w-32 h-32 bg-[#2A8D57]/5 rounded-full animate-pulse"></div>
+    <div class="absolute bottom-10 right-10 w-24 h-24 bg-[#FED35C]/10 rounded-full animate-pulse"></div>
+    <div class="absolute top-1/2 left-5 w-16 h-16 bg-[#2A8D57]/8 rounded-full animate-pulse"></div>
+  </div>
+  <div class="text-center z-10 px-4">
+    <div class="flex items-center justify-center mb-8 animate-fade-in">
+      <img src="assets/logo-lootopia.png" class="size-10 mr-3 animate-spin-very-slow" />
+      <span class="text-3xl font-bold text-[#082B21]">Lootopia</span>
+    </div>
+    <div class="relative mb-8">
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="size-32 bg-green-400/10 rounded-full animate-ping"></div>
+      </div>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="size-24 bg-blue-400/20 rounded-full animate-pulse"></div>
+      </div>
+      <div class="relative flex items-center justify-center h-32">
+        <img src="assets/images/hourglass.png" class="size-16 text-[#2A8D57] animate-spin drop-shadow-lg" />
+      </div>
+    </div>
+    <div class="space-y-4 animate-fade-in-delayed">
+      <h2 class="text-2xl font-bold text-[#082B21]">Chargement en cours</h2>
+      <p class="text-lg text-[#2A8D57] min-h-[1.5rem]">
+        {{ loadingText }}
+        <span class="inline-block w-8 text-left">{{ dots }}</span>
+      </p>
+    </div>
+    <div class="mt-8 max-w-md mx-auto animate-fade-in-delayed">
+      <div class="w-full bg-[#2A8D57]/20 rounded-full border border-green-500 h-2 overflow-hidden">
+        <div
+          class="h-full bg-gradient-to-r from-green-400 to-blue-400 rounded-full transition-all duration-300"
+          [style.width.%]="progress">
+        </div>
+      </div>
+    </div>
+    <div class="mt-6 animate-fade-in-delayed">
+      <p class="text-sm text-[#2A8D57]/80 italic">"Chaque grande aventure commence par un premier pas..."</p>
+    </div>
+  </div>
+</div>

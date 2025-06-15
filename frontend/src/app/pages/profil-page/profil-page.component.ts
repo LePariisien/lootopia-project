@@ -17,7 +17,6 @@ import { PlayerService } from '../../services/player.service';
 export class ProfilPageComponent implements OnInit {
   player: Player | null = null;
   profile: UserProfile | null = null;
-  token: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -28,22 +27,21 @@ export class ProfilPageComponent implements OnInit {
   ) {  }
 
   ngOnInit(): void {
-    this.token = this.authService.getTokenOrRedirect() ?? '';
-    if (!this.token) return;
+    const token = this.authService.getTokenOrRedirect() ?? '';
+    if (!token) return;
 
     this.route.paramMap.subscribe(params => {
       const nickname = params.get('nickname') || '';
       if (nickname) {
-        this.playerService.getPlayerByNickname(this.token, nickname).subscribe({
+        this.playerService.getPlayerByNickname(nickname).subscribe({
           next: (data) => {
             this.player = data;
             console.log('Player data:', this.player);
 
-            this.userService.getUserProfileByPlayerId(this.token, data?.id).subscribe({
+            this.userService.getUserProfileByPlayerId(data?.id).subscribe({
               next: (data) => {
                 this.profile = data;
                 console.log('User profile data:', this.profile);
-
               },
               error: (err) => {
                 console.error('Erreur de récupération du profil:', err);
