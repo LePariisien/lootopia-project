@@ -11,8 +11,14 @@ export class AuthService {
   accessTokenString = "accessToken";
   refreshTokenString = "refreshToken";
   playerIdString = "playerId";
+  nicknameString = "nickname";
+  emailVerifiedString = "emailVerified";
 
   constructor(private http: HttpClient, private router: Router, private playerService: PlayerService) { }
+
+  register(userData: any, siteURL: string): Observable<any> {
+    return this.http.post(ApiRoutes.signUp() + '?siteURL=' + encodeURIComponent(siteURL), userData);
+  }
 
   login(email: string, password: string, mfaCode: string = ''): Observable<any> {
     if (!email || !password) {
@@ -37,15 +43,15 @@ export class AuthService {
     return this.http.post<any>(ApiRoutes.refresh(), { refreshToken });
   }
 
-  setTokens(accessToken: string, refreshToken: string, redirect: boolean = false): void {
+  setTokens(accessToken: string, refreshToken: string, emailVerified: boolean = false, redirect: boolean = false): void {
     localStorage.setItem(this.accessTokenString, accessToken);
     localStorage.setItem(this.refreshTokenString, refreshToken);
+    localStorage.setItem(this.emailVerifiedString, String(emailVerified));
 
     this.playerService.getPlayer(accessToken).subscribe({
       next: (player: Player) => {
-        console.log('Player récupéré:', player);
         localStorage.setItem(this.playerIdString, player.id);
-        console.log('Player ID stocké:', localStorage.getItem(this.playerIdString));
+        localStorage.setItem(this.nicknameString, player.nickname || '');
       },
       error: (err: any) => {
         console.error('Erreur Player API:', err);
@@ -69,6 +75,8 @@ export class AuthService {
     localStorage.removeItem(this.accessTokenString);
     localStorage.removeItem(this.refreshTokenString);
     localStorage.removeItem(this.playerIdString);
+    localStorage.removeItem(this.nicknameString);
+    localStorage.removeItem(this.emailVerifiedString);
     if (redirect) {
       this.router.navigate(['/login']);
     }
@@ -92,7 +100,10 @@ export class AuthService {
   }
 
   getPlayerId(): string | null {
-    console.log('1| ',localStorage.getItem(this.playerIdString))
     return localStorage.getItem(this.playerIdString);
+  }
+
+  getNickname(): string | null {
+    return localStorage.getItem(this.nicknameString);
   }
 }

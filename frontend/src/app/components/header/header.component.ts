@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, ShoppingCart, House, Medal, Search, User, SquarePlus, LogOut, Bell } from 'lucide-angular';
 import { AuthService } from '../../services/auth.service';
@@ -20,7 +20,8 @@ export class MainLayoutModule { }
   imports: [
     RouterLink,
     LucideAngularModule,
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
@@ -41,6 +42,8 @@ export class HeaderComponent implements OnDestroy {
   playerId: string | null = null;
   crownCount: number | null = null;
   crownCountSub!: Subscription;
+  nickname: string | null = null;
+  encodedNickname: string | null = null;
 
   constructor(private authService: AuthService,
     public router: Router,
@@ -51,9 +54,13 @@ export class HeaderComponent implements OnDestroy {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.token = this.authService.getToken() ?? '';
     this.playerId = this.authService.getPlayerId() || null;
+    this.nickname = this.authService.getNickname() || null;
+    this.encodedNickname = this.nickname ? encodeURIComponent(this.nickname) : null;
+
+    console.log('nickname:', this.nickname);
 
     if (this.token) {
-      this.shopService.getCrownQuantity(this.token, "").subscribe({
+      this.shopService.getCrownQuantity(this.token).subscribe({
         next: (crown) => {
           this.crownCount = crown.quantity;
           this.shopService.updateCrownCount(crown.quantity);

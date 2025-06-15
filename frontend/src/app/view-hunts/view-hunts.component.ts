@@ -42,13 +42,11 @@ export class ViewHuntsComponent implements OnInit {
   ngOnInit() {
     this.huntService.getAllTreasureHunts().subscribe({
       next: (data) => {
-        console.log('Hunts data received:', data);
         this.hunts = data;
         data.forEach(element => {
           this.treasureService.getTreasureDetails(element.treasure_id).subscribe({
             next: (treasure) => {
               element.treasure = treasure;
-              console.log('Treasure details for hunt', element.treasure_id, ':', treasure);
               this.hunts = this.hunts.map(hunt =>
                 hunt.treasure_id === element.treasure_id ? { ...hunt, treasure } : hunt)
             },

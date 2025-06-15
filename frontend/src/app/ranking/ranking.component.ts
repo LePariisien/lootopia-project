@@ -40,11 +40,9 @@ export class RankingComponent implements OnInit {
       this.totalScore = players.reduce((sum, p) => sum + (p.score || 0), 0);
     });
     this.playerService.getPlayerCount().subscribe(count => {
-      console.log(`Total players: ${count}`);
       this.playerCount = count;
       });
     this.treasureHuntService.getTreasureHuntCount().subscribe(count => {
-      console.log(`Total treasure hunts: ${count}`);
       this.treasureHuntCount = count;
     });
   }

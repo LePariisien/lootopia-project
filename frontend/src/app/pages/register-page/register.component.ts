@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-register',
@@ -56,7 +57,7 @@ export class RegisterComponent {
       mfaEnabled: formValue.mfaEnabled
     }, window.location.origin).subscribe({
       next: (res) => {
-        console.log("Réponse reçue :", res); 
+        console.log("Réponse reçue :", res);
         this.message = "Compte créé avec succès. Veuillez vérifier votre adresse email.";
         setTimeout(() => {
           console.log("⏩ Redirection vers /login");
@@ -64,7 +65,7 @@ export class RegisterComponent {
         }, 3000);
       },
       error: (err) => {
-        console.error("Erreur reçue :", err); 
+        console.error("Erreur reçue :", err);
         this.error = err?.error?.message || "Erreur lors de l'inscription.";
       }
     });

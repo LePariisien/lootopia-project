@@ -47,6 +47,9 @@ public class AuthService {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private PlayerService playerService;
+
     public ResponseEntity<?> signup(@RequestBody RegisterDto registerDto, String siteURL)
             throws UnsupportedEncodingException, MessagingException {
         if (userRepository.existsByUsername(registerDto.getUsername())
@@ -174,9 +177,13 @@ public class AuthService {
     private JwtAuthResponse GetJwtAuthResponse(User user) {
         user.setLastSigninAt(LocalDateTime.now());
 
+        var player = playerService.getPlayerByUsername(user.getUsername());
+
         return JwtAuthResponse.builder()
                 .accessToken(jwtService.generateAccessToken(user))
                 .refreshToken(jwtService.generateRefreshToken(user))
+                .nickname(player.getNickname())
+                .playerId(player.getId())
                 .emailVerified(user.isEmailVerified())
                 .build();
     }

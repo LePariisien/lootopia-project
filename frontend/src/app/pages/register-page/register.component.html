@@ -1,5 +1,6 @@
-<div class="flex h-screen font-sans bg-[#002820]">
-  <div class="flex-1 flex items-center justify-center px-10 text-black">
+<div class="flex flex-col-reverse lg:flex-row h-screen font-sans bg-[#002820]">
+
+  <div class="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-10 text-black">
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()"
           class="bg-white p-8 rounded-xl shadow w-full max-w-md space-y-4">
 
@@ -35,14 +36,26 @@
     </form>
   </div>
 
-  <div class="w-[28%] bg-[#e9f1e8] text-green-800 text-center flex flex-col items-center px-6 shadow-inner mr-[200px]">
-    <img src="assets/logo-lootopia.png" alt="Lootopia" class="w-64 mb-8 mt-40 transition duration-500 hover:scale-105" />
-    <h1 class="text-7xl font-bold mt-6">Lootopia</h1>
-    <h2 class="text-3xl font-bold mt-4">CONNEXION</h2>
-    <p class="mt-4 text-sm">
+  <div
+    class="w-full lg:w-[40%] xl:w-[35%] xl:mr-32 bg-[#e9f1e8] text-green-800 text-center flex flex-col items-center justify-center py-8 px-6 shadow-inner">
+    <img src="assets/logo-lootopia.png" alt="Lootopia"
+      class="w-32 sm:w-48 md:w-56 mb-4 mt-0 sm:mt-12 lg:mt-0 transition duration-500 hover:scale-105" />
+    <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold mt-4">Lootopia</h1>
+    <h2 class="text-2xl sm:text-3xl font-bold mt-2">Bienvenue Aventurier !</h2>
+    <p class="mt-4 text-sm sm:text-base px-4">
+      Rejoignez notre communauté de chasseurs de trésors et commencez votre aventure dès aujourd'hui !
+    </p>
+    <p class="mt-16 text-center text-sm text-gray-600 hidden lg:block">
+      Déjà un compte ?
       <a routerLink="/login" class="underline text-green-700 hover:text-green-900 transition">
-        J’ai déjà un compte, je me connecte
+        Connectez-vous ici
+      </a>
+    </p>
+    <p class="mt-4 text-sm transition-opacity duration-700 delay-300">
+      <a routerLink="/" class="underline hover:text-green-300 transition font-semibold">
+        Mode invité
       </a>
     </p>
   </div>
+
 </div>

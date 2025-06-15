@@ -1,46 +1,50 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [FormsModule, CommonModule, RouterModule],
 })
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  mfaCode: string = '';
+  mfaCode: string = ''; // requis si MFA activé côté backend
   errorMessage: string = '';
   showPassword: boolean = false;
+  showMfa: boolean = false;
 
   constructor(private auth: AuthService) {}
 
   login() {
     this.auth.login(this.email, this.password).subscribe({
       next: (response) => {
-        this.auth.setTokens(response.accessToken, response.refreshToken, true);
-        // this.showMfa = true;
-      },
-      error: (err) => {
-        this.errorMessage =
-          err.error?.message || 'Identifiants invalides. Veuillez réessayer.';
-      },
+        if (response.accessToken && response.refreshToken) {
+          this.auth.setTokens(response.accessToken, response.refreshToken, response.emailVerified, true);
+        } else if (response.mfaRequired) {
+          this.showMfa = true;
+        }
+      }
     });
   }
 
   verifyMfa() {
     this.auth.verifyMfa(this.email, this.mfaCode).subscribe({
       next: (response) => {
-        this.auth.setTokens(response.accessToken, response.refreshToken, true);
+        this.auth.setTokens(response.accessToken, response.refreshToken, response.emailVerified, true);
       },
       error: () => {
         this.errorMessage = 'Code MFA invalide';
       },
     });
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }

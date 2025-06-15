@@ -26,12 +26,12 @@ export class ShopService {
     return this.http.post(ApiRoutes.createPurchase(), purchase, { headers });
   }
 
-  getCrownQuantity(token: string, playerId: string): Observable<any> {
+  getCrownQuantity(token: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    return this.http.get(ApiRoutes.getCrownQuantity(playerId), { headers });
+    return this.http.get(ApiRoutes.getCrownQuantity(), { headers });
   }
 
   updateCrownCount(count: number) {

@@ -11,7 +11,6 @@ export const ApiRoutes = {
   profile: (userId: string) =>
     `${ApiRoutesEnum.Lootopia}/users/${userId}/profile`,
 
-
   // Paiements
   createPaymentIntent: (amount: number) =>
     `${ApiRoutesEnum.Payment}/create-payment-intent?amount=${amount}`,
@@ -45,28 +44,25 @@ export const ApiRoutes = {
   treasureById: (id: string) => `${ApiRoutesEnum.Location}/treasure/${id}`,
   treasureAll: () => `${ApiRoutesEnum.Location}/treasure/all`,
 
-  // Crowns
-  addCrownsToPlayer: () => `${ApiRoutesEnum.Lootopia}/crowns`,
-  getCrownQuantity: (playerId: string) =>
-    `${ApiRoutesEnum.Lootopia}/crowns/player/${playerId}`,
-
-  // Purchases
-  createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,
-
   // Player
   playerAll: () => `${ApiRoutesEnum.Lootopia}/player/all`,
   playerCount: () => `${ApiRoutesEnum.Lootopia}/player/count`,
   playerById: (id: string) => `${ApiRoutesEnum.Lootopia}/player/id/${id}`,
   player: () => `${ApiRoutesEnum.Lootopia}/player`,
+  playerByNickname: (nickname: string) =>
+    `${ApiRoutesEnum.Lootopia}/player/nickname/${nickname}`,
 
   // Crowns
   addCrownsToPlayer: () => `${ApiRoutesEnum.Lootopia}/crowns`,
-  getCrownQuantity: (playerId: string) =>
+  getCrownQuantity: () =>
     `${ApiRoutesEnum.Lootopia}/crownsByToken`,
 
   // Purchases
   createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,
 
+  // UserProfile
+  userProfile: (userId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/user/${userId}`,
+  userProfileByPlayerId: (playerId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/player/${playerId}`,
 };
 
 export enum ApiRoutesEnum {

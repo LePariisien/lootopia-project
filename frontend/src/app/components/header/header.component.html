@@ -69,11 +69,11 @@
         <div class="flex flex-col items-center">
           <lucide-icon
             [img]="User"
-            routerLink="/login"
+            [routerLink]="['/profile/' + encodedNickname]"
             routerLinkActive="font-semibold text-green-700"
             class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
           </lucide-icon>
-          <span *ngIf="router.isActive('/login', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
+          <span *ngIf="router.isActive('/profile', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
         </div>
 
         <div *ngIf="isAuthenticated" class="flex flex-col items-center">
