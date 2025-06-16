@@ -15,6 +15,7 @@ import { ClueService } from '../../services/clue.service';
 import { AuthService } from '../../services/auth.service';
 import { AlertComponent } from "../../components/alert/alert.component";
 import { Alert } from '../../models/alert.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-hunt-participation-page',
@@ -23,7 +24,8 @@ import { Alert } from '../../models/alert.model';
     HuntStepCardComponent,
     HuntCompletedStepsComponent,
     HuntSidebarComponent,
-    AlertComponent
+    AlertComponent,
+    CommonModule
 ],
   templateUrl: './hunt-participation-page.component.html',
   styleUrl: './hunt-participation-page.component.css'

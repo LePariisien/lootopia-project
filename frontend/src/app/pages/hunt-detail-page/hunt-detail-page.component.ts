@@ -16,6 +16,7 @@ import { HuntDetailContentComponent } from "../../components/hunt-detail/hunt-de
 import { HuntDetailJoinComponent } from "../../components/hunt-detail/hunt-detail-join/hunt-detail-join.component";
 import { Alert } from '../../models/alert.model';
 import { AlertComponent } from "../../components/alert/alert.component";
+import { Participation } from '../../models/participation.model';
 
 @Component({
   selector: 'app-hunt-detail-page',
@@ -45,6 +46,7 @@ export class HuntDetailPageComponent {
   treasureHunt!: TreasureHunt;
   treasure!: Treasure;
   organizer!: Player;
+  participation!: Participation | null;
   isRegistered: boolean = true;
   token: string | null = null;
   alert: Alert = { type: 'success', message: '' };
@@ -80,23 +82,20 @@ export class HuntDetailPageComponent {
               this.participationService.getParticipationByTreasureHuntIdAndPlayer(this.treasureHuntId!).subscribe({
                 next: (participation) => {
                   console.log('Participation récupérée :', participation);
-
-                  this.isRegistered = participation !== null;
-                  // if (participation) {
-                  //   this.router.navigate(['/hunt-participation', participation.id]);
-                  // } else {
-                  //   this.router.navigate(['/hunt-participation', 'new', this.treasureHuntId]);
-                  // }
+                  this.participation = participation;
+                  this.isRegistered = participation && participation.length > 0;
                 },
                 error: (err) => {
                   console.error('Erreur lors de la récupération de la participation', err);
                 }
               });
+
             },
             error: (err) => {
               console.error('Erreur lors de la récupération du trésor', err);
             }
           });
+
         },
         error: (err) => {
           console.error('Erreur lors de la récupération de la chasse au trésor', err);

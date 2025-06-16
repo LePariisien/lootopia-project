@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { ApiRoutes } from '../api-routes';
 import { Router } from '@angular/router';
@@ -36,11 +36,13 @@ export class AuthService {
   }
 
   refreshToken(): Observable<any> {
+    const accessToken = localStorage.getItem(this.accessTokenString);
     const refreshToken = localStorage.getItem(this.refreshTokenString);
-    if (!refreshToken) {
-      return throwError(() => new Error('Pas de refreshToken'));
-    }
-    return this.http.post<any>(ApiRoutes.refresh(), { refreshToken });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${refreshToken}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.post<any>(ApiRoutes.refresh(), accessToken, { headers });
   }
 
   setTokens(accessToken: string, refreshToken: string, emailVerified: boolean = false, redirect: boolean = false): void {
