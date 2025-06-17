@@ -2,6 +2,7 @@
   max-width: 80rem;
   margin-left: auto;
   margin-right: auto;
+  padding-top: calc(var(--spacing) * 22) ;
 }
 
 .shop-title {
