@@ -33,7 +33,6 @@ export class ShopComponent implements OnInit {
   showStripe = false;
   clientSecret: string | null = null;
   selectedPrice: string | null = null;
-  showSuccess = false;
   crownCount: number | null = null;
   selectedPack: any = null;
 
@@ -56,7 +55,7 @@ export class ShopComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const token = this.authService.getToken() ?? '';
+    this.playerId = this.authService.getPlayerId();
 
     if (this.playerId) {
       this.shopService.getCrownQuantity().subscribe({
@@ -104,7 +103,7 @@ export class ShopComponent implements OnInit {
 
   onPaymentSuccess() {
     this.showStripe = false;
-    this.showSuccess = true;
+
     if (this.selectedPack && typeof this.selectedPack.amount === 'number') {
       let total = this.selectedPack.amount;
       if (this.selectedPack.bonus) {
@@ -129,11 +128,17 @@ export class ShopComponent implements OnInit {
           bonus: this.selectedPack.bonus,
           img: this.selectedPack.img
         };
-        this.shopService.createPurchase(purchase).subscribe();
+        this.shopService.createPurchase(purchase).subscribe({
+          next: () => {
+            this.setAlert({ type: 'success', message: 'Paiement validé !' });
+            this.shopService.updateCrownCount(this.crownCount ?? 0);
+          },
+          error: (err) => {
+            console.error('Erreur lors de l\'enregistrement de l\'achat:', err);
+          }
+        });
       }
     }
-    this.setAlert({ type: 'success', message: 'Paiement validé !' });
-    this.shopService.updateCrownCount(this.crownCount ?? 0);
   }
 
   setAlert(alert: Alert) {
