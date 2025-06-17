@@ -28,7 +28,6 @@ export class ShopComponent implements OnInit {
   readonly ShoppingCart = ShoppingCart;
   readonly Info = Info;
   readonly CreditCard = CreditCard;
-
   activeTab: 'couronnes' | 'abonnements' | 'artefacts' = 'couronnes';
   showStripe = false;
   clientSecret: string | null = null;

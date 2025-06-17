@@ -70,3 +70,4 @@ export enum ApiRoutesEnum {
   Payment = 'http://localhost:8080/paymentserv/api/payment',
   Location = 'http://localhost:8080/locationserv/api',
 }
+
