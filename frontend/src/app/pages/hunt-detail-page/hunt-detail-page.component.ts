@@ -65,19 +65,19 @@ export class HuntDetailPageComponent {
     if (!token) return;
 
     if (this.treasureHuntId) {
-      this.treasureHuntService.getTreasureHunt(token, +this.treasureHuntId!).subscribe({
+      this.treasureHuntService.getTreasureHunt(+this.treasureHuntId!).subscribe({
         next: (treasureHunt) => {
           this.treasureHunt = treasureHunt;
           console.log('Chasse au trésor récupérée :', this.treasureHunt);
 
-          this.getOrganizer(token, treasureHunt.organizer_id);
+          this.getOrganizer(treasureHunt.organizer_id);
 
-          this.treasureService.getTreasure(token, treasureHunt.treasure_id).subscribe({
+          this.treasureService.getTreasure(treasureHunt.treasure_id).subscribe({
             next: (treasure) => {
               this.treasure = treasure;
               console.log('Trésor récupéré :', this.treasure);
 
-              this.participationService.getParticipationByTreasureHuntIdAndPlayer(token, this.treasureHuntId!).subscribe({
+              this.participationService.getParticipationByTreasureHuntIdAndPlayer(this.treasureHuntId!).subscribe({
                 next: (participation) => {
                   console.log('Participation récupérée :', participation);
 
@@ -106,8 +106,8 @@ export class HuntDetailPageComponent {
     }
   };
 
-  getOrganizer(token: string, organizerId: string): void {
-    this.playerService.getPlayerById(token, organizerId).subscribe({
+  getOrganizer(organizerId: string): void {
+    this.playerService.getPlayerById(organizerId).subscribe({
       next: (player) => {
         this.organizer = player;
         console.log('Organisateur récupéré :', this.organizer);

@@ -1,6 +1,6 @@
 <app-alert *ngIf="!!alert.message" [message]="alert.message" [type]="alert.type"></app-alert>
 
-<div class="min-h-screen bg-gradient-to-b from-green-50 to-green-100">
+<div class="min-h-screen">
   <main class="max-w-6xl mx-auto p-4 md:px-8">
     <app-hunt-header
       [treasureHunt]="treasureHunt"
@@ -18,7 +18,6 @@
           [clues]="clues"
           [longitude]="longitude"
           [latitude]="latitude"
-          [TOKEN]="token"
           (alert)="setAlert($event)">
         </app-hunt-step-card>
         <app-hunt-completed-steps

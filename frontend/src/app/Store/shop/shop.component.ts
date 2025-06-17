@@ -32,7 +32,6 @@ export class ShopComponent implements OnInit {
   showStripe = false;
   clientSecret: string | null = null;
   selectedPrice: string | null = null;
-  showSuccess = false;
   crownCount: number | null = null;
   selectedPack: any = null;
 
@@ -45,7 +44,6 @@ export class ShopComponent implements OnInit {
 
   alert: Alert = { type: 'success', message: '' };
 
-  token: string = '';
   player!: Player;
   playerId: string | null = null;
 
@@ -56,10 +54,10 @@ export class ShopComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.token = this.authService.getToken() ?? '';
+    this.playerId = this.authService.getPlayerId();
 
-    if (this.token) {
-      this.shopService.getCrownQuantity(this.token).subscribe({
+    if (this.playerId) {
+      this.shopService.getCrownQuantity().subscribe({
         next: (crown) => {
           this.crownCount = crown.quantity;
         },
@@ -104,7 +102,7 @@ export class ShopComponent implements OnInit {
 
   onPaymentSuccess() {
     this.showStripe = false;
-    this.showSuccess = true;
+
     if (this.selectedPack && typeof this.selectedPack.amount === 'number') {
       let total = this.selectedPack.amount;
       if (this.selectedPack.bonus) {
@@ -113,8 +111,8 @@ export class ShopComponent implements OnInit {
       }
       this.crownCount = (this.crownCount ?? 0) + total;
 
-      if (this.token && this.playerId) {
-        this.shopService.addCrownsToPlayer(this.token, this.playerId, total).subscribe();
+      if (this.playerId) {
+        this.shopService.addCrownsToPlayer(this.playerId, total).subscribe();
         const now = new Date();
         const purchase = {
           player_id: this.playerId,
@@ -129,11 +127,17 @@ export class ShopComponent implements OnInit {
           bonus: this.selectedPack.bonus,
           img: this.selectedPack.img
         };
-        this.shopService.createPurchase(this.token, purchase).subscribe();
+        this.shopService.createPurchase(purchase).subscribe({
+          next: () => {
+            this.setAlert({ type: 'success', message: 'Paiement validé !' });
+            this.shopService.updateCrownCount(this.crownCount ?? 0);
+          },
+          error: (err) => {
+            console.error('Erreur lors de l\'enregistrement de l\'achat:', err);
+          }
+        });
       }
     }
-    this.setAlert({ type: 'success', message: 'Paiement validé !' });
-    this.shopService.updateCrownCount(this.crownCount ?? 0);
   }
 
   setAlert(alert: Alert) {

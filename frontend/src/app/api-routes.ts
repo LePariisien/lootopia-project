@@ -3,7 +3,7 @@ export const ApiRoutes = {
   login: () => `${ApiRoutesEnum.Lootopia}/auth/login`,
   verifyMfa: (username: string, mfaCode: string) =>
     `${ApiRoutesEnum.Lootopia}/auth/verify-mfa?username=${username}&mfaCode=${mfaCode}`,
-  refresh: () => `${ApiRoutesEnum.Lootopia}/token/refresh`,
+  refresh: () => `${ApiRoutesEnum.Lootopia}/token/refresh-token`,
   signUp: () => `${ApiRoutesEnum.Lootopia}/auth/sign-up`,
 
   verify: () => `${ApiRoutesEnum.Lootopia}/auth/verify`,
@@ -61,7 +61,7 @@ export const ApiRoutes = {
   createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,
 
   // UserProfile
-  userProfile: (userId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/user/${userId}`,
+  userProfileByUserId: (userId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/user/${userId}`,
   userProfileByPlayerId: (playerId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/player/${playerId}`,
 };
 

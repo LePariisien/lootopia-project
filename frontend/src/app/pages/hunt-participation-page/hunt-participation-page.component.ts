@@ -40,8 +40,6 @@ export class HuntParticipationPageComponent {
   step!: number;
   watchId: number | null = null;
 
-  token: string = '';
-
   alert: Alert = { type: 'success', message: '' };
 
   constructor(
@@ -55,27 +53,27 @@ export class HuntParticipationPageComponent {
   ) { }
 
   ngOnInit(): void {
-    this.token = this.authService.getTokenOrRedirect() ?? '';
+    const token = this.authService.getTokenOrRedirect() ?? '';
 
     this.startLocationWatch();
 
     this.route.paramMap.subscribe(params => {
       const participationId = params.get('id');
       if (participationId) {
-        this.participationService.getParticipation(this.token, participationId).subscribe({
+        this.participationService.getParticipation(participationId).subscribe({
           next: (participation) => {
             this.participation = participation;
             this.step = (participation.current_step ?? 1) - 1;
 
-            this.treasureHuntService.getTreasureHunt(this.token, participation.treasureHuntId).subscribe({
+            this.treasureHuntService.getTreasureHunt(participation.treasureHuntId).subscribe({
               next: (treasureHunt) => {
                 this.treasureHunt = treasureHunt;
 
-                this.treasureService.getTreasure(this.token, treasureHunt.treasure_id).subscribe({
+                this.treasureService.getTreasure(treasureHunt.treasure_id).subscribe({
                   next: (treasure) => {
                     this.treasure = treasure;
 
-                    this.clueService.getCluesByTreasureId(this.token, treasure.id).subscribe({
+                    this.clueService.getCluesByTreasureId(treasure.id).subscribe({
                       next: (clues) => {
                         this.clues = clues;
                       },

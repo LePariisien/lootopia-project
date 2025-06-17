@@ -190,12 +190,12 @@ export class CreateHuntComponent implements OnInit {
       maxParticipants: this.maxParticipants,
       endDate: this.endDate
     });
-    
+
     this.setAlert({ type: 'success', message: 'Brouillon enregistré avec succès !' });
 
   }
 
-  publishClues(token: string, treasureId: string): void {
+  publishClues(treasureId: string): void {
     const clues: Clue[] = this.huntSteps.map((step, index) => ({
       id: "",
       title: step.title,
@@ -207,7 +207,7 @@ export class CreateHuntComponent implements OnInit {
       treasureId: treasureId
     }));
 
-    this.clueService.createClues(token, clues).subscribe({
+    this.clueService.createClues(clues).subscribe({
       next: (response) => {
         console.log('Clues published!', response);
       },
@@ -243,11 +243,11 @@ export class CreateHuntComponent implements OnInit {
       found: false
     };
 
-    this.treasureHuntService.createTreasureHunt(this.token, body).subscribe({
+    this.treasureHuntService.createTreasureHunt(body).subscribe({
       next: (response) => {
         const treasure_id = response.treasure_id;
         body.treasure_id = treasure_id;
-        this.publishClues(this.token, treasure_id);
+        this.publishClues(treasure_id);
 
         this.resetForm();
         this.activeTab = 'informations';
