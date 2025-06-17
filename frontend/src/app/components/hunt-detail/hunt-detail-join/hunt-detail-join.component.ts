@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { ParticipationService } from '../../../services/participation.service';
 import { AuthService } from '../../../services/auth.service';
 import { Alert } from '../../../models/alert.model';
+import { Router } from '@angular/router';
+import { Participation } from '../../../models/participation.model';
 
 @Component({
   selector: 'app-hunt-detail-join',
@@ -24,6 +26,7 @@ export class HuntDetailJoinComponent {
   readonly ArrowRight = ArrowRight;
 
   @Input() treasureHunt!: TreasureHunt;
+  @Input() participation!: Participation | null;
   @Input() isRegistered: boolean = false;
 
   @Output() isRegisteredChange = new EventEmitter<boolean>();
@@ -32,13 +35,14 @@ export class HuntDetailJoinComponent {
   constructor(
     private participationService: ParticipationService,
     private authService: AuthService,
-  ) {  }
+    private router: Router
+  ) { }
 
   joinTreasureHunt(): void {
     const token = this.authService.getTokenOrRedirect();
     if (!token) return;
 
-    if (this.isRegistered) {
+    if (!this.isRegistered) {
       this.participationService.createParticipation(this.treasureHunt.id).subscribe({
         next: (response) => {
           this.isRegistered = true;
@@ -50,7 +54,13 @@ export class HuntDetailJoinComponent {
           this.alert.emit({ type: 'error', message: 'Impossible de participer à la chasse au trésor. Veuillez réessayer ultérieurement.' });
         }
       });
+    } else {
+      this.router.navigate(['/participation', this.participation?.id]);
     }
+  }
+
+  resumeParticipation(): void {
+    this.router.navigate(['/participation', this.participation?.id]);
   }
 
 }

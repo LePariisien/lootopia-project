@@ -41,7 +41,13 @@
       Rejoindre la chasse
       <lucide-icon [img]="ArrowRight" class="ml-2" size="20"></lucide-icon>
     </button>
-    <span *ngIf="!isRegistered">Vous êtes déjà inscrit !</span>
+    <span *ngIf="!isRegistered" class="w-full text-green-800 rounded py-2 flex flex-col justify-center">
+      <span class="text-green-800">Vous êtes déjà inscrit !</span>
+      <button class="text-green-600 underline cursor-pointer"
+              (click)="resumeParticipation()">
+        Poursuivez votre aventure.
+      </button>
+    </span>
 
     <div class="flex justify-center">
       <button class="w-full text-green-700 hover:text-green-900 hover:bg-green-100 rounded py-2 flex items-center justify-center">

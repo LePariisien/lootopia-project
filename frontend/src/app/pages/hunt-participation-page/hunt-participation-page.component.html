@@ -1,5 +1,9 @@
 <app-alert *ngIf="!!alert.message" [message]="alert.message" [type]="alert.type"></app-alert>
 
+<div *ngIf="!treasure && !clues" class="text-center py-10 text-green-700">
+  Chargement de la chasse au trésor...
+</div>
+
 <div class="min-h-screen">
   <main class="max-w-6xl mx-auto p-4 md:px-8">
     <app-hunt-header
