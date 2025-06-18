@@ -38,7 +38,7 @@ public class Notification {
 
     @NotNull
     @ManyToOne
-    private User user;
+    private Player Player;
 
     @NotNull
     @Column(nullable = false)
