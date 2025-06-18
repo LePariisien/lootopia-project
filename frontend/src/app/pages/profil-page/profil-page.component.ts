@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { UserProfile } from '../../models/user-profile.model';
 import { Player } from '../../models/player.model';
 import { PlayerService } from '../../services/player.service';
+import { ShopService } from '../../services/shop.service';
 
 @Component({
   selector: 'app-profil-page',
@@ -17,13 +18,15 @@ import { PlayerService } from '../../services/player.service';
 export class ProfilPageComponent implements OnInit {
   player: Player | null = null;
   profile: UserProfile | null = null;
+  crownCount: number = 0;
 
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
     private authService: AuthService,
     private playerService: PlayerService,
-    private router: Router
+    private router: Router,
+    private shopService: ShopService
   ) {  }
 
   ngOnInit(): void {
@@ -46,6 +49,15 @@ export class ProfilPageComponent implements OnInit {
               error: (err) => {
                 console.error('Erreur de récupération du profil:', err);
                 this.router.navigate(['/404']);
+              }
+            });
+
+            this.shopService.getCrownQuantity().subscribe({
+              next: (crown) => {
+                this.crownCount = crown.quantity;
+              },
+              error: (err) => {
+                console.error('Erreur Crown API:', err);
               }
             });
 

@@ -56,6 +56,7 @@ export const ApiRoutes = {
   addCrownsToPlayer: () => `${ApiRoutesEnum.Lootopia}/crowns`,
   getCrownQuantity: () =>
     `${ApiRoutesEnum.Lootopia}/crownsByToken`,
+  minusCrownsByToken: (amount: number) => `${ApiRoutesEnum.Lootopia}/crowns/minus/${amount}`,
 
   // Purchases
   createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,

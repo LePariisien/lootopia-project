@@ -25,4 +25,8 @@ export class ShopService {
   updateCrownCount(count: number) {
     this.crownCountSubject.next(count);
   }
+
+  minusCrownsByToken(quantity: number): Observable<any> {
+    return this.http.post(ApiRoutes.minusCrownsByToken(quantity), null);
+  }
 }

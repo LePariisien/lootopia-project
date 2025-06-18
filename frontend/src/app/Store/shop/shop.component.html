@@ -9,35 +9,24 @@
       Achetez des couronnes pour débloquer des indices, des chasses exclusives et
       des artefacts spéciaux
     </p>
-    <div class="shop-tabs-wrapper">
-      <div class="shop-tabs-bg">
-        <div class="shop-tabs">
-          <button
-            (click)="selectTab('couronnes')"
-            class="shop-tab"
-            [class.active]="activeTab === 'couronnes'">
-            Couronnes
-          </button>
-          <button
-            (click)="selectTab('abonnements')"
-            class="shop-tab"
-            [class.active]="activeTab === 'abonnements'">
-            Abonnements
-          </button>
-          <button
-            (click)="selectTab('artefacts')"
-            class="shop-tab"
-            [class.active]="activeTab === 'artefacts'">
-            Artefacts
-          </button>
-        </div>
-        <app-crown-balance
-          *ngIf="authService.isAuthenticated()"
-          [crownCount]="crownCount ?? 0"
-          class="flex justify-center mt-6"></app-crown-balance>
-      </div>
+    <div class="flex flex-wrap justify-center md:justify-start text-[#082B21] rounded-md p-2 gap-2">
+      <button (click)="selectTab('couronnes')"
+        [ngClass]="{'bg-green-600 text-white': activeTab === 'couronnes', 'hover:bg-green-200': activeTab !== 'couronnes'}"
+        class="flex-1 py-2 px-4 text-center border border-green-200 rounded-md transition-colors duration-200">
+        Couronnes
+      </button>
+      <button (click)="selectTab('artefacts')"
+        [ngClass]="{'bg-green-600 text-white': activeTab === 'artefacts', 'hover:bg-green-200': activeTab !== 'artefacts'}"
+        class="flex-1 py-2 px-4 text-center border border-green-200 rounded-md transition-colors duration-200">
+        Artefacts
+      </button>
     </div>
-    <div *ngIf="activeTab === 'couronnes'">
+    <app-crown-balance
+      *ngIf="authService.isAuthenticated()"
+      [crownCount]="crownCount ?? 0"
+      class="flex justify-center mt-6">
+    </app-crown-balance>
+    <div *ngIf="activeTab === 'couronnes'" class="mt-10">
       <div class="shop-packs-grid">
         <div class="shop-pack" *ngFor="let pack of crownPacks">
           <div *ngIf="pack.badge" class="shop-pack-badge">{{ pack.badge }}</div>
@@ -150,13 +139,11 @@
         </div>
       </div>
     </div>
-    <div *ngIf="activeTab === 'abonnements'" class="text-center mt-8">
-      <p class="text-gray-600">
-        Les abonnements seront disponibles prochainement.
-      </p>
-    </div>
-    <div *ngIf="activeTab === 'artefacts'" class="text-center mt-8">
-      <p class="text-gray-600">Les artefacts seront disponibles prochainement.</p>
+    <div *ngIf="activeTab === 'artefacts'" class="mt-4">
+      <app-artifacts-tab
+        [crownCount]="crownCount || 0"
+        (crownCountChange)="onCrownCountChange($event)"
+      ></app-artifacts-tab>
     </div>
     <app-stripe-modal
       [show]="showStripe"

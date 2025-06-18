@@ -9,6 +9,7 @@ import com.lootopia.lootopia.Repositories.PlayerRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +57,23 @@ public class CrownService {
 
         Optional<Crown> crownOpt = crownRepository.findByPlayer(player);
         return crownOpt.map(CrownDto::new).orElse(new CrownDto(null, player.getId(), 0));
+    }
+
+    public ResponseEntity<?> minusCrowns(int amount) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Player player = playerRepository.findByUserUsername(username)
+                .orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
+
+        Optional<Crown> crownOpt = crownRepository.findByPlayer(player);
+        if (crownOpt.isEmpty() || crownOpt.get().getQuantity() < amount) {
+            throw new CustomException("Pas assez de couronnes", HttpStatus.BAD_REQUEST);
+        }
+
+        Crown crown = crownOpt.get();
+        crown.setQuantity(crown.getQuantity() - amount);
+        crownRepository.save(crown);
+
+        return ResponseEntity.ok(new CrownDto(crown));
     }
 }
