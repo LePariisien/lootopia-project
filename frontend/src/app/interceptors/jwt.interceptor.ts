@@ -7,9 +7,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const token = localStorage.getItem('accessToken');
+  const isRefreshRequest = req.url.includes('/refresh-token');
 
-  const cloned = token
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+  const cloned = (token && !isRefreshRequest)
+    ? req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+          ContentType: 'application/json'
+        }
+      })
     : req;
 
   return next(cloned).pipe(
@@ -25,8 +31,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
             return next(retryReq);
           }),
           catchError(() => {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
+            auth.logout(true);
             return throwError(() => error);
           })
         );

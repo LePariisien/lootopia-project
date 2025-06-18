@@ -31,16 +31,16 @@ public class Friend {
 
     @NotNull
     @ManyToOne
-    private User user1; // First user in the friendship
+    private Player Player1;
 
     @NotNull
     @ManyToOne
-    private User user2; // Second user in the friendship
+    private Player Player2;
 
-public enum FriendshipStatus {
-    ACCEPTED,
-    PENDING
-}
+    public enum FriendshipStatus {
+        ACCEPTED,
+        PENDING
+    }
 
     @NotNull
     @Enumerated(EnumType.STRING)

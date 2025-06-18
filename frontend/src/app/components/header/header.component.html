@@ -1,65 +1,97 @@
-<header class="fixed inset-x-0 top-0 z-50">
-  <div class="relative w-lg mx-auto flex items-center justify-center py-3 border-2 border-green-500 border-t-0 rounded-b-full">
-    <div class ="absolute inset-0 blur-xs opacity-75 bg-gradient-to-r from-green-200 to-blue-200 rounded-b-full"></div>
-    <nav class="relative z-10 flex gap-8 items-center px-2">
-      <div class="flex flex-col items-center">
-        <lucide-icon
-          [img]="House"
-          routerLink="/"
-          routerLinkActive="active-icon"
-          class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
-        </lucide-icon>
-        <span *ngIf="router.isActive('/', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
-      </div>
-      <div class="flex flex-col items-center">
-        <lucide-icon
-          [img]="ShoppingCart"
-          routerLink="/shop"
-          routerLinkActive="active-icon"
-          class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
-        </lucide-icon>
-        <span *ngIf="router.isActive('/shop', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
-      </div>
-      <div class="flex flex-col items-center">
-        <lucide-icon
-          [img]="Medal"
-          routerLink="/ranking"
-          routerLinkActive="active-icon"
-          class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
-        </lucide-icon>
-        <span *ngIf="router.isActive('/ranking', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
-      </div>
-      <img src="assets/logo-lootopia.png" alt="Lootopia" class="w-12 h-12" />
-      <div class="flex flex-col items-center">
-        <lucide-icon
-          [img]="Search"
-          routerLink="/view-hunts"
-          routerLinkActive="font-semibold text-green-700"
-          class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
-        </lucide-icon>
-        <span *ngIf="router.isActive('/view-hunts', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
-      </div>
+<header class="fixed inset-x-0 top-0 z-50 ">
+  <div class="flex justify-center items-center gap-8 x-auto">
+    <div *ngIf="isAuthenticated" class="flex justify-between items-center gap-1 border border-green-500 rounded-full px-4 pr-0 py-0 min-w-32 bg-gradient-to-r from-green-200 to-blue-200">
+      <span class="text-lg text-green-900 font-bold">
+        {{ crownCount ?? 0}}
+      </span>
+      <img src="assets/images/piece.png" alt="crown" class="size-10" />
+    </div>
 
-      <div class="flex flex-col items-center">
-        <lucide-icon
-          [img]="User"
-          routerLink="/profile"
-          routerLinkActive="font-semibold text-green-700"
-          class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
-        </lucide-icon>
-        <span *ngIf="router.isActive('/profile', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
-      </div>
-      <div class="flex flex-col items-center">
-        <lucide-icon
-          [img]="MessageCircleMore"
-          routerLink="/chat"
-          routerLinkActive="font-semibold text-green-700"
-          class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
-        </lucide-icon>
-        <span *ngIf="router.isActive('/chat', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
-      </div>
-    </nav>
-    <div>
+    <div class="relative {{isAuthenticated ? 'w-auto' : 'w-lg'}} flex items-center justify-center py-3 px-12 border border-green-500 border-t-0 rounded-b-full">
+      <div class ="absolute inset-0 blur-xs opacity-75 bg-gradient-to-r from-green-200 to-blue-200 rounded-b-full"></div>
+      <nav class="relative z-10 flex gap-8 items-center px-2">
+        <div *ngIf="isAuthenticated" class="flex flex-col items-center">
+          <lucide-icon [img]="Bell" (click)="openNotifications()"
+            class="text-lg text-green-500 hover:text-green-700 transition cursor-pointer">
+          </lucide-icon>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <lucide-icon
+            [img]="House"
+            routerLink="/"
+            routerLinkActive="active-icon"
+            class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
+          </lucide-icon>
+          <span *ngIf="router.isActive('/', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
+        </div>
+        <div class="flex flex-col items-center">
+          <lucide-icon
+            [img]="ShoppingCart"
+            routerLink="/shop"
+            routerLinkActive="active-icon"
+            class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
+          </lucide-icon>
+          <span *ngIf="router.isActive('/shop', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
+        </div>
+        <div class="flex flex-col items-center">
+          <lucide-icon
+            [img]="Medal"
+            routerLink="/ranking"
+            routerLinkActive="active-icon"
+            class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
+          </lucide-icon>
+          <span *ngIf="router.isActive('/ranking', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
+        </div>
+
+        <img src="assets/logo-lootopia.png" alt="Lootopia" class="w-12 h-12" />
+
+        <div class="flex flex-col items-center">
+          <lucide-icon
+            [img]="Search"
+            routerLink="/view-hunts"
+            routerLinkActive="font-semibold text-green-700"
+            class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
+          </lucide-icon>
+          <span *ngIf="router.isActive('/view-hunts', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <lucide-icon
+            [img]="SquarePlus"
+            routerLink="/create-hunt"
+            routerLinkActive="font-semibold text-green-700"
+            class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
+          </lucide-icon>
+          <span *ngIf="router.isActive('/create-hunt', true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <lucide-icon
+            [img]="User"
+            [routerLink]="['/profile/' + encodedNickname]"
+            routerLinkActive="font-semibold text-green-700"
+            class="text-lg text-gray-700 hover:text-green-700 transition cursor-pointer">
+          </lucide-icon>
+          <span *ngIf="router.isActive('/profile' + encodedNickname, true)" class="block size-1 rounded-full bg-green-600 mt-1"></span>
+        </div>
+
+        <div *ngIf="isAuthenticated" class="flex flex-col items-center">
+          <lucide-icon
+            [img]="LogOut"
+            (click)="logout()"
+            class="text-lg text-green-500 hover:text-green-700 transition cursor-pointer">
+          </lucide-icon>
+        </div>
+
+      </nav>
+
+    </div>
+    <div *ngIf="isAuthenticated" class="flex justify-between items-center gap-1 border border-green-500 rounded-full px-4 pl-0 py-0 min-w-32 bg-gradient-to-r from-green-200 to-blue-200">
+      <img src="assets/images/gemme.png" alt="gemme" class="size-10" />
+      <span class="text-lg text-green-900 font-bold">
+        {{ !player ? 0 : player.score }}
+      </span>
     </div>
   </div>
 </header>

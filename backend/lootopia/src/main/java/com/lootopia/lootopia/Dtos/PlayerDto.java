@@ -1,5 +1,7 @@
 package com.lootopia.lootopia.Dtos;
 
+import java.util.UUID;
+
 import com.lootopia.lootopia.Entities.Player;
 
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import lombok.ToString;
 @ToString
 public class PlayerDto {
 
+    private UUID id;
     private String nickname;
     private int score;
     private String avatarUrl;
@@ -20,6 +23,7 @@ public class PlayerDto {
     private String country;
 
     public PlayerDto(Player player) {
+        this.id = player.getId();
         this.nickname = player.getNickname();
         this.score = player.getScore();
         this.avatarUrl = player.getAvatarUrl();

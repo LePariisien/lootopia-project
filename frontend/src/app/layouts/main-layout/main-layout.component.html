@@ -1,0 +1,5 @@
+<app-header></app-header>
+<app-loading-page *ngIf="loading"></app-loading-page>
+<div *ngIf="!loading" class="pt-14">
+  <router-outlet></router-outlet>
+</div>

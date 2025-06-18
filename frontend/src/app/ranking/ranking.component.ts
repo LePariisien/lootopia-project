@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from "../components/header/header.component";
 import { LucideAngularModule, Medal } from 'lucide-angular';
 import { PlayerService } from '../services/player.service';
 import { TreasureHuntService } from '../services/treasure-hunt.service';
@@ -9,7 +8,7 @@ import { Player } from '../models/player.model';
 @Component({
   selector: 'app-ranking',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './ranking.component.html',
   styleUrls: ['./ranking.component.css']
 })
@@ -41,11 +40,9 @@ export class RankingComponent implements OnInit {
       this.totalScore = players.reduce((sum, p) => sum + (p.score || 0), 0);
     });
     this.playerService.getPlayerCount().subscribe(count => {
-      console.log(`Total players: ${count}`);
       this.playerCount = count;
       });
     this.treasureHuntService.getTreasureHuntCount().subscribe(count => {
-      console.log(`Total treasure hunts: ${count}`);
       this.treasureHuntCount = count;
     });
   }

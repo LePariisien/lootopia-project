@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from "../components/header/header.component";
 import { TreasureHuntService } from '../services/treasure-hunt.service';
 import { Subscription } from 'rxjs';
 import { ArrowLeft, ArrowRight, LucideAngularModule } from 'lucide-angular';
@@ -10,7 +9,7 @@ import { ArrowLeft, ArrowRight, LucideAngularModule } from 'lucide-angular';
   standalone: true,
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css',
-  imports: [CommonModule, HeaderComponent, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule],
 })
 export class HomepageComponent implements OnInit, OnDestroy {
   readonly ArrowLeft = ArrowLeft;
@@ -43,6 +42,9 @@ export class HomepageComponent implements OnInit, OnDestroy {
           reward: hunt.found ? 'Trouvée !' : 'À découvrir'
         }));
         this.startAutoSlide();
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des chasses au trésor', err);
       }
     });
   }

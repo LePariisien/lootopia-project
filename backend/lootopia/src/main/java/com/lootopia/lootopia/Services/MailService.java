@@ -33,6 +33,9 @@ public class MailService {
     @Autowired
     private PlayerService playerService;
 
+    @Autowired
+    private UserService userService;
+
     public ResponseEntity<?> mailVerify(String verificationCode) {
         User user = userRepository.findByVerificationCode(verificationCode)
                 .orElseThrow(() -> new CustomException("Utilisateur introuvable ou email déjà vérifié",
@@ -45,8 +48,12 @@ public class MailService {
         if (user.isEnabled()) {
             user.setVerificationCode(null);
             user.setEmailVerified(true);
-            user.setPlayer(playerService.create(user.getUsername()));
+            var player = playerService.create(user.getUsername());
+            user.setPlayer(player);
+
             userRepository.save(user);
+
+            userService.createUserProfile(player.getNickname());
 
             return ResponseEntity.ok("Email verifié avec succès ! Vous pouvez maintenant vous connecter.");
         }

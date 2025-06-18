@@ -1,117 +1,168 @@
-<app-header></app-header>
-<div class="shop-container ">
-  <div *ngIf="showSuccess" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
-  <div class="bg-green-100 border border-green-400 text-green-800 px-8 py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-lg">
-    <lucide-icon [img]="Check" class="w-6 h-6 text-green-900"></lucide-icon>
-    Paiement validé !
-  </div>
-  </div>
-  <h1 class="shop-title mt-8">Boutique</h1>
-  <p class="shop-desc">
-    Achetez des couronnes pour débloquer des indices, des chasses exclusives et des artefacts spéciaux
-  </p>
+<app-alert *ngIf="!!alert.message" [message]="alert.message" [type]="alert.type"></app-alert>
 
-  <div class="shop-tabs-wrapper">
-    <div class="shop-tabs-bg">
-      <div class="shop-tabs">
-        <button (click)="selectTab('couronnes')" class="shop-tab" [class.active]="activeTab === 'couronnes'">
-          Couronnes
-        </button>
-        <button (click)="selectTab('abonnements')" class="shop-tab" [class.active]="activeTab === 'abonnements'">
-          Abonnements
-        </button>
-        <button (click)="selectTab('artefacts')" class="shop-tab" [class.active]="activeTab === 'artefacts'">
-          Artefacts
-        </button>
+<div class="min-h-screen py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-green-800 mb-2 text-center lg:text-left">
+      Boutique
+    </h1>
+    <p class="text-lg sm:text-xl text-gray-600 mb-6 text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
+      Achetez des couronnes pour débloquer des indices, des chasses exclusives et
+      des artefacts spéciaux
+    </p>
+    <div class="shop-tabs-wrapper">
+      <div class="shop-tabs-bg">
+        <div class="shop-tabs">
+          <button
+            (click)="selectTab('couronnes')"
+            class="shop-tab"
+            [class.active]="activeTab === 'couronnes'">
+            Couronnes
+          </button>
+          <button
+            (click)="selectTab('abonnements')"
+            class="shop-tab"
+            [class.active]="activeTab === 'abonnements'">
+            Abonnements
+          </button>
+          <button
+            (click)="selectTab('artefacts')"
+            class="shop-tab"
+            [class.active]="activeTab === 'artefacts'">
+            Artefacts
+          </button>
+        </div>
+        <app-crown-balance
+          *ngIf="authService.isAuthenticated()"
+          [crownCount]="crownCount ?? 0"
+          class="flex justify-center mt-6"></app-crown-balance>
       </div>
     </div>
-  </div>
-
-  <div *ngIf="activeTab === 'couronnes'">
-    <div class="shop-packs-grid">
-      <div class="shop-pack" *ngFor="let pack of crownPacks">
-        <div *ngIf="pack.badge" class="shop-pack-badge">{{ pack.badge }}</div>
-        <div class="shop-pack-title">{{ pack.title }}</div>
-        <div class="shop-pack-sub">{{ pack.sub }}</div>
-        <img *ngIf="pack.img" [src]="pack.img" alt="" class="mx-auto mb-2 w-20 h-20 object-contain select-none pointer-events-none" />
-        <div class="shop-pack-amount">
-          <lucide-icon [img]="Crown"></lucide-icon> {{ pack.amount }}
-          <span *ngIf="pack.bonus" class="text-green-500 text-lg font-bold">{{ pack.bonus }}</span>
+    <div *ngIf="activeTab === 'couronnes'">
+      <div class="shop-packs-grid">
+        <div class="shop-pack" *ngFor="let pack of crownPacks">
+          <div *ngIf="pack.badge" class="shop-pack-badge">{{ pack.badge }}</div>
+          <div class="shop-pack-title">{{ pack.title }}</div>
+          <div class="shop-pack-sub">{{ pack.sub }}</div>
+          <img
+            *ngIf="pack.img"
+            [src]="pack.img"
+            [alt]="pack.title"
+            class="mx-auto mb-2 w-20 h-20 object-contain select-none pointer-events-none" />
+          <div class="shop-pack-amount">
+            <lucide-icon [img]="Crown"></lucide-icon> {{ pack.amount }}
+            <span *ngIf="pack.bonus" class="text-green-500 text-lg font-bold">{{
+              pack.bonus
+              }}</span>
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="line-through text-gray-400 text-sm">{{
+              pack.oldPrice
+              }}</span>
+            <span
+              class="bg-green-200 text-green-900 text-xs px-2 py-1 rounded font-bold">{{
+              pack.discount }}</span>
+          </div>
+          <div class="shop-pack-price-box">
+            <span class="shop-pack-price">{{ pack.price }}</span>
+          </div>
+          <button class="shop-pack-btn" (click)="buyCrowns(pack.priceValue!)">
+            <lucide-icon [img]="ShoppingCart"></lucide-icon> Acheter
+          </button>
         </div>
-        <div class="flex items-center gap-2 mb-2">
-          <span class="line-through text-gray-400 text-sm">{{ pack.oldPrice }}</span>
-          <span class="bg-green-200 text-green-900 text-xs px-2 py-1 rounded font-bold">{{ pack.discount }}</span>
+      </div>
+      <div
+        class="bg-white rounded-xl shadow p-6 mt-10 mb-8 border border-green-100">
+        <div class="flex items-center mb-4 gap-2">
+          <lucide-icon [img]="Info" class="text-green-900"></lucide-icon>
+          <span class="text-2xl font-semibold text-green-900">À propos des
+            couronnes</span>
         </div>
-        <div class="shop-pack-price-box">
-          <span class="shop-pack-price">{{ pack.price }}</span>
+        <div class="text-green-900 text-lg mb-6">
+          Les couronnes sont la monnaie virtuelle de Lootopia. Elles vous
+          permettent de débloquer des indices, d'accéder à des chasses exclusives
+          et d'acquérir des artefacts rares pour votre collection.
         </div>
-        <button class="shop-pack-btn" (click)="buyCrowns(pack.priceValue!)">
-          <lucide-icon [img]="ShoppingCart"></lucide-icon> Acheter
-        </button>
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="bg-green-50 rounded-lg p-4 flex-1">
+            <div class="font-bold mb-1">Indices</div>
+            <div>
+              Débloquez des indices pour vous aider à résoudre les énigmes les
+              plus difficiles.
+            </div>
+          </div>
+          <div class="bg-green-50 rounded-lg p-4 flex-1">
+            <div class="font-bold mb-1">Chasses exclusives</div>
+            <div>
+              Accédez à des chasses au trésor premium avec des récompenses
+              exceptionnelles.
+            </div>
+          </div>
+          <div class="bg-green-50 rounded-lg p-4 flex-1">
+            <div class="font-bold mb-1">Artefacts</div>
+            <div>
+              Collectionnez des artefacts rares pour compléter votre musée
+              personnel.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow p-6 mb-8 border border-green-100">
+        <div class="text-2xl font-semibold text-green-900 mb-4">
+          Moyens de paiement acceptés
+        </div>
+        <div class="flex justify-center flex-wrap gap-4 mb-2">
+          <div
+            class="flex items-center bg-green-50 rounded px-4 py-2 text-lg gap-2">
+            <lucide-icon [img]="CreditCard"></lucide-icon> Carte bancaire
+          </div>
+          <div class="flex items-center bg-green-50 rounded px-4 py-2 text-lg">
+            <img
+              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/paypal.svg"
+              alt="PayPal"
+              class="w-6 h-6 mr-2" />
+            PayPal
+          </div>
+          <div class="flex items-center bg-green-50 rounded px-4 py-2 text-lg">
+            <img
+              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/stripe.svg"
+              alt="Stripe"
+              class="w-6 h-6 mr-2" />
+            Stripe
+          </div>
+          <div class="flex items-center bg-green-50 rounded px-4 py-2 text-lg">
+            <img
+              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/applepay.svg"
+              alt="Apple Pay"
+              class="w-6 h-6 mr-2" />
+            Apple Pay
+          </div>
+          <div class="flex items-center bg-green-50 rounded px-4 py-2 text-lg">
+            <img
+              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/googlepay.svg"
+              alt="Google Pay"
+              class="w-6 h-6 mr-2" />
+            Google Pay
+          </div>
+        </div>
+        <div class="text-gray-500 text-sm mt-2 flex justify-center">
+          Paiements sécurisés. Aucune information bancaire n'est stockée sur nos
+          serveurs.
+        </div>
       </div>
     </div>
-    <div class="bg-white rounded-xl shadow p-6 mt-10 mb-8 border border-green-100">
-      <div class="flex items-center mb-4 gap-2">
-        <lucide-icon [img]="Info" class="text-green-900"></lucide-icon>
-        <span class="text-2xl font-semibold text-green-900">À propos des couronnes</span>
-      </div>
-      <div class="text-green-900 text-lg mb-6">
-        Les couronnes sont la monnaie virtuelle de Lootopia. Elles vous permettent de débloquer des indices, d'accéder à des chasses exclusives et d'acquérir des artefacts rares pour votre collection.
-      </div>
-      <div class="flex flex-col md:flex-row gap-4">
-        <div class="bg-green-50 rounded-lg p-4 flex-1">
-          <div class="font-bold mb-1">Indices</div>
-          <div>Débloquez des indices pour vous aider à résoudre les énigmes les plus difficiles.</div>
-        </div>
-        <div class="bg-green-50 rounded-lg p-4 flex-1">
-          <div class="font-bold mb-1">Chasses exclusives</div>
-          <div>Accédez à des chasses au trésor premium avec des récompenses exceptionnelles.</div>
-        </div>
-        <div class="bg-green-50 rounded-lg p-4 flex-1">
-          <div class="font-bold mb-1">Artefacts</div>
-          <div>Collectionnez des artefacts rares pour compléter votre musée personnel.</div>
-        </div>
-      </div>
+    <div *ngIf="activeTab === 'abonnements'" class="text-center mt-8">
+      <p class="text-gray-600">
+        Les abonnements seront disponibles prochainement.
+      </p>
     </div>
-    <div class="bg-white rounded-xl shadow p-6 mb-8 border border-green-100">
-      <div class="text-2xl font-semibold text-green-900 mb-4">Moyens de paiement acceptés</div>
-      <div class="flex justify-center flex-wrap gap-4 mb-2">
-        <div class="flex items-center bg-green-50 rounded px-4 py-2 text-lg gap-2">
-          <lucide-icon [img]="CreditCard"></lucide-icon> Carte bancaire
-        </div>
-        <div class="flex items-center bg-green-50 rounded px-4 py-2 text-lg">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/paypal.svg" alt="PayPal" class="w-6 h-6 mr-2" /> PayPal
-        </div>
-        <div class="flex items-center bg-green-50 rounded px-4 py-2 text-lg">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/stripe.svg" alt="Stripe" class="w-6 h-6 mr-2" /> Stripe
-        </div>
-        <div class="flex items-center bg-green-50 rounded px-4 py-2 text-lg">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/applepay.svg" alt="Apple Pay" class="w-6 h-6 mr-2" /> Apple Pay
-        </div>
-        <div class="flex items-center bg-green-50 rounded px-4 py-2 text-lg">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/googlepay.svg" alt="Google Pay" class="w-6 h-6 mr-2" /> Google Pay
-        </div>
-      </div>
-      <div class="text-gray-500 text-sm mt-2 flex justify-center">
-        Paiements sécurisés. Aucune information bancaire n'est stockée sur nos serveurs.
-      </div>
+    <div *ngIf="activeTab === 'artefacts'" class="text-center mt-8">
+      <p class="text-gray-600">Les artefacts seront disponibles prochainement.</p>
     </div>
+    <app-stripe-modal
+      [show]="showStripe"
+      [clientSecret]="clientSecret"
+      [selectedPrice]="selectedPrice"
+      (closeModal)="showStripe = false"
+      (paymentSuccess)="onPaymentSuccess()"></app-stripe-modal>
   </div>
-
-  <div *ngIf="activeTab === 'abonnements'" class="text-center mt-8">
-    <p class="text-gray-600">Les abonnements seront disponibles prochainement.</p>
-  </div>
-
-  <div *ngIf="activeTab === 'artefacts'" class="text-center mt-8">
-    <p class="text-gray-600">Les artefacts seront disponibles prochainement.</p>
-  </div>
-
-  <app-stripe-modal
-  [show]="showStripe"
-  [clientSecret]="clientSecret"
-  [selectedPrice]="selectedPrice"
-  (closeModal)="showStripe = false"
-  (paymentSuccess)="onPaymentSuccess()"
-  ></app-stripe-modal>
 </div>
-

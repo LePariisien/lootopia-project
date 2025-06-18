@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Crown, ShoppingCart, Info, CreditCard, Check } from 'lucide-angular';
+import { LucideAngularModule, Crown, ShoppingCart, Info, CreditCard } from 'lucide-angular';
 import { PaymentService } from '../../services/PaymentService.service';
 import { StripeModalComponent } from '../../components/stripe/stripe-modal.component';
-import { HeaderComponent } from '../../components/header/header.component';
+import { Alert } from '../../models/alert.model';
+import { AlertComponent } from "../../components/alert/alert.component";
+import { AuthService } from '../../services/auth.service';
+import { ShopService } from '../../services/shop.service';
+import { CrownBalanceComponent } from '../../components/crown-balance/crown-balance.component';
+import { Player } from '../../models/player.model';
 
 @Component({
   selector: 'app-shop',
@@ -14,20 +19,21 @@ import { HeaderComponent } from '../../components/header/header.component';
     CommonModule,
     LucideAngularModule,
     StripeModalComponent,
-    HeaderComponent
+    AlertComponent,
+    CrownBalanceComponent,
   ],
 })
-export class ShopComponent {
+export class ShopComponent implements OnInit {
   readonly Crown = Crown;
   readonly ShoppingCart = ShoppingCart;
   readonly Info = Info;
   readonly CreditCard = CreditCard;
-  readonly Check = Check;
   activeTab: 'couronnes' | 'abonnements' | 'artefacts' = 'couronnes';
   showStripe = false;
   clientSecret: string | null = null;
   selectedPrice: string | null = null;
-  showSuccess = false;
+  crownCount: number | null = null;
+  selectedPack: any = null;
 
   crownPacks = [
     { title: 'Pack Découverte', sub: "Pour débuter l'aventure", amount: 100, price: '4,99 €', priceValue: 4.99, oldPrice: '5,24 €', discount: '-5%', img: 'assets/images/shop/logo-pack-1.png'},
@@ -36,7 +42,31 @@ export class ShopComponent {
     { title: 'Pack Trésorier', sub: 'Pour les collectionneurs', amount: 2000, price: '69,99 €', priceValue: 69.99, oldPrice: '100,00 €', discount: '-30%', bonus: '+500', img: 'assets/images/shop/logo-pack-4.png'},
   ];
 
-  constructor(private paymentService: PaymentService) {}
+  alert: Alert = { type: 'success', message: '' };
+
+  player!: Player;
+  playerId: string | null = null;
+
+  constructor(
+    private paymentService: PaymentService,
+    public authService: AuthService,
+    private shopService: ShopService
+  ) {}
+
+  ngOnInit() {
+    this.playerId = this.authService.getPlayerId();
+
+    if (this.playerId) {
+      this.shopService.getCrownQuantity().subscribe({
+        next: (crown) => {
+          this.crownCount = crown.quantity;
+        },
+        error: (err) => {
+          console.error('Erreur Crown API:', err);
+        }
+      });
+    }
+  }
 
   selectTab(tab: 'couronnes' | 'abonnements' | 'artefacts') {
     this.activeTab = tab;
@@ -48,8 +78,14 @@ export class ShopComponent {
   }
 
   buyCrowns(priceValue: number) {
+    if (!this.authService.isAuthenticated()) {
+      this.setAlert({ type: 'error', message: 'Veuillez vous connecter pour acheter des couronnes.' });
+      return;
+    }
+
     const pack = this.crownPacks.find(p => p.priceValue === priceValue);
     if (!pack) return;
+    this.selectedPack = pack;
     const priceInEur = Math.round(priceValue * 100);
     this.paymentService.createPaymentIntent(priceInEur).subscribe({
       next: (dto) => {
@@ -58,15 +94,57 @@ export class ShopComponent {
         this.selectedPrice = pack.price;
       },
       error: (err) => {
-        alert('Erreur lors de la création du paiement : ' + err.message);
+        this.setAlert({ type: 'error', message: 'Erreur lors de la création du paiement : ' + err.message });
+        console.error('Erreur lors de la création du PaymentIntent:', err);
       }
     });
   }
 
   onPaymentSuccess() {
     this.showStripe = false;
-    this.showSuccess = true;
-    setTimeout(() => this.showSuccess = false, 4000);
 
+    if (this.selectedPack && typeof this.selectedPack.amount === 'number') {
+      let total = this.selectedPack.amount;
+      if (this.selectedPack.bonus) {
+        const bonus = parseInt(this.selectedPack.bonus.replace('+', ''), 10);
+        if (!isNaN(bonus)) total += bonus;
+      }
+      this.crownCount = (this.crownCount ?? 0) + total;
+
+      if (this.playerId) {
+        this.shopService.addCrownsToPlayer(this.playerId, total).subscribe();
+        const now = new Date();
+        const purchase = {
+          player_id: this.playerId,
+          crowns: total,
+          price: this.selectedPack.priceValue,
+          date: now,
+          title: this.selectedPack.title,
+          sub: this.selectedPack.sub,
+          oldPrice: this.selectedPack.oldPrice,
+          discount: this.selectedPack.discount,
+          badge: this.selectedPack.badge,
+          bonus: this.selectedPack.bonus,
+          img: this.selectedPack.img
+        };
+        this.shopService.createPurchase(purchase).subscribe({
+          next: () => {
+            this.setAlert({ type: 'success', message: 'Paiement validé !' });
+            this.shopService.updateCrownCount(this.crownCount ?? 0);
+          },
+          error: (err) => {
+            console.error('Erreur lors de l\'enregistrement de l\'achat:', err);
+          }
+        });
+      }
+    }
   }
+
+  setAlert(alert: Alert) {
+    this.alert = alert;
+    setTimeout(() => {
+      this.alert = { type: 'success', message: '' };
+    }, 4000);
+  }
+
 }

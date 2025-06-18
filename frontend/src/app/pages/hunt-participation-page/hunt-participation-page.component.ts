@@ -1,8 +1,8 @@
 import { Component, Output } from '@angular/core';
-import { HuntHeaderComponent } from "../../components/hunt-header/hunt-header.component";
-import { HuntStepCardComponent } from "../../components/hunt-step-card/hunt-step-card.component";
-import { HuntCompletedStepsComponent } from "../../components/hunt-completed-steps/hunt-completed-steps.component";
-import { HuntSidebarComponent } from "../../components/hunt-sidebar/hunt-sidebar.component";
+import { HuntHeaderComponent } from "../../components/hunt-participation/hunt-header/hunt-header.component";
+import { HuntStepCardComponent } from "../../components/hunt-participation/hunt-step-card/hunt-step-card.component";
+import { HuntCompletedStepsComponent } from "../../components/hunt-participation/hunt-completed-steps/hunt-completed-steps.component";
+import { HuntSidebarComponent } from "../../components/hunt-participation/hunt-sidebar/hunt-sidebar.component";
 import { TreasureHunt } from '../../models/treasure-hunt.model';
 import { Clue } from '../../models/clue.model';
 import { Treasure } from '../../models/treasure.model';
@@ -12,7 +12,10 @@ import { ParticipationService } from '../../services/participation.service';
 import { TreasureHuntService } from '../../services/treasure-hunt.service';
 import { TreasureService } from '../../services/treasure.service';
 import { ClueService } from '../../services/clue.service';
-import { HeaderComponent } from "../../components/header/header.component";
+import { AuthService } from '../../services/auth.service';
+import { AlertComponent } from "../../components/alert/alert.component";
+import { Alert } from '../../models/alert.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-hunt-participation-page',
@@ -21,14 +24,13 @@ import { HeaderComponent } from "../../components/header/header.component";
     HuntStepCardComponent,
     HuntCompletedStepsComponent,
     HuntSidebarComponent,
-    HeaderComponent
-  ],
+    AlertComponent,
+    CommonModule
+],
   templateUrl: './hunt-participation-page.component.html',
   styleUrl: './hunt-participation-page.component.css'
 })
 export class HuntParticipationPageComponent {
-
-  TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2NyZWF0aW9uX3RpbWVzdGFtcCI6IjIwMjUtMDUtMjZUMjI6NTU6NDIuNzc2NDE3IiwidXNlcl9pZCI6IjFhZDExNmY2LTBiMTUtNDYyYS1iYmMzLTBiZWEzMTdiNGFjOCIsImVtYWlsIjoibWFyY2VsaW5zeWRAZ21haWwuY29tIiwidXNlcm5hbWUiOiJzMnlfbWNsIiwic3ViIjoiczJ5X21jbCIsImlhdCI6MTc0OTE1MDgxMSwiZXhwIjoxNzQ5MTU0NDExfQ.L9vSaFPO4f0pzF-lr6v8uideV-Czi1yTAZ5wrS6oYpc";
 
   @Output() latitude!: number;
   @Output() longitude!: number;
@@ -40,7 +42,10 @@ export class HuntParticipationPageComponent {
   step!: number;
   watchId: number | null = null;
 
+  alert: Alert = { type: 'success', message: '' };
+
   constructor(
+    private authService: AuthService,
     private participationService: ParticipationService,
     private treasureHuntService: TreasureHuntService,
     private treasureService: TreasureService,
@@ -50,25 +55,27 @@ export class HuntParticipationPageComponent {
   ) { }
 
   ngOnInit(): void {
+    const token = this.authService.getTokenOrRedirect() ?? '';
+
     this.startLocationWatch();
 
     this.route.paramMap.subscribe(params => {
       const participationId = params.get('id');
       if (participationId) {
-        this.participationService.getParticipation(this.TOKEN, participationId).subscribe({
+        this.participationService.getParticipation(participationId).subscribe({
           next: (participation) => {
             this.participation = participation;
             this.step = (participation.current_step ?? 1) - 1;
 
-            this.treasureHuntService.getTreasureHunt(this.TOKEN, participation.treasureHuntId).subscribe({
+            this.treasureHuntService.getTreasureHunt(participation.treasureHuntId).subscribe({
               next: (treasureHunt) => {
                 this.treasureHunt = treasureHunt;
 
-                this.treasureService.getTreasure(this.TOKEN, treasureHunt.treasure_id).subscribe({
+                this.treasureService.getTreasure(treasureHunt.treasure_id).subscribe({
                   next: (treasure) => {
                     this.treasure = treasure;
 
-                    this.clueService.getCluesByTreasureId(this.TOKEN, treasure.id).subscribe({
+                    this.clueService.getCluesByTreasureId(treasure.id).subscribe({
                       next: (clues) => {
                         this.clues = clues;
                       },
@@ -117,6 +124,13 @@ export class HuntParticipationPageComponent {
     if (this.watchId !== null) {
       navigator.geolocation.clearWatch(this.watchId);
     }
+  }
+
+  setAlert(alert: Alert) {
+    this.alert = alert;
+    setTimeout(() => {
+      this.alert = { type: 'success', message: '' };
+    }, 4000);
   }
 
 }

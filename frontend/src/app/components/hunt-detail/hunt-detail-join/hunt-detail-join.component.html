@@ -1,0 +1,59 @@
+<div class="border border-green-200 shadow-lg rounded-xl bg-white">
+  <div class="p-6 border-b border-green-100">
+    <h2 class="text-green-900 text-xl font-bold">Rejoindre cette chasse</h2>
+    <p class="text-green-700">Inscrivez-vous pour participer à l'aventure</p>
+  </div>
+  <div class="p-6 space-y-4">
+    <div class="bg-green-100 p-4 rounded-lg">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-green-800 font-bold">Prix par personne</span>
+        <span *ngIf="isRegistered" class="text-green-900 font-bold text-xl">&nbsp;&nbsp;&nbsp;{{ treasureHunt.price ?? 'Gratuit' }}
+          €&nbsp;&nbsp;&nbsp;</span>
+        <span *ngIf="!isRegistered" class="text-green-900 font-bold text-xl line-through">&nbsp;&nbsp;&nbsp;{{ treasureHunt.price ?? 'Gratuit'
+          }} €&nbsp;&nbsp;&nbsp;</span>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <div class="flex items-center">
+        <lucide-icon [img]="Calendar" class="text-green-700 mr-2" size="20"></lucide-icon>
+        <span class="text-green-800">La chasse débute le</span>
+      </div>
+      <button
+        class="w-full border border-green-300 text-green-800 rounded py-2">
+        {{ treasureHunt.startDate | date: 'dd/MM/yyyy' }}
+      </button>
+    </div>
+
+    <div class="space-y-3">
+      <div class="flex items-center">
+        <lucide-icon [img]="Users" class="text-green-700 mr-2" size="20"></lucide-icon>
+        <span class="text-green-800">Nombre de participants inscrit</span>
+      </div>
+      <button
+        class="w-full border border-green-300 text-green-800 rounded py-2">
+        <div>2</div>
+      </button>
+    </div>
+
+    <button *ngIf="isRegistered" (click)="joinTreasureHunt()"
+      class="w-full bg-green-600 hover:bg-green-700 text-white rounded py-2 flex items-center justify-center">
+      Rejoindre la chasse
+      <lucide-icon [img]="ArrowRight" class="ml-2" size="20"></lucide-icon>
+    </button>
+    <span *ngIf="!isRegistered" class="w-full text-green-800 rounded py-2 flex flex-col justify-center">
+      <span class="text-green-800">Vous êtes déjà inscrit !</span>
+      <button class="text-green-600 underline cursor-pointer"
+              (click)="resumeParticipation()">
+        Poursuivez votre aventure.
+      </button>
+    </span>
+
+    <div class="flex justify-center">
+      <button class="w-full text-green-700 hover:text-green-900 hover:bg-green-100 rounded py-2 flex items-center justify-center">
+        <lucide-icon [img]="Share2" class="mr-2" size="20"></lucide-icon>
+        Partager cette chasse
+      </button>
+    </div>
+  </div>
+</div>

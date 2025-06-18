@@ -11,7 +11,13 @@ export interface TreasureHunt {
   organizer_id: string;
   treasure?: Treasure;
   found: boolean;
-  address?: string; 
+  address?: string;
+
+  price?: number;
+  participantsCount?: number;
+  duration?: number;
+  tags?: string[];
+  events?: string[];
 }
 
 export enum HuntLevel {

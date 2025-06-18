@@ -1,3 +1,5 @@
+<app-alert *ngIf="!!alert.message" [message]="alert.message" [type]="alert.type"></app-alert>
+
 <div class="space-y-2 md:col-span-2">
   <label htmlFor="location" class="text-green-800 block">
     Lieu principal <span class="text-[#FED35C]">*</span>

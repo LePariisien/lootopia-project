@@ -1,13 +1,23 @@
 package com.lootopia.lootopia.Entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
 @Entity
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "user_profiles")
 public class UserProfile {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private UUID userId;
 
@@ -29,25 +39,8 @@ public class UserProfile {
     @Column(name = "badges_won")
     private int badgesWon;
 
-    public UUID getUserId() { return userId; }
-    public void setUserId(UUID userId) { this.userId = userId; }
+    @OneToOne
+    @JoinColumn(name = "player_id")
+    private Player player;
 
-    public String getAvatarUrl() { return avatarUrl; }
-    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
-
-    public int getCrownBalance() { return crownBalance; }
-    public void setCrownBalance(int crownBalance) { this.crownBalance = crownBalance; }
-
-    public int getHuntsCompleted() { return huntsCompleted; }
-    public void setHuntsCompleted(int huntsCompleted) { this.huntsCompleted = huntsCompleted; }
-
-    public int getTreasuresFound() { return treasuresFound; }
-    public void setTreasuresFound(int treasuresFound) { this.treasuresFound = treasuresFound; }
-
-    public int getRiddlesSolved() { return riddlesSolved; }
-    public void setRiddlesSolved(int riddlesSolved) { this.riddlesSolved = riddlesSolved; }
-
-    public int getBadgesWon() { return badgesWon; }
-    public void setBadgesWon(int badgesWon) { this.badgesWon = badgesWon; }
 }
-

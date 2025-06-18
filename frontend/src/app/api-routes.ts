@@ -3,14 +3,13 @@ export const ApiRoutes = {
   login: () => `${ApiRoutesEnum.Lootopia}/auth/login`,
   verifyMfa: (username: string, mfaCode: string) =>
     `${ApiRoutesEnum.Lootopia}/auth/verify-mfa?username=${username}&mfaCode=${mfaCode}`,
-  refresh: () => `${ApiRoutesEnum.Lootopia}/token/refresh`,
+  refresh: () => `${ApiRoutesEnum.Lootopia}/token/refresh-token`,
   signUp: () => `${ApiRoutesEnum.Lootopia}/auth/sign-up`,
 
   verify: () => `${ApiRoutesEnum.Lootopia}/auth/verify`,
 
   profile: (userId: string) =>
     `${ApiRoutesEnum.Lootopia}/users/${userId}/profile`,
-
 
   // Paiements
   createPaymentIntent: (amount: number) =>
@@ -34,6 +33,11 @@ export const ApiRoutes = {
   // Participation
   participation: () => `${ApiRoutesEnum.Lootopia}/participations`,
   participationById: (id: string) => `${ApiRoutesEnum.Lootopia}/participations/${id}`,
+  participationByTreasureHuntQuery: (id: string) => `${ApiRoutesEnum.Lootopia}/participations?treasureHuntId=${id}`,
+  participationByTreasureHuntId: (treasureHuntId: string) =>
+    `${ApiRoutesEnum.Lootopia}/participations/treasure-hunt/${treasureHuntId}`,
+  participationByTreasureHuntIdAndPlayer: (treasureHuntId: string) =>
+    `${ApiRoutesEnum.Lootopia}/participations/treasure-hunt/${treasureHuntId}/by-player`,
 
   // Treasure
   treasure: () => `${ApiRoutesEnum.Location}/treasure`,
@@ -43,6 +47,22 @@ export const ApiRoutes = {
   // Player
   playerAll: () => `${ApiRoutesEnum.Lootopia}/player/all`,
   playerCount: () => `${ApiRoutesEnum.Lootopia}/player/count`,
+  playerById: (id: string) => `${ApiRoutesEnum.Lootopia}/player/id/${id}`,
+  player: () => `${ApiRoutesEnum.Lootopia}/player`,
+  playerByNickname: (nickname: string) =>
+    `${ApiRoutesEnum.Lootopia}/player/nickname/${nickname}`,
+
+  // Crowns
+  addCrownsToPlayer: () => `${ApiRoutesEnum.Lootopia}/crowns`,
+  getCrownQuantity: () =>
+    `${ApiRoutesEnum.Lootopia}/crownsByToken`,
+
+  // Purchases
+  createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,
+
+  // UserProfile
+  userProfileByUserId: (userId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/user/${userId}`,
+  userProfileByPlayerId: (playerId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/player/${playerId}`,
 };
 
 export enum ApiRoutesEnum {

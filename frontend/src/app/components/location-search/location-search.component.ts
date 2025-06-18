@@ -6,11 +6,13 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
 import { debounceTime, distinctUntilChanged, lastValueFrom, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Alert } from '../../models/alert.model';
+import { AlertComponent } from "../alert/alert.component";
 
 @Component({
   selector: 'app-location-search',
   standalone: true,
-  imports: [FormsModule, LucideAngularModule, LeafletModule],
+  imports: [FormsModule, LucideAngularModule, LeafletModule, AlertComponent],
   templateUrl: './location-search.component.html'
 })
 export class LocationSearchComponent {
@@ -26,6 +28,8 @@ export class LocationSearchComponent {
   @Output() search = new EventEmitter<string>();
   @Output() locate = new EventEmitter<void>();
   @Output() coordinatesChange = new EventEmitter<{ lat: number, lng: number }>();
+
+  alert: Alert = { type: 'success', message: '' };
 
   options: L.MapOptions = {
     layers: [
@@ -105,8 +109,7 @@ export class LocationSearchComponent {
       }
       window.open(mapUrl, '_blank');
     } else {
-      alert('Veuillez entrer un lieu pour afficher sur la carte.');
-    }
+      this.setAlert({ type: 'error', message: 'Veuillez entrer un lieu pour afficher sur la carte.' });    }
   }
 
   onMapReady(map: L.Map): void {
@@ -181,13 +184,15 @@ export class LocationSearchComponent {
               errorMessage += "Une erreur inconnue est survenue.\n";
               break;
           }
-          isInit ? console.warn(errorMessage) : alert(errorMessage + " Veuillez la saisir manuellement ou cliquer sur la carte.");
+          isInit
+            ? console.warn(errorMessage)
+            : this.setAlert({ type: 'error', message: errorMessage + " Veuillez la saisir manuellement ou cliquer sur la carte." });
           console.error('Error getting user location:', error);
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
     } else {
-      alert("Votre navigateur ne supporte pas la géolocalisation.");
+      this.setAlert({ type: 'error', message: "Votre navigateur ne supporte pas la géolocalisation." });      this.setAlert({ type: 'error', message: "Votre navigateur ne supporte pas la géolocalisation." });
       console.warn("Geolocation is not supported by this browser.");
     }
   }
@@ -209,7 +214,7 @@ export class LocationSearchComponent {
       console.error('Error during reverse geocoding:', err);
       this.model = `${lat}, ${lng} (Erreur de géocodage)`;
       this.modelChange.emit(this.model);
-      alert("Erreur lors de la récupération de l'adresse pour les coordonnées. Veuillez réessayer ou saisir manuellement.");
+      this.setAlert({ type: 'error', message: "Erreur lors de la récupération de l'adresse pour les coordonnées. Veuillez réessayer ou saisir manuellement." });
     }
   }
 
@@ -235,12 +240,17 @@ export class LocationSearchComponent {
           this.map.removeLayer(this.marker);
           this.marker = null;
         }
-        alert(`Aucune localisation trouvée pour l'adresse: "${address}". Veuillez la saisir avec plus de précision ou utiliser la carte.`);
+        this.setAlert({ type: 'error', message: `Aucune localisation trouvée pour l'adresse: "${address}". Veuillez la saisir avec plus de précision ou utiliser la carte.` });
       }
     } catch (err) {
       console.error('Error during geocoding:', err);
-      alert("Erreur lors de la recherche de l'adresse. Veuillez vérifier votre saisie et réessayer.");
-    }
+      this.setAlert({ type: 'error', message: "Erreur lors de la recherche de l'adresse. Veuillez vérifier votre saisie et réessayer." });    }
   }
 
+  setAlert(alert: Alert) {
+    this.alert = alert;
+    setTimeout(() => {
+      this.alert = { type: 'success', message: '' };
+    }, 4000);
+  }
 }

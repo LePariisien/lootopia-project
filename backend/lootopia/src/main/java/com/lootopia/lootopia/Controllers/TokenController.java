@@ -14,8 +14,9 @@ public class TokenController extends AbstractController {
     private TokenService tokenService;
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String refreshToken) {
-        return tokenService.refreshToken(refreshToken);
+    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String refreshToken,
+            @RequestBody String accessToken) {
+        return tokenService.refreshToken(refreshToken, accessToken);
     }
 
     @PostMapping("/revoke-token")

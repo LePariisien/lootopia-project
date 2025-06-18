@@ -13,8 +13,7 @@ spring:
           predicates:
             - Path=/lootopia/**
           filters:
-            - RewritePath=/lootopia/(?<segment>.*), /${segment}
-
+            - StripPrefix=1
         - id: locationserv
           uri: lb://locationserv
           predicates:

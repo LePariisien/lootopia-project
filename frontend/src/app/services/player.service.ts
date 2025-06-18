@@ -14,6 +14,19 @@ export class PlayerService {
   }
 
   getPlayerCount(): Observable<number> {
-        return this.http.get<number>(ApiRoutes.playerCount());
-    }
+    return this.http.get<number>(ApiRoutes.playerCount());
+  }
+
+  getPlayerById(playerId: string): Observable<Player> {
+    return this.http.get<Player>(ApiRoutes.playerById(playerId));
+  }
+
+  getPlayer(): Observable<Player> {
+    return this.http.get<Player>(ApiRoutes.player());
+  }
+
+  getPlayerByNickname(nickname: string): Observable<any> {
+    return this.http.get(ApiRoutes.playerByNickname(nickname));
+  }
+
 }
