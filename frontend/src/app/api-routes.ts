@@ -51,11 +51,15 @@ export const ApiRoutes = {
   player: () => `${ApiRoutesEnum.Lootopia}/player`,
   playerByNickname: (nickname: string) =>
     `${ApiRoutesEnum.Lootopia}/player/nickname/${nickname}`,
+  getArtefacts: () => `${ApiRoutesEnum.Lootopia}/player/player-artefacts`,
+  getArtefactsByPlayerId: (id: string) =>
+    `${ApiRoutesEnum.Lootopia}/player/${id}/player-artefacts`,
 
   // Crowns
   addCrownsToPlayer: () => `${ApiRoutesEnum.Lootopia}/crowns`,
   getCrownQuantity: () =>
     `${ApiRoutesEnum.Lootopia}/crownsByToken`,
+  minusCrownsByToken: (amount: number) => `${ApiRoutesEnum.Lootopia}/crowns/minus/${amount}`,
 
   // Purchases
   createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,
@@ -63,6 +67,15 @@ export const ApiRoutes = {
   // UserProfile
   userProfileByUserId: (userId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/user/${userId}`,
   userProfileByPlayerId: (playerId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/player/${playerId}`,
+
+  // Artefacts
+  artefactsById: (id: string) => `${ApiRoutesEnum.Lootopia}/artefact/${id}`,
+  artefactsAll: () => `${ApiRoutesEnum.Lootopia}/artefact/all`,
+  artefactsAllOrdered: () => `${ApiRoutesEnum.Lootopia}/artefact/all/ordered`,
+
+  // PlayerArtefacts
+  playerArtefactsByToken: () => `${ApiRoutesEnum.Lootopia}/player-artefact/all/token`,
+  createPlayerArtefact: (artefactId: string) => `${ApiRoutesEnum.Lootopia}/player-artefact/${artefactId}`,
 };
 
 export enum ApiRoutesEnum {

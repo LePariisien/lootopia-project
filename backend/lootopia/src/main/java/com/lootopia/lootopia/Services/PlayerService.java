@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.lootopia.lootopia.Dtos.PlayerArtefactDto;
 import com.lootopia.lootopia.Dtos.PlayerDto;
 import com.lootopia.lootopia.Entities.Player;
 import com.lootopia.lootopia.Entities.User;
@@ -119,5 +120,30 @@ public class PlayerService {
 	public ResponseEntity<?> getPlayerCount() {
 		long count = playerRepository.count();
 		return ResponseEntity.ok(count);
+	}
+
+	public ResponseEntity<?> getPlayerArtefacts() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Player player = getPlayerByUsername(username);
+
+		if (player.getPlayerArtefacts() == null || player.getPlayerArtefacts().isEmpty()) {
+			return ResponseEntity.ok("Aucun artefact trouvé pour ce joueur.");
+		}
+
+		return ResponseEntity.ok(player.getPlayerArtefacts().stream()
+				.map(artefact -> new PlayerArtefactDto(artefact))
+				.toList());
+	}
+
+	public ResponseEntity<?> getPlayerArtefactsById(String id) {
+		Player player = getPlayerById(UUID.fromString(id));
+
+		if (player.getPlayerArtefacts() == null || player.getPlayerArtefacts().isEmpty()) {
+			return ResponseEntity.ok("Aucun artefact trouvé pour ce joueur.");
+		}
+
+		return ResponseEntity.ok(player.getPlayerArtefacts().stream()
+				.map(artefact -> new PlayerArtefactDto(artefact))
+				.toList());
 	}
 }

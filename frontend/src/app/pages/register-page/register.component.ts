@@ -62,7 +62,7 @@ export class RegisterComponent {
         setTimeout(() => {
           console.log("⏩ Redirection vers /login");
           this.router.navigate(['/login']);
-        }, 3000);
+        }, 4000);
       },
       error: (err) => {
         console.error("Erreur reçue :", err);

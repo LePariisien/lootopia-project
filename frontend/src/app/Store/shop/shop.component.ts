@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { ShopService } from '../../services/shop.service';
 import { CrownBalanceComponent } from '../../components/crown-balance/crown-balance.component';
 import { Player } from '../../models/player.model';
+import { ArtefactsTabComponent } from './artefacts-tab/artefacts-tab.component';
 
 @Component({
   selector: 'app-shop',
@@ -21,6 +22,7 @@ import { Player } from '../../models/player.model';
     StripeModalComponent,
     AlertComponent,
     CrownBalanceComponent,
+    ArtefactsTabComponent,
   ],
 })
 export class ShopComponent implements OnInit {
@@ -79,7 +81,7 @@ export class ShopComponent implements OnInit {
 
   buyCrowns(priceValue: number) {
     if (!this.authService.isAuthenticated()) {
-      this.setAlert({ type: 'error', message: 'Veuillez vous connecter pour acheter des couronnes.' });
+      this.setAlert({ type: 'warning', message: 'Veuillez vous connecter pour acheter des couronnes.' });
       return;
     }
 
@@ -138,6 +140,11 @@ export class ShopComponent implements OnInit {
         });
       }
     }
+  }
+
+  onCrownCountChange(newCount: number) {
+    this.crownCount = newCount;
+    this.shopService.updateCrownCount(this.crownCount ?? 0);
   }
 
   setAlert(alert: Alert) {

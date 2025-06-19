@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiRoutes } from '../api-routes';
 import { Player } from '../models/player.model';
+import { Artefact } from '../models/artefact.model';
+import { PlayerArtefact } from '../models/player-artefact.model';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
@@ -27,6 +29,14 @@ export class PlayerService {
 
   getPlayerByNickname(nickname: string): Observable<any> {
     return this.http.get(ApiRoutes.playerByNickname(nickname));
+  }
+
+  getArtefacts(): Observable<PlayerArtefact[]> {
+    return this.http.get<PlayerArtefact[]>(ApiRoutes.getArtefacts());
+  }
+
+  getArtefactsByPlayerId(id: string): Observable<PlayerArtefact[]> {
+    return this.http.get<PlayerArtefact[]>(ApiRoutes.getArtefactsByPlayerId(id));
   }
 
 }

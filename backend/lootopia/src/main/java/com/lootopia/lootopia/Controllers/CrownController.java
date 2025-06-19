@@ -38,4 +38,9 @@ public class CrownController {
     public ResponseEntity<CrownDto> getCrown() {
         return ResponseEntity.ok(crownService.getCrown());
     }
+
+    @PostMapping("/crowns/minus/{amount}")
+    public ResponseEntity<?> minusCrowns(@PathVariable int amount) {
+        return crownService.minusCrowns(amount);
+    }
 }

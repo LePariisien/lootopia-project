@@ -42,8 +42,29 @@
 
       <div class="bg-white rounded-lg shadow p-4 sm:p-6">
         <h2 class="text-xl font-semibold mb-4">Mes artefacts</h2>
-        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 gap-2">
-          <div *ngFor="let i of [].constructor(9)" class="w-16 h-16 bg-gray-200 rounded-full mx-auto"></div>
+        <div class="grid grid-cols-3 gap-2 justify-items-center">
+          <ng-container *ngFor="let slot of slots; let i = index">
+            <div *ngIf="artefacts[i]; else emptySlot" class="flex flex-col items-center relative group">
+              <div class="relative size-20 rounded-full flex items-center justify-center border-4 mx-auto"
+                [ngStyle]="{'border-color': artefacts[i]?.rarityColor}">
+                <img [src]="artefacts[i]?.image || '/assets/images/placeholder.svg'" [alt]="artefacts[i]?.name"
+                  class="size-18 object-cover rounded-full" />
+                <div class="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
+                  [ngStyle]="{'background-color': artefacts[i]?.rarityColor}">
+                  <lucide-icon [img]="getRarityIcon(artefacts[i]?.rarity || '')" class="size-4"></lucide-icon>
+                </div>
+              </div>
+              <div class="absolute -bottom-3 w-max text-xs font-bold text-white px-2 py-1 rounded-md hidden group-hover:block"
+                [ngStyle]="{'background-color': artefacts[i]?.rarityColor}">
+                {{ artefacts[i]?.name }}
+              </div>
+            </div>
+            <ng-template #emptySlot>
+              <div
+                class="size-20 rounded-full border-4 border-gray-300 flex items-center justify-center text-3xl text-gray-400 bg-gray-100">
+                ?</div>
+            </ng-template>
+          </ng-container>
         </div>
       </div>
 
@@ -74,7 +95,7 @@
 
       <div class="bg-white rounded-lg shadow p-4 sm:p-6">
         <h2 class="text-xl font-semibold mb-4 text-center">Mes couronnes</h2>
-        <div class="text-4xl sm:text-5xl font-bold text-yellow-500 text-center">{{ profile.crownBalance }}</div>
+        <div class="text-4xl sm:text-5xl font-bold text-yellow-500 text-center">{{ crownCount }}</div>
         <div class="text-sm text-gray-500 text-center mb-4">Total disponible</div>
         <ul class="text-sm text-gray-600 space-y-1 mt-4">
           <li><span class="text-red-500">-20</span> — Item 1</li>
