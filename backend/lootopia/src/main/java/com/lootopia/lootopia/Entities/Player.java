@@ -44,4 +44,7 @@ public class Player {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<PlayerArtefact> playerArtefacts;
+
 }

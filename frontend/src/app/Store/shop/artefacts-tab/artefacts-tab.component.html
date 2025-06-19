@@ -1,0 +1,223 @@
+<app-alert *ngIf="!!alert.message" [message]="alert.message" [type]="alert.type"></app-alert>
+
+<div class="w-full">
+  <div class="flex flex-wrap justify-center md:justify-start text-[#082B21] mb-6 rounded-md p-2 gap-2">
+    <button (click)="selectedTab = 'commun'"
+      [ngClass]="{'bg-green-600 text-white': selectedTab === 'commun', 'hover:bg-green-200': selectedTab !== 'commun'}"
+      class="flex-1 py-2 px-4 text-center border border-green-200 rounded-md transition-colors duration-200">
+      Commun
+    </button>
+    <button (click)="selectedTab = 'rare'"
+      [ngClass]="{'bg-green-600 text-white': selectedTab === 'rare', 'hover:bg-green-200': selectedTab !== 'rare'}"
+      class="flex-1 py-2 px-4 text-center border border-green-200 rounded-md transition-colors duration-200">
+      Rare
+    </button>
+    <button (click)="selectedTab = 'epic'"
+      [ngClass]="{'bg-green-600 text-white': selectedTab === 'epic', 'hover:bg-green-200': selectedTab !== 'epic'}"
+      class="flex-1 py-2 px-4 text-center border border-green-200 rounded-md transition-colors duration-200">
+      Épique
+    </button>
+    <button (click)="selectedTab = 'legendary'"
+      [ngClass]="{'bg-green-600 text-white': selectedTab === 'legendary', 'hover:bg-green-200': selectedTab !== 'legendary'}"
+      class="flex-1 py-2 px-4 text-center border border-green-200 rounded-md transition-colors duration-200">
+      Légendaire
+    </button>
+  </div>
+
+  <div *ngIf="selectedTab === 'commun'">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <ng-container *ngFor="let artefact of commonArtefacts">
+        <app-artefact-card
+          [artefact]="artefact"
+          (buy)="buyArtefact(artefact)"
+        ></app-artefact-card>
+      </ng-container>
+    </div>
+  </div>
+  <div *ngIf="selectedTab === 'rare'">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <ng-container *ngFor="let artefact of rareArtefacts">
+        <app-artefact-card
+          [artefact]="artefact"
+          (buy)="buyArtefact(artefact)"
+        ></app-artefact-card>
+      </ng-container>
+    </div>
+  </div>
+  <div *ngIf="selectedTab === 'epic'">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <ng-container *ngFor="let artefact of epicArtefacts">
+        <app-artefact-card
+          [artefact]="artefact"
+          (buy)="buyArtefact(artefact)"
+        ></app-artefact-card>
+      </ng-container>
+    </div>
+  </div>
+  <div *ngIf="selectedTab === 'legendary'">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <ng-container *ngFor="let artefact of legendaryArtefacts">
+        <app-artefact-card
+          [artefact]="artefact"
+          (buy)="buyArtefact(artefact)"
+        ></app-artefact-card>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<div class="mt-12 bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-[#2A8D57]/20">
+  <div class="flex items-start">
+    <div>
+      <h3 class="text-lg font-medium text-[#082B21] mb-2">À propos des artefacts</h3>
+      <p class="text-[#2A8D57] mb-4">
+        Les artefacts sont des objets mystérieux qui vous confèrent des pouvoirs spéciaux durant vos chasses au
+        trésor. Plus un artefact est rare, plus ses effets sont puissants et durables.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+        <div class="bg-white p-3 rounded-lg border-l-4 border-[#9CA3AF]">
+          <div class="flex items-center mb-1">
+            <lucide-icon [img]="Star" class="h-4 w-4 text-[#9CA3AF] mr-1"></lucide-icon>
+            <h4 class="font-medium text-[#082B21]">Commun</h4>
+          </div>
+          <p class="text-[#2A8D57]">Effets de base pour débuter votre collection</p>
+          <p class="text-[#2A8D57] mt-1 font-medium">50-100 couronnes</p>
+        </div>
+        <div class="bg-white p-3 rounded-lg border-l-4 border-[#3B82F6]">
+          <div class="flex items-center mb-1">
+            <lucide-icon [img]="Gem" class="h-4 w-4 text-[#3B82F6] mr-1"></lucide-icon>
+            <h4 class="font-medium text-[#082B21]">Rare</h4>
+          </div>
+          <p class="text-[#2A8D57]">Bonus intéressants pour les aventuriers expérimentés</p>
+          <p class="text-[#2A8D57] mt-1 font-medium">150-250 couronnes</p>
+        </div>
+        <div class="bg-white p-3 rounded-lg border-l-4 border-[#8B5CF6]">
+          <div class="flex items-center mb-1">
+            <lucide-icon [img]="Sparkles" class="h-4 w-4 text-[#8B5CF6] mr-1"></lucide-icon>
+            <h4 class="font-medium text-[#082B21]">Épique</h4>
+          </div>
+          <p class="text-[#2A8D57]">Pouvoirs puissants pour les maîtres chasseurs</p>
+          <p class="text-[#2A8D57] mt-1 font-medium">400-600 couronnes</p>
+        </div>
+        <div class="bg-white p-3 rounded-lg border-l-4 border-[#F59E0B]">
+          <div class="flex items-center mb-1">
+            <lucide-icon [img]="Crown" class="h-4 w-4 text-[#F59E0B] mr-1"></lucide-icon>
+            <h4 class="font-medium text-[#082B21]">Légendaire</h4>
+          </div>
+          <p class="text-[#2A8D57]">Artefacts ultimes aux effets extraordinaires</p>
+          <p class="text-[#2A8D57] mt-1 font-medium">1000+ couronnes</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-12 bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-[#2A8D57]/20">
+  <h3 class="text-lg font-semibold text-[#082B21] mb-4 flex items-center">Conseils pour bien choisir vos artefacts</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+    <div class="space-y-2">
+      <div class="flex items-start">
+        <div class="w-2 h-2 bg-[#FED35C] rounded-full mt-2 mr-3"></div>
+        <span class="text-[#2A8D57]">Commencez par des artefacts communs pour apprendre</span>
+      </div>
+      <div class="flex items-start">
+        <div class="w-2 h-2 bg-[#FED35C] rounded-full mt-2 mr-3"></div>
+        <span class="text-[#2A8D57]">Adaptez vos artefacts à votre style de jeu</span>
+      </div>
+      <div class="flex items-start">
+        <div class="w-2 h-2 bg-[#FED35C] rounded-full mt-2 mr-3"></div>
+        <span class="text-[#2A8D57]">Certains artefacts se combinent entre eux</span>
+      </div>
+    </div>
+    <div class="space-y-2">
+      <div class="flex items-start">
+        <div class="w-2 h-2 bg-[#FED35C] rounded-full mt-2 mr-3"></div>
+        <span class="text-[#2A8D57]">Les artefacts légendaires sont des investissements</span>
+      </div>
+      <div class="flex items-start">
+        <div class="w-2 h-2 bg-[#FED35C] rounded-full mt-2 mr-3"></div>
+        <span class="text-[#2A8D57]">Vérifiez les effets avant d'acheter</span>
+      </div>
+      <div class="flex items-start">
+        <div class="w-2 h-2 bg-[#FED35C] rounded-full mt-2 mr-3"></div>
+        <span class="text-[#2A8D57]">Collectionnez pour débloquer des bonus</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showModal && selectedArtefact" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-xl p-6"></div>
+  <div
+    class="relative border-[#2A8D57]/20 shadow-md hover:shadow-lg rounded-lg bg-white flex flex-col justify-center w-full max-w-xl p-4 sm:p-6 gap-4 sm:gap-6">
+    <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full">
+      <img [src]="selectedArtefact.image || '/assets/images/placeholder.svg'" [alt]="selectedArtefact.name"
+        class="size-32 sm:size-48 object-cover rounded-full flex-shrink-0" />
+      <div class="flex flex-col items-center sm:items-start text-center sm:text-left w-full">
+        <h4 class="text-[#14532d] text-xl sm:text-2xl font-bold mb-2">{{ selectedArtefact.name }}</h4>
+        <span class="text-white border-none text-xs sm:text-sm px-3 py-1 rounded w-full"
+          [ngStyle]="{'background-color': selectedArtefact.rarityColor}">
+          {{ selectedArtefact.rarity }}
+        </span>
+        <div class="w-full flex flex-col justify-center items-center sm:justify-start sm:items-start gap-2 mt-4">
+          <p class="text-sm sm:text-base text-gray-700">{{ selectedArtefact.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-center sm:justify-start gap-2 mt-2 w-full flex-wrap">
+      <div class="flex flex-col flex-1 min-w-[80px]">
+        <span class="text-lg sm:text-xl font-bold text-[#082B21] flex justify-center items-center gap-1">
+          Prix
+        </span>
+        <div class="bg-[#E7F3EB] rounded-lg p-2 sm:p-3">
+          <span class="text-lg sm:text-xl font-bold text-[#082B21] flex justify-center items-center gap-1">
+            {{ selectedArtefact.price }}
+            <lucide-icon [img]="Crown" class="size-4 md:size-6 text-[#2A8D57]"></lucide-icon>
+          </span>
+        </div>
+      </div>
+
+      <lucide-icon [img]="Minus" class="self-end mb-4 size-4 md:size-6 text-[#FED35C]"></lucide-icon>
+
+      <div class="flex flex-col flex-1 min-w-[80px]">
+        <span class="text-lg sm:text-xl font-bold text-[#082B21] flex justify-center items-center gap-1">
+          Disponible
+        </span>
+        <div class="bg-[#E7F3EB] rounded-lg p-2 sm:p-3">
+          <span class="text-lg sm:text-xl font-bold text-[#082B21] flex justify-center items-center gap-1">
+            {{ crownCount }}
+            <lucide-icon [img]="Crown" class="size-4 md:size-6 text-[#2A8D57]"></lucide-icon>
+          </span>
+        </div>
+      </div>
+
+      <lucide-icon [img]="Equal" class="self-end mb-4 size-4 md:size-6 text-[#FED35C]"></lucide-icon>
+
+      <div class="flex flex-col flex-1 min-w-[80px]">
+        <span class="text-lg sm:text-xl font-bold text-[#082B21] flex justify-center items-center gap-1">
+          Restant
+        </span>
+        <div class="bg-[#E7F3EB] rounded-lg p-2 sm:p-3">
+          <span class="text-lg sm:text-xl font-bold text-[#082B21] flex justify-center items-center gap-1">
+            {{ crownCount - selectedArtefact.price }}
+            <lucide-icon [img]="Crown" class="size-4 md:size-6 text-[#2A8D57]"></lucide-icon>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-center items-center gap-2 w-full max-w-full mx-auto">
+      <button
+        class="w-full bg-green-300 hover:bg-green-700 text-white py-2 rounded flex items-center justify-center gap-2 transition-colors duration-200"
+        (click)="cancelPurchase()">
+        Annuler
+      </button>
+      <button
+        class="w-full bg-[#2A8D57] hover:bg-[#082B21] text-white py-2 rounded flex items-center justify-center gap-2 transition-colors duration-200"
+        (click)="confirmPurchase(selectedArtefact)">
+        Confirmer
+      </button>
+    </div>
+  </div>
+</div>

@@ -44,4 +44,14 @@ public class PlayerController extends AbstractController {
         return playerService.getPlayerCount();
     }
 
+    @GetMapping("/player-artefacts")
+    public ResponseEntity<?> getPlayerArtefacts() {
+        return playerService.getPlayerArtefacts();
+    }
+
+    @GetMapping("/{id}/player-artefacts")
+    public ResponseEntity<?> getPlayerArtefactsById(@PathVariable String id) {
+        return playerService.getPlayerArtefactsById(id);
+    }
+
 }

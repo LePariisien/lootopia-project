@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { CircleCheck, LucideAngularModule, XCircle } from 'lucide-angular';
+import { CircleCheck, Info, LucideAngularModule, TriangleAlert, XCircle } from 'lucide-angular';
 
 @Component({
   selector: 'app-alert',
   imports: [
-    LucideAngularModule, 
+    LucideAngularModule,
     CommonModule
   ],
   templateUrl: './alert.component.html',
@@ -14,10 +14,14 @@ import { CircleCheck, LucideAngularModule, XCircle } from 'lucide-angular';
 export class AlertComponent {
   readonly CircleCheck = CircleCheck;
   readonly XCircle = XCircle;
+  readonly Info = Info;
+  readonly TriangleAlert = TriangleAlert;
 
-  @Input() type: 'success' | 'error' = 'success';
-  @Input() message: string = ''; 
-  
-  success: Boolean = this.type === 'success';
-  error: Boolean = this.type === 'error';
+  @Input() type: 'success' | 'error' | 'info' | 'warning' = 'success';
+  @Input() message: string = '';
+
+  get success() { return this.type === 'success'; }
+  get error() { return this.type === 'error'; }
+  get info() { return this.type === 'info'; }
+  get warning() { return this.type === 'warning'; }
 }
