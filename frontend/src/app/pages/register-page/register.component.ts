@@ -4,19 +4,19 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { Alert } from '../../models/alert.model';
+import { AlertComponent } from "../../components/alert/alert.component";
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, AlertComponent],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
   registerForm: FormGroup;
-  message: string = '';
-  error: string = '';
+  alert: Alert = { type: 'success', message: '' };
 
   constructor(
     private fb: FormBuilder,
@@ -55,10 +55,14 @@ export class RegisterComponent {
       password: formValue.password,
       username: formValue.username,
       mfaEnabled: formValue.mfaEnabled
-    }, window.location.origin).subscribe({
+    }).subscribe({
       next: (res) => {
         console.log("Réponse reçue :", res);
-        this.message = "Compte créé avec succès. Veuillez vérifier votre adresse email.";
+
+        if (!formValue.mfaEnabled) {
+          this.setAlert({ type: 'success', message: res.message });
+        }
+
         setTimeout(() => {
           console.log("⏩ Redirection vers /login");
           this.router.navigate(['/login']);
@@ -66,8 +70,15 @@ export class RegisterComponent {
       },
       error: (err) => {
         console.error("Erreur reçue :", err);
-        this.error = err?.error?.message || "Erreur lors de l'inscription.";
+        this.setAlert({ type: 'error', message: err?.message || "Erreur lors de l'inscription." });
       }
     });
+  }
+
+  setAlert(alert: Alert) {
+    this.alert = alert;
+    setTimeout(() => {
+      this.alert = { type: 'success', message: '' };
+    }, 4000);
   }
 }

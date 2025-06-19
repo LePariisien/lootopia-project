@@ -79,7 +79,8 @@ public class AuthService {
         if (registerDto.isMfaEnabled()) {
             return getMfaQr(user.getUsername());
         } else {
-            return ResponseEntity.ok(GetJwtAuthResponse(user));
+            return ResponseEntity.ok(Map.of("message",
+                    "Inscription réussie. Un email de vérification a été envoyé à " + user.getEmail()));
         }
     }
 

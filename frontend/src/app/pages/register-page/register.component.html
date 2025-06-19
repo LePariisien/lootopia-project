@@ -1,11 +1,10 @@
+<app-alert *ngIf="!!alert.message" [message]="alert.message" [type]="alert.type"></app-alert>
+
 <div class="flex flex-col-reverse lg:flex-row h-screen font-sans bg-[#002820]">
 
   <div class="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-10 text-black">
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()"
           class="bg-white p-8 rounded-xl shadow w-full max-w-md space-y-4">
-
-        <div *ngIf="message" class="text-green-600 text-sm text-center">{{ message }}</div>
-        <div *ngIf="error" class="text-red-600 text-sm text-center">{{ error }}</div>
 
       <input formControlName="username" placeholder="Username"
        class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-green-700 transition" />

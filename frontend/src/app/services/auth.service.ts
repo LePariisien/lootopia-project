@@ -16,8 +16,8 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router, private playerService: PlayerService) { }
 
-  register(userData: any, siteURL: string): Observable<any> {
-    return this.http.post(ApiRoutes.signUp() + '?siteURL=' + encodeURIComponent(siteURL), userData);
+  register(userData: any): Observable<any> {
+    return this.http.post(ApiRoutes.signUp(), userData);
   }
 
   login(email: string, password: string, mfaCode: string = ''): Observable<any> {
