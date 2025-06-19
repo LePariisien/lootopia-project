@@ -1,5 +1,5 @@
 export interface Artifact {
-  id: number;
+  id: string;
   name: string;
   description: string;
   price: number;
@@ -7,4 +7,5 @@ export interface Artifact {
   rarityColor: string;
   effect: string;
   image: string;
+  isOwned?: boolean;
 }

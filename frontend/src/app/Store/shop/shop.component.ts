@@ -151,7 +151,7 @@ export class ShopComponent implements OnInit {
     this.alert = alert;
     setTimeout(() => {
       this.alert = { type: 'success', message: '' };
-    }, 40000);
+    }, 4000);
   }
 
 }

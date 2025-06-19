@@ -29,8 +29,13 @@
       <p class="text-xs text-[#2A8D57]">{{ artifact.effect }}</p>
     </div>
   </div>
-  <button class="w-full bg-[#2A8D57] hover:bg-[#082B21] text-white py-2 rounded flex items-center justify-center"
+  <button *ngIf="!artifact.isOwned"
+   class="w-full bg-[#2A8D57] hover:bg-[#082B21] text-white py-2 rounded flex items-center justify-center"
           (click)="$event.stopPropagation(); buy.emit(artifact)">
     <lucide-icon [img]="ShoppingCart"></lucide-icon> Acheter
+  </button>
+  <button *ngIf="artifact.isOwned"
+    class="w-full bg-green-200 text-white py-2 rounded flex items-center justify-center" disabled>
+    Déjà acheté <lucide-icon [img]="Check"></lucide-icon>
   </button>
 </div>

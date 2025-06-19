@@ -7,18 +7,29 @@ import { UserProfile } from '../../models/user-profile.model';
 import { Player } from '../../models/player.model';
 import { PlayerService } from '../../services/player.service';
 import { ShopService } from '../../services/shop.service';
+import { Artifact } from '../../models/artifact.model';
+import { ArtifactService } from '../../services/artifact.service';
+import { Crown, Gem, LucideAngularModule, LucideIconData, ShoppingCart, Sparkles, Star } from 'lucide-angular';
 
 @Component({
   selector: 'app-profil-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './profil-page.component.html',
   styleUrls: ['./profil-page.component.css']
 })
 export class ProfilPageComponent implements OnInit {
+  readonly ShoppingCart = ShoppingCart;
+  readonly Crown = Crown;
+  readonly Star = Star;
+  readonly Gem = Gem;
+  readonly Sparkles = Sparkles;
+
   player: Player | null = null;
   profile: UserProfile | null = null;
   crownCount: number = 0;
+  slots = Array(9);
+  artefacts: (Artifact | undefined)[] = new Array(9).fill(undefined);
 
   constructor(
     private route: ActivatedRoute,
@@ -26,8 +37,16 @@ export class ProfilPageComponent implements OnInit {
     private authService: AuthService,
     private playerService: PlayerService,
     private router: Router,
-    private shopService: ShopService
+    private shopService: ShopService,
+    private artefactService: ArtifactService
   ) {  }
+
+  getArtefact(artefactId: string): Artifact {
+    if (artefactId) {
+    }
+
+    return {} as Artifact;
+  }
 
   ngOnInit(): void {
     const token = this.authService.getTokenOrRedirect() ?? '';
@@ -39,12 +58,10 @@ export class ProfilPageComponent implements OnInit {
         this.playerService.getPlayerByNickname(nickname).subscribe({
           next: (data) => {
             this.player = data;
-            console.log('Player data:', this.player);
 
             this.userService.getUserProfileByPlayerId(data?.id).subscribe({
               next: (data) => {
                 this.profile = data;
-                console.log('User profile data:', this.profile);
               },
               error: (err) => {
                 console.error('Erreur de récupération du profil:', err);
@@ -61,6 +78,29 @@ export class ProfilPageComponent implements OnInit {
               }
             });
 
+            this.playerService.getArtefactsByPlayerId(data?.id).subscribe({
+              next: (artefacts) => {
+                let artefactsArray: Artifact[] = [];
+                artefacts.forEach((artifact) => {
+
+                  const artefactId = artifact.artefactId;
+                  this.artefactService.getArtifactById(artefactId).subscribe({
+                    next: (artefact) => {
+                      artefactsArray.push(artefact);
+                    },
+                    error: (err) => {
+                      console.error('Erreur de récupération de l\'artefact:', err);
+                    }
+                  });
+
+                });
+                this.artefacts = artefactsArray;
+              },
+              error: (err) => {
+                console.error('Erreur de récupération des artefacts:', err);
+              }
+            });
+
           },
           error: (err) => {
             console.error('Erreur de récupération du profil:', err);
@@ -70,4 +110,20 @@ export class ProfilPageComponent implements OnInit {
       }
     });
   }
+
+  getRarityIcon(rarity: string): LucideIconData {
+    switch (rarity) {
+      case 'Commun':
+        return this.Star;
+      case 'Rare':
+        return this.Gem;
+      case 'Épique':
+        return this.Sparkles;
+      case 'Légendaire':
+        return this.Crown;
+      default:
+        return this.Star;
+    }
+  }
+
 }

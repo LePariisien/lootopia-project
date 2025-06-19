@@ -7,6 +7,10 @@ import { AuthService } from '../../../services/auth.service';
 import { Alert } from '../../../models/alert.model';
 import { AlertComponent } from "../../../components/alert/alert.component";
 import { ShopService } from '../../../services/shop.service';
+import { ArtifactService } from '../../../services/artifact.service';
+import { PlayerArtifactService } from '../../../services/playerArtifact.service';
+import { PlayerService } from '../../../services/player.service';
+import { PlayerArtifact } from '../../../models/player-artifact.model';
 
 @Component({
   selector: 'app-artifacts-tab',
@@ -36,89 +40,50 @@ export class ArtifactsTabComponent {
   selectedArtifact: Artifact | null = null;
   alert: Alert = { type: 'success', message: '' };
 
-  constructor(private authService: AuthService, private shopService: ShopService) {}
+  constructor(
+    private authService: AuthService,
+    private shopService: ShopService,
+    private artefactService: ArtifactService,
+    private playerArtifactService: PlayerArtifactService,
+    private playerService: PlayerService
+  ) {}
 
-  commonArtifacts: Artifact[] = [
-    {
-      id: 1,
-      name: 'Boussole Ancienne',
-      description: 'Une boussole qui révèle la direction générale des indices cachés',
-      price: 50,
-      rarity: 'Commun',
-      rarityColor: '#9CA3AF',
-      effect: '+10% de chance de trouver des indices',
-      image: '/assets/images/artifacts/artifact-5.png',
-    },
-    {
-      id: 2,
-      name: 'Carte Parchemin',
-      description: 'Un vieux parchemin qui dévoile des zones d\'intérêt sur la carte',
-      price: 75,
-      rarity: 'Commun',
-      rarityColor: '#9CA3AF',
-      effect: 'Révèle 1 zone d\'intérêt par chasse',
-      image: '/assets/images/artifacts/artifact-4.png',
-    },
-  ];
+  commonArtifacts: Artifact[] = [];
+  rareArtifacts: Artifact[] = [];
+  epicArtifacts: Artifact[] = [];
+  legendaryArtifacts: Artifact[] = [];
 
-  rareArtifacts: Artifact[] = [
-    {
-      id: 3,
-      name: 'Loupe de Détective',
-      description: 'Une loupe magique qui révèle des détails cachés dans les énigmes',
-      price: 150,
-      rarity: 'Rare',
-      rarityColor: '#3B82F6',
-      effect: '+25% de chance de résoudre les énigmes',
-      image: '/assets/images/artifacts/artifact-3.png',
-    },
-    {
-      id: 4,
-      name: 'Clé Universelle',
-      description: 'Une clé mystérieuse qui peut débloquer certains indices premium',
-      price: 200,
-      rarity: 'Rare',
-      rarityColor: '#3B82F6',
-      effect: 'Débloque 1 indice premium gratuit',
-      image: '/assets/images/artifacts/artifact-2.png',
-    },
-  ];
+  ngOnInit() {
+    this.artefactService.getArtefactsAllOrdered().subscribe({
+      next: (artefacts) => {
+        this.commonArtifacts = artefacts.commonArtifacts;
+        this.rareArtifacts = artefacts.rareArtifacts;
+        this.epicArtifacts = artefacts.epicArtifacts;
+        this.legendaryArtifacts = artefacts.legendaryArtifacts;
+      },
+      error: (err) => {
+        console.error('Erreur Artefact API:', err);
+      }
+    });
 
-  epicArtifacts: Artifact[] = [
-    {
-      id: 5,
-      name: 'Cristal de Vision',
-      description: 'Un cristal qui permet de voir à travers les illusions et fausses pistes',
-      price: 400,
-      rarity: 'Épique',
-      rarityColor: '#8B5CF6',
-      effect: 'Élimine les fausses pistes automatiquement',
-      image: '/assets/images/artifacts/artifact-1.png',
-    }
-  ];
+    this.statusArtifact();
+  }
 
-  legendaryArtifacts: Artifact[] = [
-    {
-      id: 7,
-      name: 'Couronne des Anciens',
-      description: 'La couronne légendaire des premiers chasseurs de trésors',
-      price: 1000,
-      rarity: 'Légendaire',
-      rarityColor: '#F59E0B',
-      effect: 'Double les couronnes gagnées pendant 24h',
-      image: '/assets/images/artifacts/artifact-6.png',
-    },
-    {
-      id: 8,
-      name: 'Œil d\'Horus',
-      description: 'L\'artefact ultime qui révèle tous les secrets d\'une chasse',
-      price: 1500,
-      rarity: 'Légendaire',
-      rarityColor: '#F59E0B',
-      effect: 'Révèle toutes les solutions d\'une chasse',
-      image: '/assets/images/artifacts/artifact-7.png',
-    },
-  ];
+  statusArtifact(): void {
+    this.playerService.getArtefacts().subscribe({
+      next: (artefacts) => {
+        artefacts.forEach((artefact: PlayerArtifact) => {
+          this.commonArtifacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
+          this.rareArtifacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
+          this.epicArtifacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
+          this.legendaryArtifacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
+        });
+      },
+      error: (err) => {
+        console.error('Erreur Artefact API:', err);
+      }
+    });
+  }
 
   getRarityIcon(rarity: string): string {
     switch (rarity) {
@@ -140,13 +105,17 @@ export class ArtifactsTabComponent {
       this.setAlert({ type: 'warning', message: 'Veuillez vous connecter pour acheter des artefacts.' });
       return;
     }
+    if (artifact.isOwned) {
+      this.setAlert({ type: 'info', message: `Vous possédez déjà l'artefact : ${artifact.name}.` });
+      return;
+    }
     if (this.crownCount < artifact.price) {
       this.setAlert({ type: 'error', message: 'Vous n\'avez pas assez de couronnes pour acheter cet artefact.' });
       return;
     }
 
     this.selectedArtifact = artifact;
-    this.showModal = true;
+    this.openModal();
   }
 
   confirmPurchase(artifact: Artifact) {
@@ -156,23 +125,43 @@ export class ArtifactsTabComponent {
     }
 
     this.shopService.minusCrownsByToken(artifact.price).subscribe({
-      next: (response) => {
-        this.crownCount -= artifact.price;
-        this.crownCountChange.emit(this.crownCount);
-        this.setAlert({ type: 'success', message: `Achat réussi : ${artifact.name} pour ${artifact.price} couronnes.` });
+      next: () => {
+
+        this.playerArtifactService.createPlayerArtifact(artifact.id).subscribe({
+          next: () => {
+            this.crownCount -= artifact.price;
+            this.crownCountChange.emit(this.crownCount);
+            this.setAlert({ type: 'success', message: `Achat réussi : ${artifact.name} pour ${artifact.price} couronnes.` });
+
+            this.statusArtifact();
+          },
+          error: (error) => {
+            this.setAlert({ type: 'error', message: `Erreur lors de l'achat : ${error.message}` });
+          }
+        });
+
       },
       error: (error) => {
         this.setAlert({ type: 'error', message: `Erreur lors de l'achat : ${error.message}` });
       }
     });
 
-    this.showModal = false;
-    this.selectedArtifact = null;
+    this.closeModal();
   }
 
   cancelPurchase() {
+    this.closeModal();
+  }
+
+  openModal() {
+    this.showModal = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeModal() {
     this.showModal = false;
     this.selectedArtifact = null;
+    document.body.style.overflow = '';
   }
 
   setAlert(alert: Alert) {

@@ -30,7 +30,10 @@ public enum ApiPathExclusion {
     VERIFY_MAIL("/verify"),
     GET_ALL_PLAYERS("/api/player/all"),
     GET_PLAYER_COUNT("/api/player/count"),
-    GET_TREASURE_HUNT_COUNT("/api/treasure-hunt/count");
+    GET_TREASURE_HUNT_COUNT("/api/treasure-hunt/count"),
+    GET_ALL_ARTEFACTS("/api/artefact/all"),
+    GET_ALL_ARTEFACTS_ORDERED("/api/artefact/all/ordered"),
+    ;
 
     private final String path;
 

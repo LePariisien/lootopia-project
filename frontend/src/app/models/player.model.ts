@@ -1,3 +1,5 @@
+import { Artifact } from "./artifact.model";
+
 export interface Player {
   id: string;
   nickname: string;
@@ -8,4 +10,5 @@ export interface Player {
   rank?: number;
   color?: string;
   avatar?: string;
+  artefacts?: Artifact[];
 }

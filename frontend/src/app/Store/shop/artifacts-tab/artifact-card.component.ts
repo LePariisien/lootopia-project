@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Artifact } from '../../../models/artifact.model';
-import { Crown, LucideAngularModule, ShoppingCart, Star, Gem, Sparkles, LucideIconData, Zap  } from 'lucide-angular';
+import { Crown, LucideAngularModule, ShoppingCart, Star, Gem, Sparkles, LucideIconData, Zap, Check  } from 'lucide-angular';
 
 @Component({
   selector: 'app-artifact-card',
@@ -16,6 +16,7 @@ export class ArtifactCardComponent {
   readonly Gem = Gem;
   readonly Sparkles = Sparkles;
   readonly Zap = Zap;
+  readonly Check = Check;
 
   @Input() artifact!: Artifact;
   @Output() buy = new EventEmitter<Artifact>();
@@ -26,9 +27,9 @@ export class ArtifactCardComponent {
         return this.Star;
       case 'Rare':
         return this.Gem;
-      case 'Epic':
+      case 'Épique':
         return this.Sparkles;
-      case 'Legendary':
+      case 'Légendaire':
         return this.Crown;
       default:
         return this.Star;
