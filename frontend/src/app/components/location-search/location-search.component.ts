@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Search, LocateIcon } from 'lucide-angular';
+import { CommonModule } from '@angular/common';
 
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';

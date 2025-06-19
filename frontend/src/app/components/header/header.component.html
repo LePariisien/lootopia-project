@@ -11,10 +11,35 @@
       <div class ="absolute inset-0 blur-xs opacity-75 bg-gradient-to-r from-green-200 to-blue-200 rounded-b-full"></div>
       <nav class="relative z-10 flex gap-8 items-center px-2">
         <div *ngIf="isAuthenticated" class="flex flex-col items-center">
-          <lucide-icon [img]="Bell" (click)="openNotifications()"
-            class="text-lg text-green-500 hover:text-green-700 transition cursor-pointer">
-          </lucide-icon>
+          <button
+            (mouseenter)="showNotifications = true"
+            (mouseleave)="hideNotificationsWithDelay()"
+            class="relative"
+            aria-label="Notifications"
+          >
+            <lucide-icon [img]="Bell"
+              class="text-lg text-green-500 hover:text-green-700 transition cursor-pointer">
+            </lucide-icon>
+          <span *ngIf="notifications.length" class="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs px-1">
+            {{ notifications.length }}
+          </span>
+                  <div
+          *ngIf="showNotifications"
+          (mouseenter)="cancelHide()"
+          (mouseleave)="hideNotificationsWithDelay()"
+          class="absolute left-0 mt-4 w-60 bg-white border border-gray-200 rounded-xl shadow-lg z-50"
+        >
+          <div class="p-4 font-bold text-[#082B21] border-b">Notifications</div>
+          <div *ngIf="!notifications.length" class="p-4 text-gray-500 text-center">No notifications</div>
+          <ul>
+            <li *ngFor="let notif of notifications" class="p-4 border-b last:border-b-0 hover:bg-gray-50">
+              {{ notif.message }}
+              <span *ngIf="notif.date" class="block text-xs text-gray-400 mt-1">{{ notif.date | date:'short' }}</span>
+            </li>
+          </ul>
         </div>
+          </button>
+    </div>
 
         <div class="flex flex-col items-center">
           <lucide-icon

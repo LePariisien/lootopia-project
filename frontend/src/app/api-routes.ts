@@ -63,6 +63,10 @@ export const ApiRoutes = {
   // UserProfile
   userProfileByUserId: (userId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/user/${userId}`,
   userProfileByPlayerId: (playerId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/player/${playerId}`,
+
+  //notifications
+  createNotification: () => `${ApiRoutesEnum.Lootopia}/notifications/create`,
+  GetNotificationsByPlayerId: (playerId: string) => `${ApiRoutesEnum.Lootopia}/notifications/player/${playerId}`,
 };
 
 export enum ApiRoutesEnum {

@@ -38,9 +38,10 @@ public class Notification {
 
     @NotNull
     @ManyToOne
-    private Player Player;
+    private Player player;
 
     @NotNull
     @Column(nullable = false)
     private boolean read;
+
 }

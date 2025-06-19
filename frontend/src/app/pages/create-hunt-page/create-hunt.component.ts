@@ -20,6 +20,7 @@ import { Clue } from '../../models/clue.model';
 import { AuthService } from '../../services/auth.service';
 import { Alert } from '../../models/alert.model';
 import { AlertComponent } from "../../components/alert/alert.component";
+import { NotificationService } from '../../services/notification.service';
 
 interface HuntStep {
   id: number;
@@ -53,7 +54,7 @@ export class CreateHuntComponent implements OnInit {
   readonly Search = Search;
   readonly Plus = Plus;
 
-  ID_USER = "0fbb229a-eb38-4a64-8e8d-c73e28487759";
+  
 
   // General
   huntTitle: string = '';
@@ -65,6 +66,7 @@ export class CreateHuntComponent implements OnInit {
   estimatedDuration: number | null = null;
   approximateDistance: number | null = null;
   coverImage: File | null = null;
+  ID_USER: string = '';
 
   // Tabs
   activeTab: string = 'informations';
@@ -114,11 +116,14 @@ export class CreateHuntComponent implements OnInit {
 
   constructor(private authService: AuthService,
     private treasureHuntService: TreasureHuntService,
-    private clueService: ClueService) { }
+    private clueService: ClueService,
+    private notificationService: NotificationService
+  ) {}
 
+  
   ngOnInit(): void {
     this.token = this.authService.getTokenOrRedirect() ?? '';
-
+    this.ID_USER = this.authService.getPlayerId() ?? '';
     this.addStep();
     this.addStep();
 
@@ -248,6 +253,12 @@ export class CreateHuntComponent implements OnInit {
         const treasure_id = response.treasure_id;
         body.treasure_id = treasure_id;
         this.publishClues(treasure_id);
+        this.notificationService.createNotification({
+          playerId: this.ID_USER,
+          message: `Chasse créée : "${this.huntTitle}" publiée avec succès !`,
+          date: new Date(),
+          read: false
+        }).subscribe();
 
         this.resetForm();
         this.activeTab = 'informations';

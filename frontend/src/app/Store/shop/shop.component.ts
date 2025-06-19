@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { ShopService } from '../../services/shop.service';
 import { CrownBalanceComponent } from '../../components/crown-balance/crown-balance.component';
 import { Player } from '../../models/player.model';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-shop',
@@ -50,7 +51,9 @@ export class ShopComponent implements OnInit {
   constructor(
     private paymentService: PaymentService,
     public authService: AuthService,
-    private shopService: ShopService
+    private shopService: ShopService,
+    private notificationService: NotificationService
+
   ) {}
 
   ngOnInit() {
@@ -129,8 +132,21 @@ export class ShopComponent implements OnInit {
         };
         this.shopService.createPurchase(purchase).subscribe({
           next: () => {
-            this.setAlert({ type: 'success', message: 'Paiement validé !' });
-            this.shopService.updateCrownCount(this.crownCount ?? 0);
+            this.notificationService.createNotification({
+              playerId: this.playerId!,
+              message: `Achat validé : ${total} couronnes pour ${this.selectedPack.price}`,
+              date: new Date(),
+              read: false
+            }).subscribe({
+              next: (notification) => {
+                console.log('Notification créée avec succès:', notification);
+                this.setAlert({ type: 'success', message: 'Paiement validé !' });
+                this.shopService.updateCrownCount(this.crownCount ?? 0);
+              },
+              error: (error) => {
+                console.error('Erreur lors de la création de la notification:', error);
+              }
+            });
           },
           error: (err) => {
             console.error('Erreur lors de l\'enregistrement de l\'achat:', err);
