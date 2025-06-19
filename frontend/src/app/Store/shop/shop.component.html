@@ -140,10 +140,10 @@
       </div>
     </div>
     <div *ngIf="activeTab === 'artefacts'" class="mt-4">
-      <app-artifacts-tab
+      <app-artefacts-tab
         [crownCount]="crownCount || 0"
         (crownCountChange)="onCrownCountChange($event)"
-      ></app-artifacts-tab>
+      ></app-artefacts-tab>
     </div>
     <app-stripe-modal
       [show]="showStripe"

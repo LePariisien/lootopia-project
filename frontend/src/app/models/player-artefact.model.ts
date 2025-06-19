@@ -1,4 +1,4 @@
-export interface PlayerArtifact {
+export interface PlayerArtefact {
   id: number;
   playerId: string;
   artefactId: string;

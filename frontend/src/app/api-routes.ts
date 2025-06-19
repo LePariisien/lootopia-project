@@ -75,7 +75,7 @@ export const ApiRoutes = {
 
   // PlayerArtefacts
   playerArtefactsByToken: () => `${ApiRoutesEnum.Lootopia}/player-artefact/all/token`,
-  createPlayerArtifact: (artefactId: string) => `${ApiRoutesEnum.Lootopia}/player-artefact/${artefactId}`,
+  createPlayerArtefact: (artefactId: string) => `${ApiRoutesEnum.Lootopia}/player-artefact/${artefactId}`,
 };
 
 export enum ApiRoutesEnum {

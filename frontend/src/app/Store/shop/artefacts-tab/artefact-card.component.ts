@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Artifact } from '../../../models/artifact.model';
+import { Artefact } from '../../../models/artefact.model';
 import { Crown, LucideAngularModule, ShoppingCart, Star, Gem, Sparkles, LucideIconData, Zap, Check  } from 'lucide-angular';
 
 @Component({
-  selector: 'app-artifact-card',
-  templateUrl: './artifact-card.component.html',
-  styleUrls: ['./artifact-card.component.css'],
+  selector: 'app-artefact-card',
+  templateUrl: './artefact-card.component.html',
+  styleUrls: ['./artefact-card.component.css'],
   imports: [CommonModule, LucideAngularModule]
 })
-export class ArtifactCardComponent {
+export class ArtefactCardComponent {
   readonly ShoppingCart = ShoppingCart;
   readonly Crown = Crown;
   readonly Star = Star;
@@ -18,11 +18,11 @@ export class ArtifactCardComponent {
   readonly Zap = Zap;
   readonly Check = Check;
 
-  @Input() artifact!: Artifact;
-  @Output() buy = new EventEmitter<Artifact>();
+  @Input() artefact!: Artefact;
+  @Output() buy = new EventEmitter<Artefact>();
 
   getRarityIcon(): LucideIconData {
-    switch (this.artifact.rarity) {
+    switch (this.artefact.rarity) {
       case 'Commun':
         return this.Star;
       case 'Rare':

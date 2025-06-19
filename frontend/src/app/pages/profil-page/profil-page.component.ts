@@ -7,8 +7,8 @@ import { UserProfile } from '../../models/user-profile.model';
 import { Player } from '../../models/player.model';
 import { PlayerService } from '../../services/player.service';
 import { ShopService } from '../../services/shop.service';
-import { Artifact } from '../../models/artifact.model';
-import { ArtifactService } from '../../services/artifact.service';
+import { Artefact } from '../../models/artefact.model';
+import { ArtefactService } from '../../services/artefact.service';
 import { Crown, Gem, LucideAngularModule, LucideIconData, ShoppingCart, Sparkles, Star } from 'lucide-angular';
 
 @Component({
@@ -29,7 +29,7 @@ export class ProfilPageComponent implements OnInit {
   profile: UserProfile | null = null;
   crownCount: number = 0;
   slots = Array(9);
-  artefacts: (Artifact | undefined)[] = new Array(9).fill(undefined);
+  artefacts: (Artefact | undefined)[] = new Array(9).fill(undefined);
 
   constructor(
     private route: ActivatedRoute,
@@ -38,14 +38,14 @@ export class ProfilPageComponent implements OnInit {
     private playerService: PlayerService,
     private router: Router,
     private shopService: ShopService,
-    private artefactService: ArtifactService
+    private artefactService: ArtefactService
   ) {  }
 
-  getArtefact(artefactId: string): Artifact {
+  getArtefact(artefactId: string): Artefact {
     if (artefactId) {
     }
 
-    return {} as Artifact;
+    return {} as Artefact;
   }
 
   ngOnInit(): void {
@@ -80,11 +80,11 @@ export class ProfilPageComponent implements OnInit {
 
             this.playerService.getArtefactsByPlayerId(data?.id).subscribe({
               next: (artefacts) => {
-                let artefactsArray: Artifact[] = [];
-                artefacts.forEach((artifact) => {
+                let artefactsArray: Artefact[] = [];
+                artefacts.forEach((artefact) => {
 
-                  const artefactId = artifact.artefactId;
-                  this.artefactService.getArtifactById(artefactId).subscribe({
+                  const artefactId = artefact.artefactId;
+                  this.artefactService.getArtefactById(artefactId).subscribe({
                     next: (artefact) => {
                       artefactsArray.push(artefact);
                     },

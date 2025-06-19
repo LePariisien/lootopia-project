@@ -1,29 +1,29 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ArtifactCardComponent } from './artifact-card.component';
+import { ArtefactCardComponent } from './artefact-card.component';
 import { CommonModule } from '@angular/common';
-import { Artifact } from '../../../models/artifact.model';
+import { Artefact } from '../../../models/artefact.model';
 import { LucideAngularModule, Star, Gem, Sparkles, Crown, Minus, Equal } from 'lucide-angular';
 import { AuthService } from '../../../services/auth.service';
 import { Alert } from '../../../models/alert.model';
 import { AlertComponent } from "../../../components/alert/alert.component";
 import { ShopService } from '../../../services/shop.service';
-import { ArtifactService } from '../../../services/artifact.service';
-import { PlayerArtifactService } from '../../../services/playerArtifact.service';
+import { ArtefactService } from '../../../services/artefact.service';
+import { PlayerArtefactService } from '../../../services/playerArtefact.service';
 import { PlayerService } from '../../../services/player.service';
-import { PlayerArtifact } from '../../../models/player-artifact.model';
+import { PlayerArtefact } from '../../../models/player-artefact.model';
 
 @Component({
-  selector: 'app-artifacts-tab',
-  templateUrl: './artifacts-tab.component.html',
-  styleUrls: ['./artifacts-tab.component.css'],
+  selector: 'app-artefacts-tab',
+  templateUrl: './artefacts-tab.component.html',
+  styleUrls: ['./artefacts-tab.component.css'],
   imports: [
     CommonModule,
-    ArtifactCardComponent,
+    ArtefactCardComponent,
     LucideAngularModule,
     AlertComponent
   ]
 })
-export class ArtifactsTabComponent {
+export class ArtefactsTabComponent {
   readonly Star = Star;
   readonly Gem = Gem;
   readonly Sparkles = Sparkles;
@@ -37,46 +37,46 @@ export class ArtifactsTabComponent {
 
   selectedTab: 'commun' | 'rare' | 'epic' | 'legendary' = 'commun';
   showModal = false;
-  selectedArtifact: Artifact | null = null;
+  selectedArtefact: Artefact | null = null;
   alert: Alert = { type: 'success', message: '' };
 
   constructor(
     private authService: AuthService,
     private shopService: ShopService,
-    private artefactService: ArtifactService,
-    private playerArtifactService: PlayerArtifactService,
+    private artefactService: ArtefactService,
+    private playerArtefactService: PlayerArtefactService,
     private playerService: PlayerService
   ) {}
 
-  commonArtifacts: Artifact[] = [];
-  rareArtifacts: Artifact[] = [];
-  epicArtifacts: Artifact[] = [];
-  legendaryArtifacts: Artifact[] = [];
+  commonArtefacts: Artefact[] = [];
+  rareArtefacts: Artefact[] = [];
+  epicArtefacts: Artefact[] = [];
+  legendaryArtefacts: Artefact[] = [];
 
   ngOnInit() {
     this.artefactService.getArtefactsAllOrdered().subscribe({
       next: (artefacts) => {
-        this.commonArtifacts = artefacts.commonArtifacts;
-        this.rareArtifacts = artefacts.rareArtifacts;
-        this.epicArtifacts = artefacts.epicArtifacts;
-        this.legendaryArtifacts = artefacts.legendaryArtifacts;
+        this.commonArtefacts = artefacts.commonArtefacts;
+        this.rareArtefacts = artefacts.rareArtefacts;
+        this.epicArtefacts = artefacts.epicArtefacts;
+        this.legendaryArtefacts = artefacts.legendaryArtefacts;
       },
       error: (err) => {
         console.error('Erreur Artefact API:', err);
       }
     });
 
-    this.statusArtifact();
+    this.statusArtefact();
   }
 
-  statusArtifact(): void {
+  statusArtefact(): void {
     this.playerService.getArtefacts().subscribe({
       next: (artefacts) => {
-        artefacts.forEach((artefact: PlayerArtifact) => {
-          this.commonArtifacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
-          this.rareArtifacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
-          this.epicArtifacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
-          this.legendaryArtifacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
+        artefacts.forEach((artefact: PlayerArtefact) => {
+          this.commonArtefacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
+          this.rareArtefacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
+          this.epicArtefacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
+          this.legendaryArtefacts.filter(a => a.id === artefact.artefactId).forEach(a => a.isOwned = true);
         });
       },
       error: (err) => {
@@ -100,40 +100,40 @@ export class ArtifactsTabComponent {
     }
   }
 
-  buyArtifact(artifact: Artifact) {
+  buyArtefact(artefact: Artefact) {
     if (!this.authService.isAuthenticated()) {
       this.setAlert({ type: 'warning', message: 'Veuillez vous connecter pour acheter des artefacts.' });
       return;
     }
-    if (artifact.isOwned) {
-      this.setAlert({ type: 'info', message: `Vous possédez déjà l'artefact : ${artifact.name}.` });
+    if (artefact.isOwned) {
+      this.setAlert({ type: 'info', message: `Vous possédez déjà l'artefact : ${artefact.name}.` });
       return;
     }
-    if (this.crownCount < artifact.price) {
+    if (this.crownCount < artefact.price) {
       this.setAlert({ type: 'error', message: 'Vous n\'avez pas assez de couronnes pour acheter cet artefact.' });
       return;
     }
 
-    this.selectedArtifact = artifact;
+    this.selectedArtefact = artefact;
     this.openModal();
   }
 
-  confirmPurchase(artifact: Artifact) {
+  confirmPurchase(artefact: Artefact) {
     if (!this.authService.isAuthenticated()) {
       this.setAlert({ type: 'warning', message: 'Veuillez vous connecter pour acheter des artefacts.' });
       return;
     }
 
-    this.shopService.minusCrownsByToken(artifact.price).subscribe({
+    this.shopService.minusCrownsByToken(artefact.price).subscribe({
       next: () => {
 
-        this.playerArtifactService.createPlayerArtifact(artifact.id).subscribe({
+        this.playerArtefactService.createPlayerArtefact(artefact.id).subscribe({
           next: () => {
-            this.crownCount -= artifact.price;
+            this.crownCount -= artefact.price;
             this.crownCountChange.emit(this.crownCount);
-            this.setAlert({ type: 'success', message: `Achat réussi : ${artifact.name} pour ${artifact.price} couronnes.` });
+            this.setAlert({ type: 'success', message: `Achat réussi : ${artefact.name} pour ${artefact.price} couronnes.` });
 
-            this.statusArtifact();
+            this.statusArtefact();
           },
           error: (error) => {
             this.setAlert({ type: 'error', message: `Erreur lors de l'achat : ${error.message}` });
@@ -160,7 +160,7 @@ export class ArtifactsTabComponent {
 
   closeModal() {
     this.showModal = false;
-    this.selectedArtifact = null;
+    this.selectedArtefact = null;
     document.body.style.overflow = '';
   }
 

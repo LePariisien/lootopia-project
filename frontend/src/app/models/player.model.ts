@@ -1,4 +1,4 @@
-import { Artifact } from "./artifact.model";
+import { Artefact } from "./artefact.model";
 
 export interface Player {
   id: string;
@@ -10,5 +10,5 @@ export interface Player {
   rank?: number;
   color?: string;
   avatar?: string;
-  artefacts?: Artifact[];
+  artefacts?: Artefact[];
 }

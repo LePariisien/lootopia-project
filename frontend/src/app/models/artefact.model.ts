@@ -1,4 +1,4 @@
-export interface Artifact {
+export interface Artefact {
   id: string;
   name: string;
   description: string;

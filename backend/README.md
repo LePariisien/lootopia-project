@@ -39,10 +39,12 @@ Exemple (`.env.example`) :
 # Ports
 GATEWAY_PORT=8080
 LOOTOPIA_PORT=8081
+PAYMENT_PORT=8082
+LOCATION_PORT=8083
 EUREKA_PORT=8088
 
 # Frontend
-SERVER_FRONTEND_URL=http://localhost:3000
+SERVER_FRONTEND_URL=http://localhost:4200
 
 # Database
 SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/lootopia_db
@@ -96,6 +98,8 @@ make logs
 - **Eureka Dashboard** : [http://localhost:8088](http://localhost:8088)
 - **API Gateway (entry point)** : [http://localhost:8080](http://localhost:8080)
 - **Lootopia via Gateway** : [http://localhost:8080/lootopia/api](http://localhost:8080/lootopia/api)
+- **Payment service via Gateway** : [http://localhost:8080/paymentserv/api](http://localhost:8080/paymentserv/api)
+- **Location service via Gateway** : [http://localhost:8080/locationserv/api](http://localhost:8080/locationserv/api)
 - **PgAdmin** : [http://localhost:8888](http://localhost:8888)
 
 - **Swagger UI** : [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
@@ -132,6 +136,8 @@ GET http://localhost:8080/lootopia/api/test/all
   - `pgadmin4_container_lootopia` (PgAdmin)
   - `eureka` (Service Discovery)
   - `lootopia` (Service principal)
+  - `location` (Service de localisation)
+  - `payment` (Service de paiement)
   - `gateway` (API Gateway)
 
 ---
@@ -152,7 +158,7 @@ GET http://localhost:8080/lootopia/api/test/all
 
 ## 📜 Notes
 
-- Assurez-vous que les ports 5432 (si bdd locale), 8080, 8081, 8088 et 8888 sont libres sur votre machine avant de démarrer.
+- Assurez-vous que les ports 5432 (si bdd locale), 8080, 8081, 8082, 8083, 8088 et 8888 sont libres sur votre machine avant de démarrer.
 - `PgAdmin` sera disponible sur [http://localhost:8888](http://localhost:8888) — connectez-vous avec les credentials définis dans `.env`.
 
 ---

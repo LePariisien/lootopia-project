@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { ShopService } from '../../services/shop.service';
 import { CrownBalanceComponent } from '../../components/crown-balance/crown-balance.component';
 import { Player } from '../../models/player.model';
-import { ArtifactsTabComponent } from './artifacts-tab/artifacts-tab.component';
+import { ArtefactsTabComponent } from './artefacts-tab/artefacts-tab.component';
 
 @Component({
   selector: 'app-shop',
@@ -22,7 +22,7 @@ import { ArtifactsTabComponent } from './artifacts-tab/artifacts-tab.component';
     StripeModalComponent,
     AlertComponent,
     CrownBalanceComponent,
-    ArtifactsTabComponent,
+    ArtefactsTabComponent,
   ],
 })
 export class ShopComponent implements OnInit {

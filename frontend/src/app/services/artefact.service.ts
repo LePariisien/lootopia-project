@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiRoutes } from '../api-routes';
-import { Artifact } from '../models/artifact.model';
+import { Artefact } from '../models/artefact.model';
 
 @Injectable({ providedIn: 'root' })
-export class ArtifactService {
+export class ArtefactService {
 
   constructor(private http: HttpClient) {}
 
-  getAllArtifacts(): Observable<Artifact[]> {
-    return this.http.get<Artifact[]>(ApiRoutes.artefactsAll());
+  getAllArtefacts(): Observable<Artefact[]> {
+    return this.http.get<Artefact[]>(ApiRoutes.artefactsAll());
   }
 
-  getArtifactById(artifactId: string): Observable<Artifact> {
-    return this.http.get<Artifact>(ApiRoutes.artefactsById(artifactId));
+  getArtefactById(artefactId: string): Observable<Artefact> {
+    return this.http.get<Artefact>(ApiRoutes.artefactsById(artefactId));
   }
 
   getArtefactsAllOrdered(): Observable<any> {

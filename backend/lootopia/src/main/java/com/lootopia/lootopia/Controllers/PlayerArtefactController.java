@@ -18,9 +18,9 @@ public class PlayerArtefactController extends AbstractController {
         return playerArtefactService.getPlayerArtefactById(id);
     }
 
-    @PostMapping("/{artifactId}")
-    public ResponseEntity<?> createPlayerArtefact(@PathVariable String artifactId) {
-        return playerArtefactService.createPlayerArtefact(artifactId);
+    @PostMapping("/{artefactId}")
+    public ResponseEntity<?> createPlayerArtefact(@PathVariable String artefactId) {
+        return playerArtefactService.createPlayerArtefact(artefactId);
     }
 
     @GetMapping("/all/token")
