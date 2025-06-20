@@ -1,10 +1,10 @@
 package com.lootopia.lootopia.Controllers;
 
 import com.lootopia.lootopia.Dtos.ParticipationDto;
-import com.lootopia.lootopia.Entities.Player;
 import com.lootopia.lootopia.Services.ParticipationService;
-import com.lootopia.lootopia.Services.PlayerService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +15,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ParticipationController {
 
-    private final ParticipationService participationService;
-    private final PlayerService playerService;
+    @Autowired
+    private ParticipationService participationService;
 
     /**
      * Endpoint pour créer une participation.
@@ -30,9 +30,13 @@ public class ParticipationController {
      * Endpoint pour récupérer les participations d'un joueur.
      */
     @GetMapping("/player/{playerId}")
-    public ResponseEntity<?> getParticipationsByPlayer(@PathVariable UUID playerId) {
-        Player player = playerService.getPlayerById(playerId);
-        return participationService.getParticipationsByPlayer(player);
+    public ResponseEntity<?> getParticipationsByPlayer(@PathVariable String playerId) {
+        return participationService.getParticipationsByPlayer(playerId);
+    }
+
+    @GetMapping("/player/{playerId}/details")
+    public ResponseEntity<?> getParticipationsWithTreasureHuntByPlayer(@PathVariable String playerId) {
+        return participationService.getParticipationsWithTreasureHuntByPlayer(playerId);
     }
 
     /**

@@ -38,6 +38,8 @@ export const ApiRoutes = {
     `${ApiRoutesEnum.Lootopia}/participations/treasure-hunt/${treasureHuntId}`,
   participationByTreasureHuntIdAndPlayer: (treasureHuntId: string) =>
     `${ApiRoutesEnum.Lootopia}/participations/treasure-hunt/${treasureHuntId}/by-player`,
+  getParticipationDetailsByPlayerId: (playerId: string) =>
+    `${ApiRoutesEnum.Lootopia}/participations/player/${playerId}/details`,
 
   // Treasure
   treasure: () => `${ApiRoutesEnum.Location}/treasure`,

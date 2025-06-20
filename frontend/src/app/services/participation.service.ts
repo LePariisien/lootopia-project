@@ -28,4 +28,8 @@ export class ParticipationService {
     return this.http.get(ApiRoutes.participationByTreasureHuntIdAndPlayer(treasureHuntId));
   }
 
+  getParticipationDetailsByPlayerId(playerId: string): Observable<any> {
+    return this.http.get(ApiRoutes.getParticipationDetailsByPlayerId(playerId));
+  }
+
 }

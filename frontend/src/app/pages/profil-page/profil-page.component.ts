@@ -9,7 +9,9 @@ import { PlayerService } from '../../services/player.service';
 import { ShopService } from '../../services/shop.service';
 import { Artefact } from '../../models/artefact.model';
 import { ArtefactService } from '../../services/artefact.service';
-import { Crown, Gem, LucideAngularModule, LucideIconData, ShoppingCart, Sparkles, Star } from 'lucide-angular';
+import { ChevronRight, Crown, Gem, LucideAngularModule, LucideIconData, ShoppingCart, Sparkles, Star } from 'lucide-angular';
+import { ParticipationService } from '../../services/participation.service';
+import { Participation } from '../../models/participation.model';
 
 @Component({
   selector: 'app-profil-page',
@@ -24,12 +26,15 @@ export class ProfilPageComponent implements OnInit {
   readonly Star = Star;
   readonly Gem = Gem;
   readonly Sparkles = Sparkles;
+  readonly ChevronRight = ChevronRight;
 
   player: Player | null = null;
   profile: UserProfile | null = null;
   crownCount: number = 0;
   slots = Array(9);
+  participationSlots = Array(4);
   artefacts: (Artefact | undefined)[] = new Array(9).fill(undefined);
+  participations: (Participation | undefined)[] = new Array(4).fill(undefined);
 
   constructor(
     private route: ActivatedRoute,
@@ -38,15 +43,9 @@ export class ProfilPageComponent implements OnInit {
     private playerService: PlayerService,
     private router: Router,
     private shopService: ShopService,
-    private artefactService: ArtefactService
+    private artefactService: ArtefactService,
+    private participationService: ParticipationService
   ) {  }
-
-  getArtefact(artefactId: string): Artefact {
-    if (artefactId) {
-    }
-
-    return {} as Artefact;
-  }
 
   ngOnInit(): void {
     const token = this.authService.getTokenOrRedirect() ?? '';
@@ -101,6 +100,21 @@ export class ProfilPageComponent implements OnInit {
               }
             });
 
+            this.participationService.getParticipationDetailsByPlayerId(data?.id).subscribe({
+              next: (participationDetail) => {
+                if (participationDetail && participationDetail.length > 0) {
+                  const lastParticipations = participationDetail.slice(-4).reverse();
+                  this.participations = lastParticipations;
+                } else {
+                  this.participations = new Array(4).fill(undefined);
+                }
+              },
+              error: (err) => {
+                console.error('Erreur de récupération de la participation:', err);
+                this.participations = new Array(4).fill(undefined);
+              }
+            });
+
           },
           error: (err) => {
             console.error('Erreur de récupération du profil:', err);
@@ -123,6 +137,14 @@ export class ProfilPageComponent implements OnInit {
         return this.Crown;
       default:
         return this.Star;
+    }
+  }
+
+  viewParticipationDetails(participationId: String) {
+    if (participationId) {
+      this.router.navigate(['/participation', participationId]);
+    } else {
+      console.error('Participation ou Treasure Hunt ID manquant');
     }
   }
 
