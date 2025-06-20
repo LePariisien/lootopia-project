@@ -162,7 +162,7 @@ export class ProfilPageComponent implements OnInit {
     }
   }
 
-  viewParticipationDetails(participationId: String) {
+  viewParticipationDetails(participationId: string) {
     if (participationId) {
       this.router.navigate(['/participation', participationId]);
     } else {

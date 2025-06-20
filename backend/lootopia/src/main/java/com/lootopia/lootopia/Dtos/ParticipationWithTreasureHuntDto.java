@@ -12,7 +12,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-public class ParticipationWithTresureHuntDto {
+public class ParticipationWithTreasureHuntDto {
 
     private UUID id;
 
@@ -36,7 +36,7 @@ public class ParticipationWithTresureHuntDto {
 
     private LocalDateTime endDate;
 
-    public ParticipationWithTresureHuntDto(ParticipationDto participation, TreasureHuntDto treasure) {
+    public ParticipationWithTreasureHuntDto(ParticipationDto participation, TreasureHuntDto treasure) {
         this.id = participation.getId();
         this.playerId = participation.getPlayerId();
         this.treasureHuntId = participation.getTreasureHuntId();

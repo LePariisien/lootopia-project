@@ -1,7 +1,7 @@
 package com.lootopia.lootopia.Services;
 
 import com.lootopia.lootopia.Dtos.ParticipationDto;
-import com.lootopia.lootopia.Dtos.ParticipationWithTresureHuntDto;
+import com.lootopia.lootopia.Dtos.ParticipationWithTreasureHuntDto;
 import com.lootopia.lootopia.Dtos.TreasureHuntDto;
 import com.lootopia.lootopia.Entities.Participation;
 import com.lootopia.lootopia.Entities.Player;
@@ -55,10 +55,10 @@ public class ParticipationService {
             throw new CustomException("Aucune participation trouvée pour ce joueur.", HttpStatus.NOT_FOUND);
         }
 
-        List<ParticipationWithTresureHuntDto> result = new ArrayList<>();
+        List<ParticipationWithTreasureHuntDto> result = new ArrayList<>();
         for (Participation participation : participations) {
             TreasureHunt treasureHunt = participation.getTreasureHunt();
-            result.add(new ParticipationWithTresureHuntDto(new ParticipationDto(participation),
+            result.add(new ParticipationWithTreasureHuntDto(new ParticipationDto(participation),
                     new TreasureHuntDto(treasureHunt)));
         }
         return ResponseEntity.ok(result);
