@@ -5,7 +5,16 @@
         <img *ngIf="player.avatarUrl" [src]="profile.avatarUrl" alt="Avatar"
           class="h-full w-full object-cover rounded-full" />
       </div>
-      <div class="font-semibold text-lg">{{ profile.username }}</div>
+      <div class="font-semibold text-lg flex items-center justify-center gap-2">
+        {{ profile.username }}
+        <button
+          *ngIf="player?.id === connectedPlayerId"
+          (click)="openEditProfile()"
+          class="ml-2 p-1 rounded hover:bg-gray-200 transition"
+          aria-label="Modifier le profil">
+          <lucide-icon [img]="Edit" class="w-5 h-5 text-green-600"></lucide-icon>
+        </button>
+      </div>
       <div class="text-sm text-gray-500">{{ player.nickname }} ({{ player.country }})</div>
       <div class="text-xs italic text-gray-400 mt-2">{{ player.bio }}</div>
 
@@ -118,10 +127,11 @@
         <div class="text-4xl sm:text-5xl font-bold text-yellow-500 text-center">{{ crownCount }}</div>
         <div class="text-sm text-gray-500 text-center mb-4">Total disponible</div>
         <ul class="text-sm text-gray-600 space-y-1 mt-4">
-          <li><span class="text-red-500">-20</span> — Item 1</li>
-          <li><span class="text-red-500">-10</span> — Item 2</li>
-          <li><span class="text-red-500">-50</span> — Item 3</li>
-          <li><span class="text-red-500">-5</span> — Item 4</li>
+          <li *ngFor="let purchase of purchases | slice:0:5" class="flex items-center justify-between">
+            <span class="text-yellow-600 font-semibold">+ {{ purchase.crowns }}</span>
+          </li>
+          <li *ngIf="purchases.length === 0" class="text-gray-400 text-center">Aucune couronne pour le moment</li>
+
         </ul>
       </div>
 
@@ -140,4 +150,28 @@
 
 <div *ngIf="!profile || !player" class="text-center mt-20 text-gray-500">
   Chargement du profil...
+</div>
+
+<!-- Popup d'édition du profil -->
+<div *ngIf="showEditPopup" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-xl p-6"></div>
+  <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-md relative">
+    <button (click)="closeEditProfile()" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700">
+      <lucide-icon [img]="CircleX" class="w-6 h-6"></lucide-icon>
+    </button>
+    <h3 class="text-xl font-bold mb-4">Modifier mon profil</h3>
+    <form (ngSubmit)="saveProfile()" #editForm="ngForm">
+      <div class="mb-4">
+        <label class="block mb-1 font-medium">Pays</label>
+        <input [(ngModel)]="editData.country" name="country" required class="w-full border rounded px-3 py-2" />
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1 font-medium">Bio</label>
+        <textarea [(ngModel)]="editData.bio" name="bio" rows="3" class="w-full border rounded px-3 py-2"></textarea>
+      </div>
+      <button type="submit" [disabled]="editForm.invalid" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+        Sauvegarder
+      </button>
+    </form>
+  </div>
 </div>

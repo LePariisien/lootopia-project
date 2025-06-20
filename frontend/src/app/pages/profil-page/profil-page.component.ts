@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/userProfile.service';
 import { AuthService } from '../../services/auth.service';
@@ -9,14 +10,14 @@ import { PlayerService } from '../../services/player.service';
 import { ShopService } from '../../services/shop.service';
 import { Artefact } from '../../models/artefact.model';
 import { ArtefactService } from '../../services/artefact.service';
-import { ChevronRight, Crown, Gem, LucideAngularModule, LucideIconData, ShoppingCart, Sparkles, Star } from 'lucide-angular';
+import { ChevronRight, CircleX, Crown, Edit, Gem, LucideAngularModule, LucideIconData, ShoppingCart, Sparkles, Star } from 'lucide-angular';
 import { ParticipationService } from '../../services/participation.service';
 import { Participation } from '../../models/participation.model';
 
 @Component({
   selector: 'app-profil-page',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, FormsModule],
   templateUrl: './profil-page.component.html',
   styleUrls: ['./profil-page.component.css']
 })
@@ -27,6 +28,8 @@ export class ProfilPageComponent implements OnInit {
   readonly Gem = Gem;
   readonly Sparkles = Sparkles;
   readonly ChevronRight = ChevronRight;
+  readonly Edit = Edit;
+  readonly CircleX = CircleX;
 
   player: Player | null = null;
   profile: UserProfile | null = null;
@@ -35,6 +38,13 @@ export class ProfilPageComponent implements OnInit {
   participationSlots = Array(4);
   artefacts: (Artefact | undefined)[] = new Array(9).fill(undefined);
   participations: (Participation | undefined)[] = new Array(4).fill(undefined);
+
+  showEditPopup = false;
+  editData = {country: '', bio: '' };
+
+  connectedPlayerId: string | null = null;
+
+  purchases: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -50,6 +60,8 @@ export class ProfilPageComponent implements OnInit {
   ngOnInit(): void {
     const token = this.authService.getTokenOrRedirect() ?? '';
     if (!token) return;
+
+    this.connectedPlayerId = this.authService.getPlayerId();
 
     this.route.paramMap.subscribe(params => {
       const nickname = params.get('nickname') || '';
@@ -115,6 +127,16 @@ export class ProfilPageComponent implements OnInit {
               }
             });
 
+            this.shopService.getPurchasesByPlayerId(data?.id).subscribe({
+              next: (purchases) => {
+                console.log('Achats récupérés:', purchases);
+                this.purchases = Array.isArray(purchases) ? purchases : [purchases];
+              },
+              error: (err) => {
+                console.error('Erreur lors de la récupération des achats:', err);
+              }
+            });
+
           },
           error: (err) => {
             console.error('Erreur de récupération du profil:', err);
@@ -148,4 +170,35 @@ export class ProfilPageComponent implements OnInit {
     }
   }
 
+  openEditProfile() {
+    if (this.player) {
+      this.editData.country = this.player.country ?? '';
+      this.editData.bio = this.player.bio ?? '';
+      this.showEditPopup = true;
+    }
+  }
+
+  closeEditProfile() {
+    this.showEditPopup = false;
+  }
+
+  saveProfile() {
+    if (!this.player) return;
+    const updated = {
+      ...this.player,
+      country: this.editData.country,
+      bio: this.editData.bio
+    };
+    this.playerService.updatePlayer(this.player.id, updated).subscribe({
+      next: () => {
+        // Mets à jour l'affichage local
+        this.player = { ...this.player!, ...this.editData };
+        this.closeEditProfile();
+      },
+      error: (err) => {
+        alert("Erreur lors de la sauvegarde du profil");
+        console.error(err);
+      }
+    });
+  }
 }

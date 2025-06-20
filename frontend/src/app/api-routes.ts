@@ -51,6 +51,7 @@ export const ApiRoutes = {
   playerCount: () => `${ApiRoutesEnum.Lootopia}/player/count`,
   playerById: (id: string) => `${ApiRoutesEnum.Lootopia}/player/id/${id}`,
   player: () => `${ApiRoutesEnum.Lootopia}/player`,
+  updatePlayer: (id: string) => `${ApiRoutesEnum.Lootopia}/player/${id}`,
   playerByNickname: (nickname: string) =>
     `${ApiRoutesEnum.Lootopia}/player/nickname/${nickname}`,
   getArtefacts: () => `${ApiRoutesEnum.Lootopia}/player/player-artefacts`,
@@ -65,6 +66,7 @@ export const ApiRoutes = {
 
   // Purchases
   createPurchase: () => `${ApiRoutesEnum.Lootopia}/purchases`,
+  getPurchasesByPlayerId: (playerId: string) => `${ApiRoutesEnum.Lootopia}/purchases/player/${playerId}`,
 
   // UserProfile
   userProfileByUserId: (userId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/user/${userId}`,
