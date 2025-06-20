@@ -7,16 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.UUID;
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/purchases")
 public class PurchaseController {
 
     @Autowired
     private PurchaseService purchaseService;
-    
-    @PostMapping("/purchases")
+
+    @PostMapping
     public ResponseEntity<PurchaseDto> createPurchase(@RequestBody PurchaseDto purchaseDto) {
         Purchase saved = purchaseService.createPurchase(purchaseDto);
         return ResponseEntity.ok(new PurchaseDto(saved));
+    }
+
+    @GetMapping("/player/{playerId}")
+    public List<PurchaseDto> getPurchasesByPlayerId(@PathVariable UUID playerId) {
+        return purchaseService.getPurchasesByPlayerId(playerId);
     }
 }
