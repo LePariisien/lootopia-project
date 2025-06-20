@@ -26,7 +26,7 @@ export class HuntDetailJoinComponent {
   readonly Star = Star;
   readonly ArrowRight = ArrowRight;
 
-  @Input() playerId!: string | null;
+  playerId!: string;
   @Input() treasureHunt!: TreasureHunt;
   @Input() participation!: Participation | null;
   @Input() isRegistered: boolean = false;
@@ -42,12 +42,16 @@ export class HuntDetailJoinComponent {
     private notificationService: NotificationService
   ) { }
 
+  ngOnInit(): void {
+    this.playerId = this.authService.getPlayerId()!;
+  }
+
   joinTreasureHunt(): void {
     if (!this.isRegistered) {
       this.participationService.createParticipation(this.treasureHunt.id).subscribe({
         next: (response) => {
           this.notificationService.createNotification({
-              playerId: this.playerId!,
+              playerId: this.playerId,
               message: `Vous avez rejoint la chasse au trésor "${this.treasureHunt.name}" !`,
               date: new Date(),
               read: false
