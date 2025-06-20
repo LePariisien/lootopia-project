@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ApiRoutes } from '../api-routes';
+import { purchase } from '../models/purchase.model';
 
 @Injectable({ providedIn: 'root' })
 export class ShopService {
@@ -28,5 +29,9 @@ export class ShopService {
 
   minusCrownsByToken(quantity: number): Observable<any> {
     return this.http.post(ApiRoutes.minusCrownsByToken(quantity), null);
+  }
+
+  getPurchasesByPlayerId(playerId: string): Observable<purchase> {
+    return this.http.get<purchase>(ApiRoutes.getPurchasesByPlayerId(playerId));
   }
 }

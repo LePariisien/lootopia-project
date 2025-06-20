@@ -1,5 +1,6 @@
 package com.lootopia.lootopia.Services;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -90,7 +91,7 @@ public class PlayerService {
 		return ResponseEntity.ok(new PlayerDto(player));
 	}
 
-	public ResponseEntity<?> updatePlayer(PlayerDto playerDto) {
+	public ResponseEntity<?> updatePlayer( String id, PlayerDto playerDto) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
 		Player player = playerRepository.findByUserUsername(username)
@@ -102,7 +103,7 @@ public class PlayerService {
 
 		playerRepository.save(player);
 
-		return ResponseEntity.ok("Profil mis à jour avec succès");
+		return ResponseEntity.ok(Map.of("Message", "Profil mis à jour avec succès"));
 	}
 
 	public Player getPlayerById(UUID playerId) {

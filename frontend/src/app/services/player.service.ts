@@ -39,4 +39,7 @@ export class PlayerService {
     return this.http.get<PlayerArtefact[]>(ApiRoutes.getArtefactsByPlayerId(id));
   }
 
+  updatePlayer(id: string, player: Player) {
+    return this.http.put(ApiRoutes.updatePlayer(id), player);
+  }
 }
