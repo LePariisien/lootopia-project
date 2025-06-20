@@ -11,6 +11,7 @@ import { ArtefactService } from '../../../services/artefact.service';
 import { PlayerArtefactService } from '../../../services/playerArtefact.service';
 import { PlayerService } from '../../../services/player.service';
 import { PlayerArtefact } from '../../../models/player-artefact.model';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-artefacts-tab',
@@ -30,12 +31,14 @@ export class ArtefactsTabComponent {
   readonly Crown = Crown;
   readonly Minus = Minus;
   readonly Equal = Equal;
-
+  
+  
   @Input() crownCount!: number;
-
+  
   @Output() crownCountChange = new EventEmitter<number>();
-
+  
   selectedTab: 'commun' | 'rare' | 'epic' | 'legendary' = 'commun';
+  playerId!: string;
   showModal = false;
   selectedArtefact: Artefact | null = null;
   alert: Alert = { type: 'success', message: '' };
@@ -45,7 +48,8 @@ export class ArtefactsTabComponent {
     private shopService: ShopService,
     private artefactService: ArtefactService,
     private playerArtefactService: PlayerArtefactService,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private notificationService: NotificationService,
   ) {}
 
   commonArtefacts: Artefact[] = [];
@@ -54,6 +58,7 @@ export class ArtefactsTabComponent {
   legendaryArtefacts: Artefact[] = [];
 
   ngOnInit() {
+    this.playerId = this.authService.getPlayerId() || '';
     this.artefactService.getArtefactsAllOrdered().subscribe({
       next: (artefacts) => {
         this.commonArtefacts = artefacts.commonArtefacts;
@@ -129,6 +134,19 @@ export class ArtefactsTabComponent {
 
         this.playerArtefactService.createPlayerArtefact(artefact.id).subscribe({
           next: () => {
+              this.notificationService.createNotification({
+              playerId: this.playerId,
+              message: `Vous avez acheté l'artefact : ${artefact.name} !`,
+              date: new Date(),
+              read: false
+            }).subscribe({
+              next: (notification) => {
+                console.log('Notification créée avec succès:', notification);
+              },
+              error: (error) => {
+                console.error('Erreur lors de la création de la notification:', error);
+              }
+            });
             this.crownCount -= artefact.price;
             this.crownCountChange.emit(this.crownCount);
             this.setAlert({ type: 'success', message: `Achat réussi : ${artefact.name} pour ${artefact.price} couronnes.` });

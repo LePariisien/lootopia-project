@@ -7,6 +7,7 @@ import { AuthService } from '../../../services/auth.service';
 import { Alert } from '../../../models/alert.model';
 import { Router } from '@angular/router';
 import { Participation } from '../../../models/participation.model';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-hunt-detail-join',
@@ -25,9 +26,11 @@ export class HuntDetailJoinComponent {
   readonly Star = Star;
   readonly ArrowRight = ArrowRight;
 
+  playerId!: string;
   @Input() treasureHunt!: TreasureHunt;
   @Input() participation!: Participation | null;
   @Input() isRegistered: boolean = false;
+  @Input() name: TreasureHunt['name'] = '';
 
   @Output() isRegisteredChange = new EventEmitter<boolean>();
   @Output() alert = new EventEmitter<Alert>();
@@ -35,16 +38,24 @@ export class HuntDetailJoinComponent {
   constructor(
     private participationService: ParticipationService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) { }
 
-  joinTreasureHunt(): void {
-    const token = this.authService.getTokenOrRedirect();
-    if (!token) return;
+  ngOnInit(): void {
+    this.playerId = this.authService.getPlayerId()!;
+  }
 
+  joinTreasureHunt(): void {
     if (!this.isRegistered) {
       this.participationService.createParticipation(this.treasureHunt.id).subscribe({
         next: (response) => {
+          this.notificationService.createNotification({
+              playerId: this.playerId,
+              message: `Vous avez rejoint la chasse au trésor "${this.treasureHunt.name}" !`,
+              date: new Date(),
+              read: false
+          }).subscribe()
           this.isRegistered = true;
           this.isRegisteredChange.emit(true);
           this.alert.emit({ type: 'success', message: 'Participation enregistrée avec succès !' });

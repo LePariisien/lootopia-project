@@ -47,7 +47,7 @@ export class HuntDetailPageComponent {
   treasure!: Treasure;
   organizer!: Player;
   participation!: Participation | null;
-  isRegistered: boolean = true;
+  isRegistered: boolean = false;
   token: string | null = null;
   alert: Alert = { type: 'success', message: '' };
 

@@ -36,12 +36,12 @@
       </button>
     </div>
 
-    <button *ngIf="isRegistered" (click)="joinTreasureHunt()"
+    <button *ngIf="!isRegistered" (click)="joinTreasureHunt()"
       class="w-full bg-green-600 hover:bg-green-700 text-white rounded py-2 flex items-center justify-center">
       Rejoindre la chasse
       <lucide-icon [img]="ArrowRight" class="ml-2" size="20"></lucide-icon>
     </button>
-    <span *ngIf="!isRegistered" class="w-full text-green-800 rounded py-2 flex flex-col justify-center">
+    <span *ngIf="isRegistered" class="w-full text-green-800 rounded py-2 flex flex-col justify-center">
       <span class="text-green-800">Vous êtes déjà inscrit !</span>
       <button class="text-green-600 underline cursor-pointer"
               (click)="resumeParticipation()">

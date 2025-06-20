@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, ShoppingCart, House, Medal, Search, User, SquarePlus, LogOut, Bell } from 'lucide-angular';
@@ -6,8 +6,10 @@ import { AuthService } from '../../services/auth.service';
 import { NgModule } from '@angular/core';
 import { Player } from '../../models/player.model';
 import { ShopService } from '../../services/shop.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
+import { NotificationService, Notification } from '../../services/notification.service';
+import { takeUntil } from 'rxjs/operators';
 
 @NgModule({
   imports: [
@@ -27,7 +29,7 @@ export class MainLayoutModule { }
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnDestroy {
+export class HeaderComponent implements OnInit, OnDestroy {
   readonly ShoppingCart = ShoppingCart;
   readonly House = House;
   readonly Medal = Medal;
@@ -44,11 +46,16 @@ export class HeaderComponent implements OnDestroy {
   crownCountSub!: Subscription;
   nickname: string | null = null;
   encodedNickname: string | null = null;
+  showNotifications = false;
+  hideTimeout: any;
+  notifications: Notification[] = [];
+  private destroy$ = new Subject<void>();
 
   constructor(private authService: AuthService,
     public router: Router,
     private shopService: ShopService,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -80,11 +87,29 @@ export class HeaderComponent implements OnDestroy {
       this.crownCountSub = this.shopService.crownCount$.subscribe(count => {
         if (count !== null) this.crownCount = count;
       });
+
+      this.notificationService.getNotificationsByPlayerId(this.playerId).subscribe({
+        next: (notifs) => {
+          this.notifications = notifs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        }
+      });
+
+      this.notificationService.notificationCreated$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.notificationService.getNotificationsByPlayerId(this.playerId!).subscribe({
+            next: (notifs) => {
+              this.notifications = notifs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            }
+          });
+        });
     }
   }
 
   ngOnDestroy(): void {
     this.crownCountSub?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   logout(): void {
@@ -92,9 +117,23 @@ export class HeaderComponent implements OnDestroy {
     window.location.reload();
   }
 
-  openNotifications(): void {
-    // Logic to open notifications
-    console.log('Notifications opened');
+  hideNotificationsWithDelay() {
+    this.hideTimeout = setTimeout(() => this.showNotifications = false, 200);
   }
 
+  cancelHide() {
+    if (this.hideTimeout) {
+      clearTimeout(this.hideTimeout);
+      this.hideTimeout = null;
+    }
+    this.showNotifications = true;
+  }
+
+  goToNotificationsPage() {
+    this.router.navigate(['/notifications']);
+  }
+
+    get unreadCount(): number {
+    return this.notifications.filter(n => !n.read).length;
+  }
 }

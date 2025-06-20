@@ -13,7 +13,7 @@ public class PurchaseController {
 
     @Autowired
     private PurchaseService purchaseService;
-
+    
     @PostMapping("/purchases")
     public ResponseEntity<PurchaseDto> createPurchase(@RequestBody PurchaseDto purchaseDto) {
         Purchase saved = purchaseService.createPurchase(purchaseDto);

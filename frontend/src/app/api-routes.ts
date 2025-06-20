@@ -68,6 +68,10 @@ export const ApiRoutes = {
   userProfileByUserId: (userId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/user/${userId}`,
   userProfileByPlayerId: (playerId: string) => `${ApiRoutesEnum.Lootopia}/user-profile/player/${playerId}`,
 
+  //notifications
+  createNotification: () => `${ApiRoutesEnum.Lootopia}/notifications/create`,
+  GetNotificationsByPlayerId: (playerId: string) => `${ApiRoutesEnum.Lootopia}/notifications/player/${playerId}`,
+  SetNotificationAsRead: (notificationId: string) => `${ApiRoutesEnum.Lootopia}/notifications/read/${notificationId}`,
   // Artefacts
   artefactsById: (id: string) => `${ApiRoutesEnum.Lootopia}/artefact/${id}`,
   artefactsAll: () => `${ApiRoutesEnum.Lootopia}/artefact/all`,
