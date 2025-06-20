@@ -38,6 +38,8 @@ export const ApiRoutes = {
     `${ApiRoutesEnum.Lootopia}/participations/treasure-hunt/${treasureHuntId}`,
   participationByTreasureHuntIdAndPlayer: (treasureHuntId: string) =>
     `${ApiRoutesEnum.Lootopia}/participations/treasure-hunt/${treasureHuntId}/by-player`,
+  getParticipationDetailsByPlayerId: (playerId: string) =>
+    `${ApiRoutesEnum.Lootopia}/participations/player/${playerId}/details`,
 
   // Treasure
   treasure: () => `${ApiRoutesEnum.Location}/treasure`,
@@ -49,7 +51,7 @@ export const ApiRoutes = {
   playerCount: () => `${ApiRoutesEnum.Lootopia}/player/count`,
   playerById: (id: string) => `${ApiRoutesEnum.Lootopia}/player/id/${id}`,
   player: () => `${ApiRoutesEnum.Lootopia}/player`,
-  updatePlayer: (id: string) => `${ApiRoutesEnum.Lootopia}/player/update/${id}`,
+  updatePlayer: (id: string) => `${ApiRoutesEnum.Lootopia}/player/${id}`,
   playerByNickname: (nickname: string) =>
     `${ApiRoutesEnum.Lootopia}/player/nickname/${nickname}`,
   getArtefacts: () => `${ApiRoutesEnum.Lootopia}/player/player-artefacts`,

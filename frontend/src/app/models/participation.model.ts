@@ -14,4 +14,9 @@ export interface Participation {
   startDate: string;
   endDate?: string;
   progress?: number;
+
+  // Treasure Hunt
+  name?: string;
+  description?: string;
+  image?: string;
 }

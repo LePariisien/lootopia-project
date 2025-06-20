@@ -29,7 +29,7 @@ public class PlayerController extends AbstractController {
         return playerService.getPlayerById(id);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updatePlayer(@PathVariable String id, @RequestBody PlayerDto playerDto) {
         return playerService.updatePlayer(id, playerDto);
     }

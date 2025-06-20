@@ -1,6 +1,8 @@
 package com.lootopia.lootopia.Services;
 
 import com.lootopia.lootopia.Dtos.ParticipationDto;
+import com.lootopia.lootopia.Dtos.ParticipationWithTreasureHuntDto;
+import com.lootopia.lootopia.Dtos.TreasureHuntDto;
 import com.lootopia.lootopia.Entities.Participation;
 import com.lootopia.lootopia.Entities.Player;
 import com.lootopia.lootopia.Entities.TreasureHunt;
@@ -33,17 +35,33 @@ public class ParticipationService {
     @Autowired
     private ParticipationRepository participationRepository;
 
-    public ResponseEntity<?> getParticipationsByPlayer(Player player) {
-        if (player == null) {
-            throw new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<?> getParticipationsByPlayer(String playerId) {
+        Player player = playerRepository.findById(UUID.fromString(playerId))
+                .orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
+
         List<Participation> participations = participationRepository.findByPlayer(player);
 
-        List<ParticipationDto> participationDtos = new ArrayList<>();
-        for (Participation participation : participations) {
-            participationDtos.add(new ParticipationDto(participation));
+        return ResponseEntity.ok(participations.stream()
+                .map(ParticipationDto::new)
+                .toList());
+    }
+
+    public ResponseEntity<?> getParticipationsWithTreasureHuntByPlayer(String playerId) {
+        Player player = playerRepository.findById(UUID.fromString(playerId))
+                .orElseThrow(() -> new CustomException("Joueur introuvable", HttpStatus.NOT_FOUND));
+
+        List<Participation> participations = participationRepository.findByPlayer(player);
+        if (participations.isEmpty()) {
+            throw new CustomException("Aucune participation trouvée pour ce joueur.", HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(participationDtos);
+
+        List<ParticipationWithTreasureHuntDto> result = new ArrayList<>();
+        for (Participation participation : participations) {
+            TreasureHunt treasureHunt = participation.getTreasureHunt();
+            result.add(new ParticipationWithTreasureHuntDto(new ParticipationDto(participation),
+                    new TreasureHuntDto(treasureHunt)));
+        }
+        return ResponseEntity.ok(result);
     }
 
     public ResponseEntity<?> getAllParticipations() {

@@ -10,7 +10,9 @@ import { PlayerService } from '../../services/player.service';
 import { ShopService } from '../../services/shop.service';
 import { Artefact } from '../../models/artefact.model';
 import { ArtefactService } from '../../services/artefact.service';
-import { Crown, Gem, LucideAngularModule, LucideIconData, ShoppingCart, Sparkles, Star, Edit, CircleX } from 'lucide-angular';
+import { ChevronRight, CircleX, Crown, Edit, Gem, LucideAngularModule, LucideIconData, ShoppingCart, Sparkles, Star } from 'lucide-angular';
+import { ParticipationService } from '../../services/participation.service';
+import { Participation } from '../../models/participation.model';
 
 @Component({
   selector: 'app-profil-page',
@@ -25,6 +27,7 @@ export class ProfilPageComponent implements OnInit {
   readonly Star = Star;
   readonly Gem = Gem;
   readonly Sparkles = Sparkles;
+  readonly ChevronRight = ChevronRight;
   readonly Edit = Edit;
   readonly CircleX = CircleX;
 
@@ -32,7 +35,9 @@ export class ProfilPageComponent implements OnInit {
   profile: UserProfile | null = null;
   crownCount: number = 0;
   slots = Array(9);
+  participationSlots = Array(4);
   artefacts: (Artefact | undefined)[] = new Array(9).fill(undefined);
+  participations: (Participation | undefined)[] = new Array(4).fill(undefined);
 
   showEditPopup = false;
   editData = {country: '', bio: '' };
@@ -48,19 +53,15 @@ export class ProfilPageComponent implements OnInit {
     private playerService: PlayerService,
     private router: Router,
     private shopService: ShopService,
-    private artefactService: ArtefactService
+    private artefactService: ArtefactService,
+    private participationService: ParticipationService
   ) {  }
-
-  getArtefact(artefactId: string): Artefact {
-    if (artefactId) {
-    }
-
-    return {} as Artefact;
-  }
 
   ngOnInit(): void {
     const token = this.authService.getTokenOrRedirect() ?? '';
     if (!token) return;
+
+    this.connectedPlayerId = this.authService.getPlayerId();
 
     this.route.paramMap.subscribe(params => {
       const nickname = params.get('nickname') || '';
@@ -111,6 +112,21 @@ export class ProfilPageComponent implements OnInit {
               }
             });
 
+            this.participationService.getParticipationDetailsByPlayerId(data?.id).subscribe({
+              next: (participationDetail) => {
+                if (participationDetail && participationDetail.length > 0) {
+                  const lastParticipations = participationDetail.slice(-4).reverse();
+                  this.participations = lastParticipations;
+                } else {
+                  this.participations = new Array(4).fill(undefined);
+                }
+              },
+              error: (err) => {
+                console.error('Erreur de récupération de la participation:', err);
+                this.participations = new Array(4).fill(undefined);
+              }
+            });
+
             this.shopService.getPurchasesByPlayerId(data?.id).subscribe({
               next: (purchases) => {
                 console.log('Achats récupérés:', purchases);
@@ -129,7 +145,6 @@ export class ProfilPageComponent implements OnInit {
         });
       }
     });
-    this.connectedPlayerId = this.authService.getPlayerId();
   }
 
   getRarityIcon(rarity: string): LucideIconData {
@@ -144,6 +159,14 @@ export class ProfilPageComponent implements OnInit {
         return this.Crown;
       default:
         return this.Star;
+    }
+  }
+
+  viewParticipationDetails(participationId: string) {
+    if (participationId) {
+      this.router.navigate(['/participation', participationId]);
+    } else {
+      console.error('Participation ou Treasure Hunt ID manquant');
     }
   }
 
