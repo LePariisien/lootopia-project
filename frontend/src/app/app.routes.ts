@@ -11,6 +11,7 @@ import { NotFoundComponent } from './pages/not-found-page/not-found.component';
 import { HuntDetailPageComponent } from './pages/hunt-detail-page/hunt-detail-page.component';
 import { ProfilPageComponent } from './pages/profil-page/profil-page.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { NotificationsPageComponent } from './pages/notifications-page/notifications-page.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,7 @@ export const routes: Routes = [
       { path: 'view-hunts', component: ViewHuntsComponent },
       { path: 'participation/:id', component: HuntParticipationPageComponent },
       { path: 'hunt/:id', component: HuntDetailPageComponent },
+      { path: 'notifications', component: NotificationsPageComponent },
     ]
   },
   { path: 'login', component: LoginComponent },

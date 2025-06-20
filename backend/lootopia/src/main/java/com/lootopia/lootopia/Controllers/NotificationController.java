@@ -2,6 +2,7 @@ package com.lootopia.lootopia.Controllers;
 
 import com.lootopia.lootopia.Repositories.NotificationRepository;
 import com.lootopia.lootopia.Repositories.PlayerRepository;
+import com.lootopia.lootopia.Services.NotificationService;
 import com.lootopia.lootopia.Dtos.NotificationDto;
 import com.lootopia.lootopia.Entities.Notification;
 
@@ -23,9 +24,13 @@ public class NotificationController {
     @Autowired
     private final PlayerRepository playerRepository;
 
-    public NotificationController(NotificationRepository notificationRepository, PlayerRepository playerRepository) {
+    @Autowired
+    private final NotificationService notificationService;
+
+    public NotificationController(NotificationRepository notificationRepository, PlayerRepository playerRepository, NotificationService notificationService) {
         this.notificationRepository = notificationRepository;
         this.playerRepository = playerRepository;
+        this.notificationService = notificationService;
     }
 
     @PostMapping("/create")
@@ -48,14 +53,9 @@ public class NotificationController {
         return ResponseEntity.ok(dtos);
     }
 
-    @PostMapping("/update-read/{notificationId}")
-    public ResponseEntity<?> updateNotification(@PathVariable UUID notificationId) {
-        Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new RuntimeException("Notification not found"));
-
-        notification.setRead(true);
-
-        Notification updatedNotification = notificationRepository.save(notification);
-        return ResponseEntity.ok(new NotificationDto(updatedNotification));
+    @PutMapping("/read/{notificationId}")
+    public ResponseEntity<?> markAsRead(@PathVariable UUID notificationId) {
+        notificationService.markAsRead(notificationId);
+        return ResponseEntity.ok().build();
     }
 }

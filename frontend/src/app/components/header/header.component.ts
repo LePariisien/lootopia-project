@@ -128,4 +128,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     this.showNotifications = true;
   }
+
+  goToNotificationsPage() {
+    this.router.navigate(['/notifications']);
+  }
+
+    get unreadCount(): number {
+    return this.notifications.filter(n => !n.read).length;
+  }
 }

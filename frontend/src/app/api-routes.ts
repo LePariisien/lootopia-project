@@ -71,6 +71,7 @@ export const ApiRoutes = {
   //notifications
   createNotification: () => `${ApiRoutesEnum.Lootopia}/notifications/create`,
   GetNotificationsByPlayerId: (playerId: string) => `${ApiRoutesEnum.Lootopia}/notifications/player/${playerId}`,
+  SetNotificationAsRead: (notificationId: string) => `${ApiRoutesEnum.Lootopia}/notifications/read/${notificationId}`,
   // Artefacts
   artefactsById: (id: string) => `${ApiRoutesEnum.Lootopia}/artefact/${id}`,
   artefactsAll: () => `${ApiRoutesEnum.Lootopia}/artefact/all`,

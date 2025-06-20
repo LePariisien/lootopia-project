@@ -1,0 +1,32 @@
+<div class="max-w-2xl mx-auto mt-8">
+  <h2 class="text-2xl font-bold mb-4">Toutes les notifications</h2>
+  <button (click)="toggleSort()" class="mb-4 px-3 py-1 bg-green-100 rounded text-green-700">
+    Trier par date {{ sortDesc ? '↓' : '↑' }}
+  </button>
+  <div class="grid gap-4">
+    <div
+      *ngFor="let notif of notifications"
+      (click)="markAsRead(notif)"
+      class="rounded-xl shadow border border-green-200 p-4 cursor-pointer transition
+        bg-white
+        hover:bg-green-50
+        relative
+        flex items-center
+      "
+      [ngClass]="{
+        'font-bold bg-green-700/80 text-white hover:bg-green-300': !notif.read,
+        'hover:bg-green-100': notif.read
+      }"
+    >
+      <span *ngIf="!notif.read" class="absolute top-4 right-4 inline-block w-3 h-3 rounded-full bg-green-900"></span>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-lg text-black">{{ notif.message }}</span>
+        </div>
+        <div *ngIf="notif.date" class="text-xs mt-2 text-gray-400">{{ notif.date | date : "short" }}</div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!notifications.length" class="text-gray-500 text-center py-8">Aucune notification</div>
+
+</div>

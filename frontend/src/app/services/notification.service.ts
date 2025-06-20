@@ -13,7 +13,7 @@ export interface Notification {
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private notificationCreatedSource = new Subject<void>();
+  public notificationCreatedSource = new Subject<void>();
   notificationCreated$ = this.notificationCreatedSource.asObservable();
 
   constructor(private http: HttpClient) {}
@@ -33,5 +33,9 @@ export class NotificationService {
 
   getNotificationsByPlayerId(playerId: string): Observable<Notification[]> {
     return this.http.get<Notification[]>(ApiRoutes.GetNotificationsByPlayerId(playerId));
+  }
+
+  markAsRead(notificationId: string) {
+    return this.http.put(ApiRoutes.SetNotificationAsRead(notificationId), {});
   }
 }

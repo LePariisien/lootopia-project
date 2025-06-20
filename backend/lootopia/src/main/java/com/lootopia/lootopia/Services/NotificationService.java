@@ -28,4 +28,11 @@ public class NotificationService {
 
         return notificationRepository.save(notification);
     }
+
+    public void markAsRead(UUID notificationId) {
+        notificationRepository.findById(notificationId).ifPresent(notification -> {
+            notification.setRead(true);
+            notificationRepository.save(notification);
+        });
+    }
 }
